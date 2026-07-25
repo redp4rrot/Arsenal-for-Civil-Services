@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Browser</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; background: #f9f9f9; }
+        h1 { color: #333; }
+        ul { list-style: none; padding: 0; }
+        li { margin: 8px 0; padding: 8px; background: white; border: 1px solid #ddd; border-radius: 4px; }
+        a { text-decoration: none; color: #0366d6; font-weight: bold; }
+        a:hover { text-decoration: underline; }
+        .meta { font-size: 0.85em; color: #666; margin-left: 10px; }
+    </style>
+</head>
+<body>
+
+    <h1 id="dir-title">Root Directory</h1>
+    <ul id="file-list">Loading files...</ul>
+
+    <script>
+        // REPLACE THESE VARIABLES WITH YOUR REPO DETAILS
+        const USER = "redp4rrot";
+        const REPO = "Arsenal-for-Civil-Services";
+        const BRANCH = "main"; 
+
+        // Get the current path from the URL hash (e.g., #/folder1)
+        const getPath = () => window.location.hash.replace('#', '') || '';
+
+        async function loadDirectory() {
+            const path = getPath();
+            const listElement = document.getElementById('file-list');
+            document.getElementById('dir-title').innerText = path ? `Directory: /${path}` : "Root Directory";
+            listElement.innerHTML = "Loading...";
+
+            // GitHub REST API endpoint for repository contents
+            const apiUrl = `https://api.github.com/repos/${USER}/${REPO}/contents/${path}?ref=${BRANCH}`;
+
+            try {
+                const response = await fetch(apiUrl);
+                if (!response.ok) throw new Error("Failed to fetch contents");
+                const items = await response.ok ? await response.json() : [];
+
+                listElement.innerHTML = "";
+
+                // Add a "Go Back" option if we are inside a sub-directory
+                if (path) {
+                    const parentPath = path.substring(0, path.lastIndexOf('/'));
+                    const li = document.createElement('li');
+                    li.innerHTML = `<a href="#${parentPath}">📁 .. (Go up a directory)</a>`;
+                    listElement.appendChild(li);
+                }
+
+                // Render folders and files
+                items.forEach(item => {
+                    const li = document.createElement('li');
+                    if (item.type === 'dir') {
+                        // Folder link: Updates the hash to navigate deeper
+                        li.innerHTML = `<a href="#${item.path}">📁 ${item.name}</a>`;
+                    } else {
+                        // File link: Points directly to the deployed GitHub Pages file
+                        // Exclude index.html itself from the list if desired
+                        if (item.name !== 'index.html') {
+                            const rawUrl = `https://${USER}.github.io/${REPO}/${item.path}`;
+                            const sizeKB = (item.size / 1024).toFixed(1);
+                            li.innerHTML = `<a href="${rawUrl}" target="_blank">📄 ${item.name}</a> <span class="meta">(${sizeKB} KB)</span>`;
+                        } else {
+                            return;
+                        }
+                    }
+                    listElement.appendChild(li);
+                });
+
+            } catch (error) {
+                listElement.innerHTML = `<li style="color:red;">Error loading directory. Make sure user and repo names are correct.</li>`;
+                console.error(error);
+            }
+        }
+
+        // Listen for back/forward navigation or clicks
+        window.addEventListener('hashchange', loadDirectory);
+        window.onload = loadDirectory;
+    </script>
+</body>
+</html>
