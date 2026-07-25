@@ -112,3 +112,32 @@ content.appendChild(div);
 }
 
 }
+
+document.body.className=
+localStorage.theme || "dark";
+
+document.getElementById("theme").onclick=()=>{
+
+const t=document.body.className==="dark"
+?"light"
+:"dark";
+
+document.body.className=t;
+
+localStorage.theme=t;
+
+document.getElementById("theme").textContent=
+t==="dark"
+?"🌙"
+:"☀";
+
+};
+
+document.getElementById("theme").textContent=
+document.body.className==="dark"
+?"🌙"
+:"☀";
+
+document.getElementById("back").onclick=()=>history.back();
+
+document.getElementById("forward").onclick=()=>history.forward();
