@@ -1,0 +1,106 @@
+#!/usr/bin/env bash
+
+export ARSENAL_ROOT="/var/www/Arsenal-for-Civil-Services"
+
+# Step 1: basic navigation helper
+arsenal() {
+    cd "$ARSENAL_ROOT" || return 1
+}
+
+# Step 2: commit helper
+gacm() {
+    if [ $# -lt 1 ]; then
+        echo 'Usage: gacm "commit message"'
+        return 1
+    fi
+
+    git -C "$ARSENAL_ROOT" add -A || return 1
+    git -C "$ARSENAL_ROOT" commit -m "$*"
+}
+
+# Step 3: move a Windows PDF into the repo
+# Step 3: move a Windows file OR folder into the repo
+# Step 3: move a Windows file OR folder into the repo
+throw() {
+    if [ $# -ne 2 ]; then
+        echo "Usage: throw 'C:\path\to\file or folder' 'mains/GS/Polity/Subfolder'"
+        return 1
+    fi
+
+    local windows_path="$1"
+    local relative_dest="$2"
+
+    if ! command -v wslpath >/dev/null 2>&1; then
+        echo 'wslpath is not available in this shell.'
+        return 1
+    fi
+
+    # Explicitly convert Windows string to Unix path safely
+    local src
+    src="$(wslpath -u "$windows_path" 2>/dev/null)" || {
+        echo "Error: Invalid Windows path or wslpath failed."
+        return 1
+    }
+
+    if [ ! -e "$src" ]; then
+        echo "Source path not found:"
+        echo "  $src"
+        return 1
+    fi
+
+    local dest="$ARSENAL_ROOT/$relative_dest"
+
+    mkdir -p "$dest" || return 1
+
+    if [ -d "$src" ]; then
+        cp -r "$src" "$dest/" || return 1
+        echo "Moved folder:"
+        echo "  $(basename "$src")"
+    else
+        mv "$src" "$dest/" || return 1
+        echo "Moved file:"
+        echo "  $(basename "$src")"
+    fi
+
+    echo "To:"
+    echo "  $dest/"
+}
+
+# Step 2b: force push helper
+gpf() {
+    git -C "$ARSENAL_ROOT" push --force-with-lease "$@"
+}
+
+# Amend existing commit helper
+gaca() {
+    git -C "$ARSENAL_ROOT" add -A || return 1
+
+    if [ $# -ge 1 ]; then
+        # Amend with a new message if provided
+        git -C "$ARSENAL_ROOT" commit --amend -m "$*"
+    else
+        # Amend using the exact same commit message
+        git -C "$ARSENAL_ROOT" commit --amend --no-edit
+    fi
+}
+
+# Pretty git log helper
+# Pretty git log helper
+gl() {
+    if [ $# -eq 0 ]; then
+        git -C "$ARSENAL_ROOT" log --oneline --graph --decorate -n 10
+    else
+        git -C "$ARSENAL_ROOT" log --oneline --graph --decorate "$@"
+    fi
+}
+
+# Git diff helper
+gd() {
+    if [ $# -eq 0 ]; then
+        # Default: show unstaged + staged changes together
+        git -C "$ARSENAL_ROOT" diff HEAD
+    else
+        # Pass any custom flags/paths (e.g. gd --staged, gd mains/GS)
+        git -C "$ARSENAL_ROOT" diff "$@"
+    fi
+}
