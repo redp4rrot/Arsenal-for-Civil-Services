@@ -1,124 +1,126 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>File Browser</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arsenal Browser</title>
 <style>
-    body {
-        font-family: sans-serif;
-        padding: 20px;
-        background: #2D353B;
-        color: #D3C6AA;
-    }
-
-    h1 {
-        color: #D3C6AA;
-    }
-
-    ul {
-        list-style: none;
-        padding: 0;
-    }
-
-    li {
-        margin: 8px 0;
-        padding: 10px 12px;
-        background: #343F44;
-        border: 1px solid #4F585E;
-        border-radius: 6px;
-        transition: background 0.15s ease;
-    }
-
-    li:hover {
-        background: #475258;
-    }
-
-    a {
-        text-decoration: none;
-        color: #7FBBB3;
-        font-weight: bold;
-    }
-
-    a:hover {
-        text-decoration: underline;
-        color: #83C092;
-    }
-
-    .meta {
-        font-size: 0.85em;
-        color: #9DA9A0;
-        margin-left: 10px;
-    }
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Inter,Segoe UI,sans-serif;background:#2D353B;color:#D3C6AA;padding:36px}
+.header{margin-bottom:28px}
+.breadcrumbs{display:flex;flex-wrap:wrap;gap:8px;font-size:.92rem;color:#9DA9A0;margin-bottom:10px}
+.breadcrumbs a{text-decoration:none;color:#7FBBB3}
+.breadcrumbs span.sep{opacity:.55}
+h1{font-size:2.2rem;font-weight:700;margin-bottom:6px}
+.subtitle{color:#9DA9A0}
+hr{border:none;height:1px;background:#4F585E;margin-top:20px}
+#file-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:20px;margin-top:28px}
+.tile{display:flex;flex-direction:column;justify-content:center;min-height:150px;padding:22px;background:#343F44;border:1px solid #4F585E;border-radius:14px;text-decoration:none;color:inherit;transition:.2s}
+.tile:hover{transform:translateY(-4px);border-color:#7FBBB3;background:#3D474D;box-shadow:0 10px 22px rgba(0,0,0,.28)}
+.icon{font-size:44px;margin-bottom:14px}
+.name{font-size:18px;font-weight:600;line-height:1.35;word-break:break-word}
+.meta{margin-top:8px;font-size:14px;color:#9DA9A0}
+.loading,.error{grid-column:1/-1;color:#9DA9A0}
+.error{color:#e67e80}
 </style>
 </head>
 <body>
 
-    <h1 id="dir-title">Root Directory</h1>
-    <ul id="file-list">Loading files...</ul>
+<div class="header">
+<div class="breadcrumbs" id="breadcrumbs"></div>
+<h1 id="title">Home</h1>
+<div class="subtitle" id="subtitle"></div>
+<hr>
+</div>
 
-    <script>
-        // REPLACE THESE VARIABLES WITH YOUR REPO DETAILS
-        const USER = "redp4rrot";
-        const REPO = "Arsenal-for-Civil-Services";
-        const BRANCH = "main"; 
+<div id="file-list"><div class="loading">Loading…</div></div>
 
-        // Get the current path from the URL hash (e.g., #/folder1)
-        const getPath = () => window.location.hash.replace('#', '') || '';
+<script>
+const USER="redp4rrot";
+const REPO="Arsenal-for-Civil-Services";
+const BRANCH="main";
 
-        async function loadDirectory() {
-            const path = getPath();
-            const listElement = document.getElementById('file-list');
-            document.getElementById('dir-title').innerText = path ? `Directory: /${path}` : "Root Directory";
-            listElement.innerHTML = "Loading...";
+const getPath=()=>window.location.hash.replace("#","");
 
-            // GitHub REST API endpoint for repository contents
-            const apiUrl = `https://api.github.com/repos/${USER}/${REPO}/contents/${path}?ref=${BRANCH}`;
+function renderHeader(path,count){
+ const bc=document.getElementById("breadcrumbs");
+ const title=document.getElementById("title");
+ const sub=document.getElementById("subtitle");
+ bc.innerHTML="";
+ const parts=decodeURIComponent(path).split("/").filter(Boolean);
+ const home=document.createElement("a");
+ home.href="#";
+ home.textContent="Home";
+ bc.appendChild(home);
+ let accum="";
+ parts.forEach((p,i)=>{
+   const sep=document.createElement("span");
+   sep.className="sep"; sep.textContent="/";
+   bc.appendChild(sep);
+   accum+=(i?"/":"")+parts[i];
+   const a=document.createElement("a");
+   a.href="#"+accum;
+   a.textContent=p;
+   bc.appendChild(a);
+ });
+ title.textContent=parts.length?parts[parts.length-1]:"Arsenal for Civil Services";
+ sub.textContent=(parts.length?parts.slice(0,-1).join(" / "):"Repository root")+" • "+count+" item"+(count===1?"":"s");
+}
 
-            try {
-                const response = await fetch(apiUrl);
-                if (!response.ok) throw new Error("Failed to fetch contents");
-                const items = await response.ok ? await response.json() : [];
+async function loadDirectory(){
+ const path=getPath();
+ const list=document.getElementById("file-list");
+ list.innerHTML='<div class="loading">Loading…</div>';
+ const url=`https://api.github.com/repos/${USER}/${REPO}/contents/${path}?ref=${BRANCH}`;
+ try{
+   const res=await fetch(url);
+   if(!res.ok) throw new Error();
+   const items=await res.json();
+   renderHeader(path,items.filter(i=>i.name!=="index.html").length);
+   list.innerHTML="";
+   if(path){
+     const parent=path.substring(0,path.lastIndexOf("/"));
+     const t=document.createElement("a");
+     t.className="tile"; t.href="#"+parent;
+     t.innerHTML=`<div class="icon">←</div><div class="name">Go Back</div><div class="meta">Parent folder</div>`;
+     list.appendChild(t);
+   }
+   items.sort((a,b)=>a.type===b.type?a.name.localeCompare(b.name):a.type==="dir"?-1:1);
+   items.forEach(item=>{
+        const HIDDEN_FILES = new Set([
+            "index.html",
+            ".gitkeep",
+            ".gitignore",
+            "README.md",
+            "sh.rc"
+        ]);
 
-                listElement.innerHTML = "";
-
-                // Add a "Go Back" option if we are inside a sub-directory
-                if (path) {
-                    const parentPath = path.substring(0, path.lastIndexOf('/'));
-                    const li = document.createElement('li');
-                    li.innerHTML = `<a href="#${parentPath}">📁 .. (Go up a directory)</a>`;
-                    listElement.appendChild(li);
-                }
-
-                // Render folders and files
-                items.forEach(item => {
-                    const li = document.createElement('li');
-                    if (item.type === 'dir') {
-                        // Folder link: Updates the hash to navigate deeper
-                        li.innerHTML = `<a href="#${item.path}">📁 ${item.name}</a>`;
-                    } else {
-                        // File link: Points directly to the deployed GitHub Pages file
-                        // Exclude index.html itself from the list if desired
-                        if (item.name !== 'index.html') {
-                            const rawUrl = `https://${USER}.github.io/${REPO}/${item.path}`;
-                            const sizeKB = (item.size / 1024).toFixed(1);
-                            li.innerHTML = `<a href="${rawUrl}" target="_blank">📄 ${item.name}</a> <span class="meta">(${sizeKB} KB)</span>`;
-                        } else {
-                            return;
-                        }
-                    }
-                    listElement.appendChild(li);
-                });
-
-            } catch (error) {
-                listElement.innerHTML = `<li style="color:red;">Error loading directory. Make sure user and repo names are correct.</li>`;
-                console.error(error);
-            }
-        }
-
-        // Listen for back/forward navigation or clicks
-        window.addEventListener('hashchange', loadDirectory);
-        window.onload = loadDirectory;
-    </script>
+        if (item.name.startsWith(".") || HIDDEN_FILES.has(item.name))
+            return;
+      const t=document.createElement("a");
+      t.className="tile";
+      if(item.type==="dir"){
+        t.href="#"+item.path;
+        t.innerHTML=`<div class="icon">📁</div><div class="name">${decodeURIComponent(item.name)}</div><div class="meta">Folder</div>`;
+      }else{
+        t.href=`https://${USER}.github.io/${REPO}/${item.path}`;
+        t.target="_blank";
+        const ext=item.name.split(".").pop().toLowerCase();
+        let icon="📄";
+        if(ext==="pdf") icon="📕";
+        else if(["png","jpg","jpeg","webp","gif","svg"].includes(ext)) icon="🖼️";
+        else if(["zip","rar","7z"].includes(ext)) icon="🗜️";
+        t.innerHTML=`<div class="icon">${icon}</div><div class="name">${decodeURIComponent(item.name)}</div><div class="meta">${(item.size/1024).toFixed(1)} KB</div>`;
+      }
+      list.appendChild(t);
+   });
+ }catch(e){
+   renderHeader(path,0);
+   list.innerHTML='<div class="error">Failed to load directory.</div>';
+ }
+}
+window.addEventListener("hashchange",loadDirectory);
+window.addEventListener("load",loadDirectory);
+</script>
 </body>
 </html>

@@ -23,7 +23,7 @@ gacm() {
 # Step 3: move a Windows file OR folder into the repo
 throw() {
     if [ $# -ne 2 ]; then
-        echo "Usage: throw 'C:\path\to\file or folder' 'mains/GS/Polity/Subfolder'"
+        echo "Usage: throw 'C:\path\to\file or folder' 'mains/GS'"
         return 1
     fi
 
@@ -31,35 +31,44 @@ throw() {
     local relative_dest="$2"
 
     if ! command -v wslpath >/dev/null 2>&1; then
-        echo 'wslpath is not available in this shell.'
+        echo "Error: wslpath is not available."
         return 1
     fi
 
-    # Explicitly convert Windows string to Unix path safely
     local src
-    src="$(wslpath -u "$windows_path" 2>/dev/null)" || {
-        echo "Error: Invalid Windows path or wslpath failed."
+    src="$(wslpath -u "$windows_path")" || {
+        echo "Error: Invalid Windows path."
         return 1
     }
 
     if [ ! -e "$src" ]; then
-        echo "Source path not found:"
+        echo "Error: Source does not exist:"
         echo "  $src"
         return 1
     fi
 
     local dest="$ARSENAL_ROOT/$relative_dest"
-
     mkdir -p "$dest" || return 1
 
+    local name
+    name="$(basename "$src")"
+
     if [ -d "$src" ]; then
-        cp -r "$src" "$dest/" || return 1
-        echo "Moved folder:"
-        echo "  $(basename "$src")"
+        # Completely remove any existing folder with the same name
+        rm -rf "$dest/$name" || return 1
+
+        # Copy the new folder
+        cp -a "$src" "$dest/" || return 1
+
+        echo "Replaced folder:"
+        echo "  $name"
     else
+        # Replace file if it already exists
+        rm -f "$dest/$name" || return 1
         mv "$src" "$dest/" || return 1
+
         echo "Moved file:"
-        echo "  $(basename "$src")"
+        echo "  $name"
     fi
 
     echo "To:"
