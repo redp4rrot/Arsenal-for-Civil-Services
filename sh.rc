@@ -2,12 +2,12 @@
 
 export ARSENAL_ROOT="/var/www/Arsenal-for-Civil-Services"
 
-# Step 1: basic navigation helper
+# Navigate to Arsenal repo
 arsenal() {
     cd "$ARSENAL_ROOT" || return 1
 }
 
-# Step 2: commit helper
+# Git add + commit
 gacm() {
     if [ $# -lt 1 ]; then
         echo 'Usage: gacm "commit message"'
@@ -18,12 +18,10 @@ gacm() {
     git -C "$ARSENAL_ROOT" commit -m "$*"
 }
 
-# Step 3: move a Windows PDF into the repo
-# Step 3: move a Windows file OR folder into the repo
-# Step 3: move a Windows file OR folder into the repo
+# Sync a Windows file or folder into the repo
 throw() {
     if [ $# -ne 2 ]; then
-        echo "Usage: throw 'C:\path\to\file or folder' 'mains/GS'"
+        echo "Usage: throw 'C:\path\to\file_or_folder' 'relative/destination'"
         return 1
     fi
 
@@ -35,6 +33,13 @@ throw() {
         return 1
     fi
 
+    if ! command -v rsync >/dev/null 2>&1; then
+        echo "Error: rsync is not installed."
+        echo "Install using:"
+        echo "  sudo apt install rsync"
+        return 1
+    fi
+
     local src
     src="$(wslpath -u "$windows_path")" || {
         echo "Error: Invalid Windows path."
@@ -42,7 +47,7 @@ throw() {
     }
 
     if [ ! -e "$src" ]; then
-        echo "Error: Source does not exist:"
+        echo "Error: Source not found:"
         echo "  $src"
         return 1
     fi
@@ -54,20 +59,20 @@ throw() {
     name="$(basename "$src")"
 
     if [ -d "$src" ]; then
-        # Completely remove any existing folder with the same name
-        rm -rf "$dest/$name" || return 1
+        mkdir -p "$dest/$name" || return 1
 
-        # Copy the new folder
-        cp -a "$src" "$dest/" || return 1
+        rsync -avh \
+            "$src/" \
+            "$dest/$name/" || return 1
 
-        echo "Replaced folder:"
+        echo "Synced folder:"
         echo "  $name"
     else
-        # Replace file if it already exists
-        rm -f "$dest/$name" || return 1
-        mv "$src" "$dest/" || return 1
+        rsync -avh \
+            "$src" \
+            "$dest/" || return 1
 
-        echo "Moved file:"
+        echo "Synced file:"
         echo "  $name"
     fi
 
@@ -75,26 +80,23 @@ throw() {
     echo "  $dest/"
 }
 
-# Step 2b: force push helper
+# Force push
 gpf() {
     git -C "$ARSENAL_ROOT" push --force-with-lease "$@"
 }
 
-# Amend existing commit helper
+# Amend commit
 gaca() {
     git -C "$ARSENAL_ROOT" add -A || return 1
 
     if [ $# -ge 1 ]; then
-        # Amend with a new message if provided
         git -C "$ARSENAL_ROOT" commit --amend -m "$*"
     else
-        # Amend using the exact same commit message
         git -C "$ARSENAL_ROOT" commit --amend --no-edit
     fi
 }
 
-# Pretty git log helper
-# Pretty git log helper
+# Pretty git log
 gl() {
     if [ $# -eq 0 ]; then
         git -C "$ARSENAL_ROOT" log --oneline --graph --decorate -n 10
@@ -103,13 +105,11 @@ gl() {
     fi
 }
 
-# Git diff helper
+# Git diff
 gd() {
     if [ $# -eq 0 ]; then
-        # Default: show unstaged + staged changes together
         git -C "$ARSENAL_ROOT" diff HEAD
     else
-        # Pass any custom flags/paths (e.g. gd --staged, gd mains/GS)
         git -C "$ARSENAL_ROOT" diff "$@"
     fi
 }
