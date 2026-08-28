@@ -496,3 +496,37 @@ hr {
         bottom: 65px;
     }
 }
+
+
+.month-navigation {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.month-nav-button {
+    width: 34px;
+    height: 34px;
+
+    border: 1px solid #4F585E;
+    border-radius: 8px;
+
+    background: #343F44;
+    color: #D3C6AA;
+
+    font-size: 18px;
+
+    cursor: pointer;
+
+    transition: .2s;
+}
+
+.month-nav-button:hover:not(:disabled) {
+    border-color: #7FBBB3;
+    color: #7FBBB3;
+}
+
+.month-nav-button:disabled {
+    opacity: .3;
+    cursor: default;
+}
