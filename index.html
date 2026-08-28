@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,61 +11,239 @@
 
 <body>
 
-    <!-- =========================================
-         HEADER / BREADCRUMBS
-         ========================================= -->
+    <main class="app">
 
-    <div class="header">
+        <!-- =========================================================
+             HEADER
+        ========================================================== -->
 
-        <div
-            class="breadcrumbs"
-            id="breadcrumbs"
-        ></div>
+        <header class="header">
 
-        <h1 id="title">
-            Home
-        </h1>
+            <div class="breadcrumbs" id="breadcrumbs"></div>
 
-        <div
-            class="subtitle"
-            id="subtitle"
-        ></div>
+            <div class="header-row">
+                <div>
+                    <h1 id="title">Arsenal for Civil Services</h1>
+                    <div class="subtitle" id="subtitle">
+                        Repository root
+                    </div>
+                </div>
 
-        <hr>
+                <button id="refresh-btn" class="refresh-btn">
+                    ↻ Refresh
+                </button>
+            </div>
 
-    </div>
-
-
-    <!-- =========================================
-         LIVE PRODUCTIVITY TRACKING
-         ========================================= -->
-
-    <div
-        id="productivity-dashboard"
-    ></div>
+        </header>
 
 
-    <!-- =========================================
-         GITHUB REPOSITORY FILE BROWSER
-         ========================================= -->
+        <!-- =========================================================
+             LIVE TRACKING
+        ========================================================== -->
 
-    <div
-        id="file-list"
-    >
+        <section class="dashboard-section tracking-section">
 
-        <div class="loading">
-            Loading…
-        </div>
+            <div class="section-header">
 
-    </div>
+                <div class="section-title">
+                    <span class="section-icon">〽</span>
+                    <span>LIVE TRACKING</span>
+                </div>
+
+            </div>
 
 
-    <!-- =========================================
-         APPLICATION
-         ========================================= -->
+            <div id="tracking-card" class="tracking-card">
+
+                <div class="tracking-top">
+
+                    <div>
+                        <div id="tracking-month" class="tracking-month">
+                            Loading...
+                        </div>
+
+                        <div class="tracking-label">
+                            Average working hours / day
+                        </div>
+                    </div>
+
+
+                    <!-- MONTH NAVIGATION -->
+
+                    <div class="month-navigation">
+
+                        <button
+                            id="previous-month"
+                            class="month-btn"
+                            title="Previous month"
+                        >
+                            ←
+                        </button>
+
+                        <button
+                            id="next-month"
+                            class="month-btn"
+                            title="Next month"
+                        >
+                            →
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- MAIN TRACKING CONTENT -->
+
+                <div class="tracking-content">
+
+
+                    <!-- DONUT -->
+
+                    <div class="donut-wrapper">
+
+                        <div id="donut" class="donut">
+
+                            <div class="donut-center">
+
+                                <div
+                                    id="average-hours"
+                                    class="average-hours"
+                                >
+                                    --
+                                </div>
+
+                                <div class="hours-label">
+                                    hrs/day
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- TARGET / STATUS -->
+
+                    <div class="tracking-stats">
+
+                        <div class="target-row">
+
+                            <span class="target-symbol">✦</span>
+
+                            <span>
+                                Target:
+                                <strong>8 hrs/day</strong>
+                            </span>
+
+                        </div>
+
+
+                        <div class="target-line"></div>
+
+
+                        <div
+                            id="status-badge"
+                            class="status-badge"
+                        >
+                            Loading...
+                        </div>
+
+                    </div>
+
+
+                    <!-- MOTIVATION -->
+
+                    <div class="motivation-card">
+
+                        <div
+                            id="motivation-quote"
+                            class="motivation-quote"
+                        >
+                            Stay consistent.
+                        </div>
+
+                        <div class="motivation-divider"></div>
+
+                        <div
+                            id="motivation-message"
+                            class="motivation-message"
+                        >
+                            Keep showing up.
+                        </div>
+
+                        <div class="motivation-symbol">
+                            ★
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- TRACKING FOOTER -->
+
+                <div class="tracking-footer">
+
+                    <span id="total-hours">
+                        -- total hours
+                    </span>
+
+                    <span class="footer-dot">•</span>
+
+                    <span id="days-logged">
+                        -- days logged
+                    </span>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================================================
+             BROWSE REPOSITORY
+        ========================================================== -->
+
+        <section class="dashboard-section repository-section">
+
+            <div class="repository-header">
+
+                <div>
+
+                    <div class="section-title">
+                        <span class="section-icon">▱</span>
+                        <span>BROWSE REPOSITORY</span>
+                    </div>
+
+                    <div
+                        id="repository-subtitle"
+                        class="repository-subtitle"
+                    >
+                        Repository root
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div id="file-list">
+
+                <div class="loading">
+                    Loading repository...
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
 
     <script src="dashboard.js"></script>
 
 </body>
-
 </html>

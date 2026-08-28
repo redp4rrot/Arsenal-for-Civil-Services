@@ -1,6 +1,6 @@
-/* =========================================================
+/* ================================================================
    CONFIGURATION
-   ========================================================= */
+================================================================ */
 
 const USER = "redp4rrot";
 const REPO = "Arsenal-for-Civil-Services";
@@ -8,217 +8,97 @@ const BRANCH = "main";
 
 const TARGET_HOURS = 8;
 const EXCELLENT_HOURS = 9;
-const METER_MAX_HOURS = 10;
+
+const START_YEAR = 2026;
+const START_MONTH = 5; // June = 5 because JS months are 0-indexed
+
+
+/* ================================================================
+   STATE
+================================================================ */
+
+let selectedYear;
+let selectedMonth;
+
+const now = new Date();
+
+selectedYear = now.getFullYear();
+selectedMonth = now.getMonth();
+
 
 /*
- * Tracking started in June 2026.
- *
- * JavaScript months are zero-indexed:
- *
- * January = 0
- * February = 1
- * ...
- * June = 5
- */
+   Prevent navigation before June 2026
+*/
+function isBeforeStart(year, month) {
 
-const TRACKING_START_YEAR = 2026;
-const TRACKING_START_MONTH = 5;
+    return (
+        year < START_YEAR ||
+        (year === START_YEAR && month < START_MONTH)
+    );
+
+}
+
 
 /*
- * Cache key for GitHub planning issues.
- */
-const ISSUE_CACHE_KEY =
-    "arsenal-planning-issues-v1";
+   Prevent navigating into future months
+*/
+function isFutureMonth(year, month) {
+
+    const currentYear = now.getFullYear();
+    const currentMonth = now.getMonth();
+
+    return (
+        year > currentYear ||
+        (year === currentYear && month > currentMonth)
+    );
+
+}
 
 
-/* =========================================================
-   PRODUCTIVITY STATE
-   ========================================================= */
+/* ================================================================
+   MONTH HELPERS
+================================================================ */
 
-let availableMonths = [];
-let currentMonthIndex = 0;
+function getMonthName(month) {
 
-/*
- * All planning issues loaded from GitHub.
-
- * Structure:
- *
- * {
- *   "2026-06": issue,
- *   "2026-07": issue,
- *   "2026-08": issue
- * }
- */
-
-let planningIssues = {};
-
-
-/* =========================================================
-   MONTH UTILITIES
-   ========================================================= */
-
-function getMonthInfo(year, month) {
-
-    const date = new Date(year, month, 1);
-
-    const monthName =
-        date.toLocaleString("en-US", {
-            month: "long"
-        });
-
-    return {
-        year,
+    return new Date(
+        2000,
         month,
-        monthName,
+        1
+    ).toLocaleString("en-US", {
+        month: "long"
+    });
 
-        key:
-            `${year}-${String(month + 1).padStart(2, "0")}`,
-
-        title:
-            `Plan the backlog for \`${monthName} ${year}\``
-    };
 }
 
 
-function getCurrentMonthInfo() {
+function getMonthLabel(year, month) {
 
-    const now = new Date();
+    return `${getMonthName(month)} ${year}`;
 
-    return getMonthInfo(
-        now.getFullYear(),
-        now.getMonth()
-    );
 }
 
 
-/*
- * Generate every month from June 2026
- * up to and including the current month.
- *
- * Example in August 2026:
- *
- * June 2026
- * July 2026
- * August 2026
- */
+function getIssueTitle(year, month) {
 
-function getAvailableMonths() {
+    return `Plan the backlog for \`${getMonthLabel(year, month)}\``;
 
-    const current =
-        getCurrentMonthInfo();
-
-    const months = [];
-
-    let year =
-        TRACKING_START_YEAR;
-
-    let month =
-        TRACKING_START_MONTH;
-
-
-    while (
-        year < current.year ||
-        (
-            year === current.year &&
-            month <= current.month
-        )
-    ) {
-
-        months.push(
-            getMonthInfo(year, month)
-        );
-
-
-        month++;
-
-        if (month > 11) {
-
-            month = 0;
-            year++;
-        }
-    }
-
-
-    return months;
 }
 
 
-/* =========================================================
-   GITHUB ISSUE FETCHING
-   ========================================================= */
+/* ================================================================
+   GITHUB API
+================================================================ */
 
 /*
- * IMPORTANT:
- *
- * We DO NOT use the GitHub Search API here.
- *
- * Previously:
- *
- *     June click   → API search
- *     July click   → API search
- *     August click → API search
- *
- * Rapid switching could therefore trigger GitHub's
- * unauthenticated API rate limit.
- *
- * Now:
- *
- *     Dashboard loads
- *          ↓
- *     Fetch repository issues ONCE
- *          ↓
- *     Extract planning issues locally
- *          ↓
- *     Cache them
- *          ↓
- *     Month switching is completely local
- */
+   Fetch all issues.
 
+   We deliberately avoid GitHub's search API because the search
+   endpoint is much more likely to hit rate limits while switching
+   months rapidly.
+*/
 
-/*
- * Extract month information from an issue title.
- *
- * Expected title:
- *
- * Plan the backlog for `August 2026`
- */
-
-function getMonthFromIssueTitle(title) {
-
-    const pattern =
-        /^Plan the backlog for `([A-Za-z]+ \d{4})`$/;
-
-    const match =
-        title.match(pattern);
-
-    if (!match) {
-        return null;
-    }
-
-    const date =
-        new Date(`${match[1]} 1`);
-
-    if (Number.isNaN(date.getTime())) {
-        return null;
-    }
-
-    return getMonthInfo(
-        date.getFullYear(),
-        date.getMonth()
-    );
-}
-
-
-/*
- * Fetch all repository issues.
- *
- * We use /issues instead of /search/issues.
- *
- * This endpoint is paginated, so we continue until
- * GitHub returns fewer than 100 issues.
- */
-
-async function fetchPlanningIssuesFromGitHub() {
+async function fetchIssues() {
 
     const issues = [];
 
@@ -230,812 +110,806 @@ async function fetchPlanningIssuesFromGitHub() {
             `https://api.github.com/repos/${USER}/${REPO}/issues` +
             `?state=all&per_page=100&page=${page}`;
 
-        const response =
-            await fetch(url);
+        const response = await fetch(url, {
+            cache: "no-store"
+        });
 
         if (!response.ok) {
 
             throw new Error(
                 `GitHub API returned ${response.status}`
             );
+
         }
 
-        const data =
-            await response.json();
+        const data = await response.json();
+
+        if (!Array.isArray(data)) {
+            throw new Error("Invalid GitHub API response");
+        }
 
         /*
-         * GitHub's /issues endpoint can also return
-         * pull requests.
-         *
-         * We only care about actual issues.
-         */
+           Pull requests also appear in the issues API.
+           We don't need them.
+        */
 
-        const realIssues =
-            data.filter(
-                item => !item.pull_request
-            );
+        const realIssues = data.filter(
+            issue => !issue.pull_request
+        );
 
         issues.push(...realIssues);
-
-
-        /*
-         * Fewer than 100 means we've reached the end.
-         */
 
         if (data.length < 100) {
             break;
         }
 
         page++;
-    }
-
-
-    /*
-     * Convert the issue list into a month-keyed object.
-     */
-
-    const result = {};
-
-    issues.forEach(issue => {
-
-        const monthInfo =
-            getMonthFromIssueTitle(
-                issue.title
-            );
-
-        if (!monthInfo) {
-            return;
-        }
 
         /*
-         * Ignore anything before tracking started.
-         */
-
-        if (
-            monthInfo.year < TRACKING_START_YEAR ||
-            (
-                monthInfo.year === TRACKING_START_YEAR &&
-                monthInfo.month < TRACKING_START_MONTH
-            )
-        ) {
-            return;
+           Safety limit.
+        */
+        if (page > 10) {
+            break;
         }
-
-
-        result[monthInfo.key] = issue;
-    });
-
-
-    return result;
-}
-
-
-/* =========================================================
-   ISSUE CACHE
-   ========================================================= */
-
-function loadCachedPlanningIssues() {
-
-    try {
-
-        const cached =
-            sessionStorage.getItem(
-                ISSUE_CACHE_KEY
-            );
-
-        if (!cached) {
-            return null;
-        }
-
-        const parsed =
-            JSON.parse(cached);
-
-        if (
-            !parsed ||
-            typeof parsed !== "object" ||
-            !parsed.issues
-        ) {
-            return null;
-        }
-
-        return parsed.issues;
-
-    } catch (error) {
-
-        console.warn(
-            "Unable to read issue cache:",
-            error
-        );
-
-        return null;
     }
+
+    return issues;
+
 }
 
 
-function saveCachedPlanningIssues(issues) {
+/* ================================================================
+   FIND MONTH ISSUE
+================================================================ */
 
-    try {
+async function findIssueForMonth(year, month, issues = null) {
 
-        sessionStorage.setItem(
-            ISSUE_CACHE_KEY,
-            JSON.stringify({
-                issues,
-                cachedAt: Date.now()
-            })
-        );
+    const title = getIssueTitle(year, month);
 
-    } catch (error) {
+    const allIssues = issues || await fetchIssues();
+
+    return allIssues.find(
+        issue => issue.title === title
+    ) || null;
+
+}
+
+
+/* ================================================================
+   PARSE PRODUCTIVITY DATA
+================================================================ */
+
+/*
+   Expected format:
+
+   _20/08/2026_ **9**
+
+   Everything else in the issue is ignored.
+
+   The parser therefore does NOT care about:
+   - checkboxes
+   - descriptions
+   - headings
+   - comments
+   - other markdown
+   - text containing numbers
+
+   It only looks for:
+
+       _DD/MM/YYYY_ **NUMBER**
+*/
+
+function parseWorkingHours(body, year, month) {
+
+    if (!body) {
+
+        return {
+            totalHours: 0,
+            daysLogged: 0,
+            average: 0,
+            entries: []
+        };
+
+    }
+
+
+    const monthNumber =
+        String(month + 1).padStart(2, "0");
+
+
+    /*
+       Capture:
+
+       _20/08/2026_ **9**
+    */
+
+    const regex =
+        /_(\d{2})\/(\d{2})\/(\d{4})_\s+\*\*(\d+(?:\.\d+)?)\*\*/g;
+
+
+    const entries = [];
+
+    let match;
+
+
+    while ((match = regex.exec(body)) !== null) {
+
+        const day = match[1];
+        const entryMonth = match[2];
+        const entryYear = match[3];
+        const hours = parseFloat(match[4]);
+
 
         /*
-         * Caching is only an optimization.
-         * If storage fails, the dashboard still works.
-         */
+           Only accept the selected month/year.
+        */
 
-        console.warn(
-            "Unable to cache planning issues:",
-            error
-        );
-    }
-}
+        if (
+            entryYear === String(year) &&
+            entryMonth === monthNumber
+        ) {
 
+            entries.push({
+                day: Number(day),
+                hours
+            });
 
-/*
- * Load planning issues.
- *
- * Priority:
- *
- * 1. Existing in-memory data
- * 2. sessionStorage
- * 3. GitHub API
- */
+        }
 
-async function loadPlanningIssues() {
-
-    /*
-     * Already loaded during this page session.
-     */
-
-    if (
-        Object.keys(planningIssues).length > 0
-    ) {
-        return planningIssues;
     }
 
 
     /*
-     * Try browser cache first.
-     */
+       Sort chronologically.
+    */
 
-    const cached =
-        loadCachedPlanningIssues();
-
-    if (cached) {
-
-        planningIssues =
-            cached;
-
-        return planningIssues;
-    }
-
-
-    /*
-     * Nothing cached.
-     *
-     * Make ONE GitHub API operation.
-     */
-
-    planningIssues =
-        await fetchPlanningIssuesFromGitHub();
-
-
-    /*
-     * Save for the remainder of the
-     * browser session.
-     */
-
-    saveCachedPlanningIssues(
-        planningIssues
+    entries.sort(
+        (a, b) => a.day - b.day
     );
 
 
-    return planningIssues;
-}
-
-
-/*
- * Optional helper for development/testing.
- *
- * If you ever want to force fresh GitHub data from
- * the browser console:
- *
- *     clearPlanningIssueCache()
- *
- * Then refresh the page.
- */
-
-function clearPlanningIssueCache() {
-
-    sessionStorage.removeItem(
-        ISSUE_CACHE_KEY
+    const totalHours = entries.reduce(
+        (sum, entry) => sum + entry.hours,
+        0
     );
 
-    planningIssues = {};
 
-    console.log(
-        "Planning issue cache cleared."
-    );
-}
+    const daysLogged = entries.length;
 
 
-/* =========================================================
-   WORKLOG PARSER
-   ========================================================= */
-
-/*
- * We only care about lines like:
- *
- * _20/08/2026_ **9**
- * _21/08/2026_ **8.5**
- * _22/08/2026_ **7.25**
- *
- * Everything else in the issue is ignored.
- */
-
-function parseWorklog(markdown) {
-
-    const pattern =
-        /_(\d{2}\/\d{2}\/\d{4})_\s+\*\*(\d+(?:\.\d+)?)\*\*/g;
-
-    const logs = [];
-
-
-    for (
-        const match of markdown.matchAll(pattern)
-    ) {
-
-        const [, date, hours] =
-            match;
-
-
-        logs.push({
-            date,
-            hours: Number(hours)
-        });
-    }
-
-
-    return logs;
-}
-
-
-/* =========================================================
-   PRODUCTIVITY CALCULATIONS
-   ========================================================= */
-
-function calculateStats(logs) {
-
-    const totalHours =
-        logs.reduce(
-            (sum, log) =>
-                sum + log.hours,
-            0
-        );
-
-
-    const daysWorked =
-        logs.length;
-
-
-    const averageHours =
-        daysWorked > 0
-            ? totalHours / daysWorked
+    const average =
+        daysLogged > 0
+            ? totalHours / daysLogged
             : 0;
 
 
     return {
         totalHours,
-        daysWorked,
-        averageHours
+        daysLogged,
+        average,
+        entries
     };
+
 }
 
 
-/* =========================================================
-   PERFORMANCE STATE
-   ========================================================= */
+/* ================================================================
+   PRODUCTIVITY STATUS
+================================================================ */
 
-function getPerformanceState(average) {
+function getStatus(hours) {
 
-    if (average < TARGET_HOURS) {
+    if (hours < TARGET_HOURS) {
 
         return {
-            className: "below",
             label: "↓ Below target",
-            message:
-                "Push harder. You've got this."
+            className: "below"
         };
+
+    }
+
+    if (hours < EXCELLENT_HOURS) {
+
+        return {
+            label: "→ On track",
+            className: "on-track"
+        };
+
+    }
+
+    return {
+        label: "↑ Excellent",
+        className: "excellent"
+    };
+
+}
+
+
+/* ================================================================
+   MOTIVATION
+================================================================ */
+
+function getMotivation(hours) {
+
+    if (hours === 0) {
+
+        return {
+            quote: "Start before you feel ready.",
+            message: "Today is still yours."
+        };
+
     }
 
 
-    if (average <= EXCELLENT_HOURS) {
+    if (hours < 6) {
 
         return {
-            className: "on-track",
-            label: "✓ On track",
-            message:
-                "Good work. Keep the momentum."
+            quote: "Small steps still move you forward.",
+            message: "Build the momentum."
         };
+
+    }
+
+
+    if (hours < 8) {
+
+        return {
+            quote: "Discipline today, freedom tomorrow.",
+            message: "Push a little harder."
+        };
+
+    }
+
+
+    if (hours < 9) {
+
+        return {
+            quote: "Consistency compounds.",
+            message: "You're on track."
+        };
+
+    }
+
+
+    if (hours < 10) {
+
+        return {
+            quote: "Excellence is a habit.",
+            message: "You're doing great."
+        };
+
     }
 
 
     return {
-        className: "excellent",
-        label: "★ Excellent",
-        message:
-            "Outstanding. Keep raising the bar."
+        quote: "Relentless execution.",
+        message: "You're operating at another level."
     };
+
 }
 
 
-/* =========================================================
-   RENDER PRODUCTIVITY DASHBOARD
-   ========================================================= */
+/* ================================================================
+   DONUT
+================================================================ */
 
-function renderDashboard(
-    stats,
-    monthInfo
+function updateDonut(hours) {
+
+    const donut =
+        document.getElementById("donut");
+
+
+    /*
+       The visual scale is based around 12 hours.
+
+       This means:
+
+       8 hrs  -> 66.7%
+       9 hrs  -> 75%
+       12 hrs -> 100%
+
+       Anything beyond 12 remains visually full.
+    */
+
+    const percentage =
+        Math.min(hours / 12, 1) * 100;
+
+
+    const status = getStatus(hours);
+
+
+    donut.classList.remove(
+        "below",
+        "on-track",
+        "excellent"
+    );
+
+
+    donut.classList.add(
+        status.className
+    );
+
+
+    donut.style.setProperty(
+        "--progress",
+        `${percentage}%`
+    );
+
+}
+
+
+/* ================================================================
+   RENDER TRACKING
+================================================================ */
+
+function renderTracking(
+    year,
+    month,
+    productivity,
+    issue
 ) {
 
-    const container =
+    const monthLabel =
+        getMonthLabel(year, month);
+
+
+    document.getElementById(
+        "tracking-month"
+    ).textContent =
+        monthLabel.toUpperCase();
+
+
+    /*
+       No issue / no data
+    */
+
+    if (!issue) {
+
         document.getElementById(
-            "productivity-dashboard"
-        );
+            "average-hours"
+        ).textContent = "--";
 
 
-    if (!container) {
+        document.getElementById(
+            "total-hours"
+        ).textContent =
+            "No data";
+
+
+        document.getElementById(
+            "days-logged"
+        ).textContent =
+            "0 days logged";
+
+
+        document.getElementById(
+            "status-badge"
+        ).textContent =
+            "No data";
+
+
+        document.getElementById(
+            "status-badge"
+        ).className =
+            "status-badge";
+
+
+        document.getElementById(
+            "motivation-quote"
+        ).textContent =
+            "Your next chapter starts here.";
+
+
+        document.getElementById(
+            "motivation-message"
+        ).textContent =
+            "Log your first day.";
+
+
+        updateDonut(0);
+
         return;
+
     }
 
 
     const average =
-        stats.averageHours;
+        productivity.average;
 
 
-    const performance =
-        getPerformanceState(
-            average
-        );
+    const status =
+        getStatus(average);
 
 
-    /*
-     * Meter represents:
-     *
-     * 0 hrs  = 0%
-     * 8 hrs  = 80%
-     * 9 hrs  = 90%
-     * 10 hrs = 100%
-     */
-
-    const percentage =
-        Math.min(
-            (average / METER_MAX_HOURS) * 100,
-            100
-        );
-
-
-    container.innerHTML = `
-
-        <div class="productivity-card ${performance.className}">
-
-            <div class="productivity-header">
-
-                <div>
-
-                    <div class="tracking-label">
-                        LIVE TRACKING
-                    </div>
-
-                    <div class="productivity-month">
-                        ${monthInfo.monthName.toUpperCase()}
-                        ${monthInfo.year}
-                    </div>
-
-                    <div class="productivity-label">
-                        Average working hours / day
-                    </div>
-
-                </div>
-
-
-                <div class="month-navigation">
-
-                    <button
-                        class="month-nav-button"
-                        id="previous-month"
-                        title="Previous month"
-                    >
-                        ←
-                    </button>
-
-
-                    <button
-                        class="month-nav-button"
-                        id="next-month"
-                        title="Next month"
-                    >
-                        →
-                    </button>
-
-                </div>
-
-            </div>
-
-
-            <div class="productivity-main">
-
-                <div class="meter-wrapper">
-
-                    <div
-                        class="productivity-meter"
-                        style="--progress:${percentage}%"
-                    >
-
-                        <div class="meter-center">
-
-                            <div class="productivity-average">
-                                ${average.toFixed(2)}
-                            </div>
-
-                            <div class="meter-unit">
-                                hrs/day
-                            </div>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="target-marker">
-
-                        <span></span>
-
-                        8 hr target
-
-                    </div>
-
-                </div>
-
-
-                <div class="motivation">
-
-                    <div class="motivation-icon">
-                        ✦
-                    </div>
-
-                    <div class="motivation-text">
-                        ${performance.message}
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <div class="productivity-meta">
-
-                <span>
-                    ${stats.totalHours.toFixed(1)} total hours
-                </span>
-
-                <span>•</span>
-
-                <span>
-                    ${stats.daysWorked} days logged
-                </span>
-
-                <span>•</span>
-
-                <span>
-                    Target: ${TARGET_HOURS} hrs/day
-                </span>
-
-            </div>
-
-        </div>
-    `;
+    const motivation =
+        getMotivation(average);
 
 
     /*
-     * Navigation buttons.
-     */
+       Average
+    */
 
-    const previousButton =
+    document.getElementById(
+        "average-hours"
+    ).textContent =
+        average.toFixed(2);
+
+
+    /*
+       Footer
+    */
+
+    document.getElementById(
+        "total-hours"
+    ).textContent =
+        `${productivity.totalHours.toFixed(1)} total hours`;
+
+
+    document.getElementById(
+        "days-logged"
+    ).textContent =
+        `${productivity.daysLogged} days logged`;
+
+
+    /*
+       Status
+    */
+
+    const statusBadge =
+        document.getElementById(
+            "status-badge"
+        );
+
+
+    statusBadge.textContent =
+        status.label;
+
+
+    statusBadge.className =
+        `status-badge ${status.className}`;
+
+
+    /*
+       Motivation
+    */
+
+    document.getElementById(
+        "motivation-quote"
+    ).textContent =
+        motivation.quote;
+
+
+    document.getElementById(
+        "motivation-message"
+    ).textContent =
+        motivation.message;
+
+
+    /*
+       Donut
+    */
+
+    updateDonut(average);
+
+}
+
+
+/* ================================================================
+   LOAD PRODUCTIVITY
+================================================================ */
+
+let issueCache = null;
+let issueCacheTimestamp = 0;
+
+const ISSUE_CACHE_TIME = 60 * 1000;
+
+
+/*
+   Cache the issue list for 1 minute.
+
+   This is important because rapidly pressing
+   ← → ← → should NOT fire a GitHub request every time.
+*/
+
+async function getCachedIssues() {
+
+    const nowTime = Date.now();
+
+
+    if (
+        issueCache &&
+        nowTime - issueCacheTimestamp < ISSUE_CACHE_TIME
+    ) {
+
+        return issueCache;
+
+    }
+
+
+    issueCache = await fetchIssues();
+
+    issueCacheTimestamp = nowTime;
+
+
+    return issueCache;
+
+}
+
+
+let trackingRequestId = 0;
+
+
+async function loadDashboardMonth() {
+
+    const requestId =
+        ++trackingRequestId;
+
+
+    const year = selectedYear;
+    const month = selectedMonth;
+
+
+    /*
+       Show loading state.
+    */
+
+    document.getElementById(
+        "tracking-month"
+    ).textContent =
+        getMonthLabel(
+            year,
+            month
+        ).toUpperCase();
+
+
+    document.getElementById(
+        "average-hours"
+    ).textContent =
+        "…";
+
+
+    try {
+
+        const issues =
+            await getCachedIssues();
+
+
+        /*
+           User may have clicked another month
+           while the request was running.
+
+           Ignore this stale response.
+        */
+
+        if (
+            requestId !== trackingRequestId
+        ) {
+            return;
+        }
+
+
+        const issue =
+            await findIssueForMonth(
+                year,
+                month,
+                issues
+            );
+
+
+        if (
+            requestId !== trackingRequestId
+        ) {
+            return;
+        }
+
+
+        const productivity =
+            issue
+                ? parseWorkingHours(
+                    issue.body,
+                    year,
+                    month
+                )
+                : {
+                    totalHours: 0,
+                    daysLogged: 0,
+                    average: 0,
+                    entries: []
+                };
+
+
+        renderTracking(
+            year,
+            month,
+            productivity,
+            issue
+        );
+
+
+        updateMonthButtons();
+
+    }
+    catch (error) {
+
+        console.error(
+            "Dashboard error:",
+            error
+        );
+
+
+        if (
+            requestId !== trackingRequestId
+        ) {
+            return;
+        }
+
+
+        document.getElementById(
+            "average-hours"
+        ).textContent =
+            "--";
+
+
+        document.getElementById(
+            "status-badge"
+        ).textContent =
+            "Unable to load";
+
+
+        document.getElementById(
+            "status-badge"
+        ).className =
+            "status-badge below";
+
+
+        document.getElementById(
+            "motivation-quote"
+        ).textContent =
+            "Unable to load productivity data.";
+
+
+        document.getElementById(
+            "motivation-message"
+        ).textContent =
+            "Try refreshing in a moment.";
+
+    }
+
+}
+
+
+/* ================================================================
+   MONTH NAVIGATION
+================================================================ */
+
+function updateMonthButtons() {
+
+    const previous =
         document.getElementById(
             "previous-month"
         );
 
 
-    const nextButton =
+    const next =
         document.getElementById(
             "next-month"
         );
 
 
-    previousButton.disabled =
-        currentMonthIndex === 0;
-
-
-    nextButton.disabled =
-        currentMonthIndex ===
-        availableMonths.length - 1;
-
-
     /*
-     * Previous month.
-     *
-     * IMPORTANT:
-     *
-     * This is now completely local.
-     *
-     * No GitHub request happens here.
-     */
+       Previous button
+    */
 
-    previousButton.addEventListener(
-        "click",
-        () => {
-
-            if (
-                currentMonthIndex <= 0
-            ) {
-                return;
-            }
-
-
-            currentMonthIndex--;
-
-
-            loadDashboardMonth(
-                availableMonths[
-                    currentMonthIndex
-                ]
-            );
-        }
-    );
-
-
-    /*
-     * Next month.
-     *
-     * Again, completely local.
-     */
-
-    nextButton.addEventListener(
-        "click",
-        () => {
-
-            if (
-                currentMonthIndex >=
-                availableMonths.length - 1
-            ) {
-                return;
-            }
-
-
-            currentMonthIndex++;
-
-
-            loadDashboardMonth(
-                availableMonths[
-                    currentMonthIndex
-                ]
-            );
-        }
-    );
-}
-
-
-/* =========================================================
-   LOAD SELECTED MONTH
-   ========================================================= */
-
-function loadDashboardMonth(
-    monthInfo
-) {
-
-    const container =
-        document.getElementById(
-            "productivity-dashboard"
+    previous.disabled =
+        isBeforeStart(
+            selectedYear,
+            selectedMonth - 1
         );
 
 
-    if (!container) {
+    /*
+       Next button
+    */
+
+    next.disabled =
+        isFutureMonth(
+            selectedYear,
+            selectedMonth + 1
+        );
+
+}
+
+
+function moveMonth(delta) {
+
+    let year = selectedYear;
+    let month = selectedMonth + delta;
+
+
+    if (month < 0) {
+
+        month = 11;
+        year--;
+
+    }
+
+
+    if (month > 11) {
+
+        month = 0;
+        year++;
+
+    }
+
+
+    /*
+       Don't allow months before June 2026.
+    */
+
+    if (
+        isBeforeStart(
+            year,
+            month
+        )
+    ) {
         return;
     }
 
 
     /*
-     * The issue is ALREADY in memory.
-     *
-     * This is the important difference from
-     * the previous implementation.
-     */
+       Don't allow future months.
+    */
 
-    const issue =
-        planningIssues[
-            monthInfo.key
-        ];
-
-
-    /*
-     * No issue for this month.
-     */
-
-    if (!issue) {
-
-        renderDashboard(
-            {
-                totalHours: 0,
-                daysWorked: 0,
-                averageHours: 0
-            },
-            monthInfo
-        );
-
+    if (
+        isFutureMonth(
+            year,
+            month
+        )
+    ) {
         return;
     }
 
 
-    /*
-     * Extract worklog entries.
-     */
-
-    const logs =
-        parseWorklog(
-            issue.body || ""
-        );
+    selectedYear = year;
+    selectedMonth = month;
 
 
-    /*
-     * Calculate statistics.
-     */
+    loadDashboardMonth();
 
-    const stats =
-        calculateStats(logs);
-
-
-    /*
-     * Render.
-     */
-
-    renderDashboard(
-        stats,
-        monthInfo
-    );
 }
 
 
-/* =========================================================
-   INITIALIZE PRODUCTIVITY TRACKER
-   ========================================================= */
-
-async function loadProductivityDashboard() {
-
-    const container =
-        document.getElementById(
-            "productivity-dashboard"
-        );
-
-
-    if (!container) {
-        return;
-    }
-
-
-    container.innerHTML = `
-        <div class="productivity-loading">
-            Loading productivity...
-        </div>
-    `;
-
-
-    try {
-
-        /*
-         * Build month list.
-         */
-
-        availableMonths =
-            getAvailableMonths();
-
-
-        /*
-         * Find current month.
-         */
-
-        const current =
-            getCurrentMonthInfo();
-
-
-        currentMonthIndex =
-            availableMonths.findIndex(
-                month =>
-                    month.key ===
-                    current.key
-            );
-
-
-        /*
-         * Safety fallback.
-         */
-
-        if (
-            currentMonthIndex === -1
-        ) {
-
-            currentMonthIndex =
-                availableMonths.length - 1;
-        }
-
-
-        /*
-         * IMPORTANT:
-         *
-         * Fetch planning issues ONCE.
-         *
-         * After this completes, month
-         * switching never talks to GitHub.
-         */
-
-        await loadPlanningIssues();
-
-
-        /*
-         * Render current month.
-         */
-
-        loadDashboardMonth(
-            availableMonths[
-                currentMonthIndex
-            ]
-        );
-
-
-    } catch (error) {
-
-        console.error(
-            "Productivity initialization error:",
-            error
-        );
-
-
-        container.innerHTML = `
-            <div class="productivity-card productivity-error">
-                Unable to load productivity data.
-            </div>
-        `;
-    }
-}
-
-
-/* =========================================================
-   REPOSITORY FILE BROWSER
-   ========================================================= */
+/* ================================================================
+   FILE BROWSER
+================================================================ */
 
 const getPath = () =>
-    window.location.hash.replace(
-        "#",
-        ""
-    );
+    window.location.hash.replace("#", "");
 
 
-/* =========================================================
-   RENDER BROWSER HEADER
-   ========================================================= */
+/*
+   Files that belong to the dashboard itself.
 
-function renderHeader(
-    path,
-    count
-) {
+   They should exist in the repository but NOT appear
+   inside the repository browser.
+*/
+
+const HIDDEN_FILES = new Set([
+    "index.html",
+    "dashboard.js",
+    "styles.css",
+    ".gitkeep",
+    ".gitignore",
+    "README.md",
+    "sh.rc"
+]);
+
+
+/* ================================================================
+   HEADER
+================================================================ */
+
+function renderHeader(path, count) {
 
     const bc =
         document.getElementById(
@@ -1055,6 +929,12 @@ function renderHeader(
         );
 
 
+    const repositorySub =
+        document.getElementById(
+            "repository-subtitle"
+        );
+
+
     bc.innerHTML = "";
 
 
@@ -1063,10 +943,6 @@ function renderHeader(
             .split("/")
             .filter(Boolean);
 
-
-    /*
-     * Home
-     */
 
     const home =
         document.createElement("a");
@@ -1079,56 +955,43 @@ function renderHeader(
     bc.appendChild(home);
 
 
-    /*
-     * Breadcrumb folders
-     */
-
     let accum = "";
 
 
-    parts.forEach(
-        (p, i) => {
+    parts.forEach((part, index) => {
 
-            const sep =
-                document.createElement(
-                    "span"
-                );
-
-
-            sep.className = "sep";
-            sep.textContent = "/";
+        const sep =
+            document.createElement(
+                "span"
+            );
 
 
-            bc.appendChild(sep);
+        sep.className = "sep";
+        sep.textContent = "/";
 
 
-            accum +=
-                (i ? "/" : "") +
-                parts[i];
+        bc.appendChild(sep);
 
 
-            const a =
-                document.createElement(
-                    "a"
-                );
+        accum +=
+            (index ? "/" : "") +
+            part;
 
 
-            a.href =
-                "#" + accum;
+        const a =
+            document.createElement(
+                "a"
+            );
 
 
-            a.textContent =
-                p;
+        a.href = "#" + accum;
+        a.textContent = part;
 
 
-            bc.appendChild(a);
-        }
-    );
+        bc.appendChild(a);
 
+    });
 
-    /*
-     * Title
-     */
 
     title.textContent =
         parts.length
@@ -1136,36 +999,23 @@ function renderHeader(
             : "Arsenal for Civil Services";
 
 
-    /*
-     * Subtitle
-     */
-
     sub.textContent =
-        (
-            parts.length
-                ? parts
-                    .slice(0, -1)
-                    .join(" / ")
-                : "Repository root"
-        )
-        +
-        " • "
-        +
-        count
-        +
-        " item"
-        +
-        (
-            count === 1
-                ? ""
-                : "s"
-        );
+        parts.length
+            ? parts.slice(0, -1).join(" / ")
+            : "Repository root";
+
+
+    repositorySub.textContent =
+        parts.length
+            ? `${parts.join(" / ")} • ${count} item${count === 1 ? "" : "s"}`
+            : `Repository root • ${count} item${count === 1 ? "" : "s"}`;
+
 }
 
 
-/* =========================================================
+/* ================================================================
    LOAD DIRECTORY
-   ========================================================= */
+================================================================ */
 
 async function loadDirectory() {
 
@@ -1180,7 +1030,7 @@ async function loadDirectory() {
 
 
     list.innerHTML =
-        '<div class="loading">Loading…</div>';
+        '<div class="loading">Loading repository...</div>';
 
 
     const url =
@@ -1189,33 +1039,38 @@ async function loadDirectory() {
 
     try {
 
-        const res =
+        const response =
             await fetch(url);
 
 
-        if (!res.ok) {
+        if (!response.ok) {
 
             throw new Error(
-                "Failed to load repository contents"
+                `GitHub returned ${response.status}`
             );
+
         }
 
 
         const items =
-            await res.json();
+            await response.json();
 
 
         /*
-         * Render header.
-         */
+           Only visible files are counted.
+        */
+
+        const visibleItems =
+            items.filter(
+                item =>
+                    !item.name.startsWith(".") &&
+                    !HIDDEN_FILES.has(item.name)
+            );
+
 
         renderHeader(
             path,
-            items.filter(
-                item =>
-                    item.name !==
-                    "index.html"
-            ).length
+            visibleItems.length
         );
 
 
@@ -1223,8 +1078,8 @@ async function loadDirectory() {
 
 
         /*
-         * Go Back tile.
-         */
+           Parent directory
+        */
 
         if (path) {
 
@@ -1235,160 +1090,125 @@ async function loadDirectory() {
                 );
 
 
-            const t =
-                document.createElement(
-                    "a"
-                );
+            const tile =
+                document.createElement("a");
 
 
-            t.className = "tile";
+            tile.className =
+                "file-tile back-tile";
 
 
-            t.href =
+            tile.href =
                 "#" + parent;
 
 
-            t.innerHTML = `
-
-                <div class="icon">
-                    ←
-                </div>
-
-                <div class="name">
-                    Go Back
-                </div>
-
-                <div class="meta">
-                    Parent folder
-                </div>
-
+            tile.innerHTML = `
+                <div class="file-icon">←</div>
+                <div class="file-name">Go Back</div>
+                <div class="file-meta">Parent folder</div>
             `;
 
 
-            list.appendChild(t);
+            list.appendChild(tile);
+
         }
 
 
         /*
-         * Hidden files.
-         */
+           Sort:
 
-        const HIDDEN_FILES = new Set([
-            "index.html",
-            "dashboard.js",
-            "styles.css",
-            ".gitkeep",
-            ".gitignore",
-            "README.md",
-            "sh.rc"
-        ]);
+           folders first
+           then files alphabetically
+        */
 
+        visibleItems.sort(
+            (a, b) => {
 
-        /*
-         * Folders first,
-         * then files.
-         */
+                if (a.type === b.type) {
 
-        items.sort(
-            (a, b) =>
-                a.type === b.type
-                    ? a.name.localeCompare(
+                    return a.name.localeCompare(
                         b.name
-                    )
-                    : a.type === "dir"
-                        ? -1
-                        : 1
+                    );
+
+                }
+
+                return a.type === "dir"
+                    ? -1
+                    : 1;
+
+            }
         );
 
 
-        /*
-         * Render items.
-         */
-
-        items.forEach(
+        visibleItems.forEach(
             item => {
 
-                if (
-                    item.name.startsWith(".") ||
-                    HIDDEN_FILES.has(
-                        item.name
-                    )
-                ) {
-                    return;
-                }
-
-
-                const t =
+                const tile =
                     document.createElement(
                         "a"
                     );
 
 
-                t.className = "tile";
+                tile.className =
+                    "file-tile";
 
-
-                /*
-                 * DIRECTORY
-                 */
 
                 if (
                     item.type === "dir"
                 ) {
 
-                    t.href =
+                    tile.href =
                         "#" + item.path;
 
 
-                    t.innerHTML = `
-
-                        <div class="icon">
+                    tile.innerHTML = `
+                        <div class="file-icon folder-icon">
                             📁
                         </div>
 
-                        <div class="name">
-                            ${decodeURIComponent(
-                                item.name
-                            )}
+                        <div class="file-name">
+                            ${decodeURIComponent(item.name)}
                         </div>
 
-                        <div class="meta">
+                        <div class="file-meta">
                             Folder
                         </div>
-
                     `;
+
                 }
-
-
-                /*
-                 * FILE
-                 */
-
                 else {
 
-                    t.href =
+                    tile.href =
                         `https://${USER}.github.io/${REPO}/${item.path}`;
 
 
-                    t.target = "_blank";
+                    tile.target =
+                        "_blank";
 
 
-                    const ext =
+                    tile.rel =
+                        "noopener";
+
+
+                    const extension =
                         item.name
                             .split(".")
                             .pop()
                             .toLowerCase();
 
 
-                    let icon = "📄";
+                    let icon =
+                        "📄";
 
 
                     if (
-                        ext === "pdf"
+                        extension === "pdf"
                     ) {
 
                         icon = "📕";
 
-                    } else if (
+                    }
+                    else if (
                         [
                             "png",
                             "jpg",
@@ -1396,53 +1216,67 @@ async function loadDirectory() {
                             "webp",
                             "gif",
                             "svg"
-                        ].includes(ext)
+                        ].includes(extension)
                     ) {
 
                         icon = "🖼️";
 
-                    } else if (
+                    }
+                    else if (
                         [
                             "zip",
                             "rar",
                             "7z"
-                        ].includes(ext)
+                        ].includes(extension)
                     ) {
 
                         icon = "🗜️";
+
                     }
 
 
-                    t.innerHTML = `
-
-                        <div class="icon">
+                    tile.innerHTML = `
+                        <div class="file-icon">
                             ${icon}
                         </div>
 
-                        <div class="name">
-                            ${decodeURIComponent(
-                                item.name
-                            )}
+                        <div class="file-name">
+                            ${decodeURIComponent(item.name)}
                         </div>
 
-                        <div class="meta">
+                        <div class="file-meta">
                             ${(item.size / 1024).toFixed(1)} KB
                         </div>
-
                     `;
+
                 }
 
 
-                list.appendChild(t);
+                list.appendChild(tile);
 
             }
         );
 
 
-    } catch (error) {
+        /*
+           Empty directory
+        */
+
+        if (
+            visibleItems.length === 0 &&
+            !path
+        ) {
+
+            list.innerHTML =
+                '<div class="loading">No repository files to display.</div>';
+
+        }
+
+    }
+    catch (error) {
 
         console.error(
-            "Repository browser error:",
+            "Repository error:",
             error
         );
 
@@ -1453,44 +1287,82 @@ async function loadDirectory() {
         );
 
 
-        list.innerHTML = `
-            <div class="error">
-                Failed to load directory.
-            </div>
-        `;
+        list.innerHTML =
+            '<div class="error">Failed to load repository.</div>';
+
     }
+
 }
 
 
-/* =========================================================
-   APPLICATION STARTUP
-   ========================================================= */
+/* ================================================================
+   REFRESH
+================================================================ */
 
-/*
- * One startup event initializes:
- *
- * 1. Live productivity tracker
- * 2. Repository browser
- */
+function refreshDashboard() {
+
+    /*
+       Clear issue cache so Refresh actually
+       gets the newest GitHub issue data.
+    */
+
+    issueCache = null;
+    issueCacheTimestamp = 0;
+
+
+    loadDashboardMonth();
+    loadDirectory();
+
+}
+
+
+/* ================================================================
+   EVENTS
+================================================================ */
+
+document
+    .getElementById("previous-month")
+    .addEventListener(
+        "click",
+        () => moveMonth(-1)
+    );
+
+
+document
+    .getElementById("next-month")
+    .addEventListener(
+        "click",
+        () => moveMonth(1)
+    );
+
+
+document
+    .getElementById("refresh-btn")
+    .addEventListener(
+        "click",
+        refreshDashboard
+    );
+
+
+window.addEventListener(
+    "hashchange",
+    loadDirectory
+);
+
+
+/* ================================================================
+   INITIALIZE
+================================================================ */
 
 window.addEventListener(
     "load",
     () => {
 
-        loadProductivityDashboard();
+        updateMonthButtons();
+
+        loadDashboardMonth();
 
         loadDirectory();
 
     }
-);
-
-
-/*
- * Hash changes only affect
- * repository navigation.
- */
-
-window.addEventListener(
-    "hashchange",
-    loadDirectory
 );
