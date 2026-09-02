@@ -86,7 +86,6 @@ export function parseWorkingHours(
          */
 
         if (
-
             entryYear === String(year) &&
 
             entryMonth === monthNumber
@@ -146,6 +145,64 @@ export function parseWorkingHours(
     };
 
 }
+
+/* =========================================================
+   TODAY'S WORKING HOURS
+========================================================= */
+
+export function getTodayWorkingHours(
+    body,
+    date = new Date()
+) {
+
+    if (!body) {
+        return 0;
+    }
+
+
+    const day =
+        String(date.getDate())
+            .padStart(2, "0");
+
+    const month =
+        String(date.getMonth() + 1)
+            .padStart(2, "0");
+
+    const year =
+        String(date.getFullYear());
+
+
+    const regex =
+        /_(\d{2})\/(\d{2})\/(\d{4})_\s+\*\*(\d+(?:\.\d+)?)\*\*/g;
+
+
+    let match;
+
+
+    while (
+        (match = regex.exec(body)) !== null
+    ) {
+
+        if (
+            match[1] === day &&
+            match[2] === month &&
+            match[3] === year
+        ) {
+
+            return parseFloat(match[4]);
+
+        }
+
+    }
+
+
+    return 0;
+
+}
+
+/* =========================================================
+   TODAY'S WORKING HOURS
+========================================================= */
 
 
 /* =========================================================

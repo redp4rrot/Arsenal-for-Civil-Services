@@ -39,7 +39,8 @@ export const CONFIG = {
             ".gitkeep",
             ".gitignore",
             "README.md",
-            "sh.rc"
+            "sh.rc",
+            "js"
         ])
 
     }

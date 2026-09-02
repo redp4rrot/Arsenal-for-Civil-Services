@@ -49,6 +49,7 @@
 
                 </div>
 
+
                 <button
                     id="refresh-btn"
                     class="refresh-btn"
@@ -77,8 +78,19 @@
 
                 <div class="section-title">
 
-                    <span class="section-icon">
-                        ⌁
+                    <span class="section-icon" aria-hidden="true">
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                            width="20"
+                            height="20"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <path d="M3 3v18h18"/>
+                            <path d="m7 16 4-5 3 3 5-7"/>
+                        </svg>
                     </span>
 
                     <span>
@@ -143,98 +155,177 @@
                      TRACKING CONTENT
                 ================================================== -->
 
-                <div class="tracking-content">
+<div class="tracking-content">
 
+    <!-- =====================================================
+         MONTHLY AVERAGE
+    ====================================================== -->
 
-                    <!-- Donut -->
+    <div class="monthly-panel">
 
-                    <div class="donut-wrapper">
+        <div class="monthly-donut-column">
 
-                        <div
-                            id="donut"
-                            class="donut below"
-                        >
+            <div class="panel-heading">
+                Monthly average
+            </div>
 
-                            <div class="donut-center">
+            <div class="donut-wrapper">
 
-                                <div
-                                    id="average-hours"
-                                    class="average-hours"
-                                >
-                                    …
-                                </div>
+                <div
+                    id="donut"
+                    class="donut below"
+                >
 
-                                <div class="hours-label">
-                                    hrs/day
-                                </div>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-
-                    <!-- Tracking stats -->
-
-                    <div class="tracking-stats">
-
-                        <div class="target-row">
-
-                            <span class="target-symbol">
-                                ✦
-                            </span>
-
-                            <span>
-                                Target:
-                            </span>
-
-                            <strong>
-                                8 hrs/day
-                            </strong>
-
-                        </div>
-
-
-                        <div class="target-line"></div>
-
+                    <div class="donut-center">
 
                         <div
-                            id="status-badge"
-                            class="status-badge"
+                            id="average-hours"
+                            class="average-hours"
                         >
-                            Loading...
+                            …
                         </div>
 
-                    </div>
-
-
-                    <!-- Motivation -->
-
-                    <div class="motivation-card">
-
-                        <div class="motivation-quote">
-                            <span id="motivation-quote">
-                                Loading...
-                            </span>
-                        </div>
-
-                        <div class="motivation-divider"></div>
-
-                        <div
-                            id="motivation-message"
-                            class="motivation-message"
-                        >
-                            Loading...
-                        </div>
-
-                        <div class="motivation-symbol">
-                            ★
+                        <div class="hours-label">
+                            hrs/day
                         </div>
 
                     </div>
 
                 </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="monthly-legend">
+
+            <div class="target-row">
+
+                <span class="target-symbol">
+                    ✦
+                </span>
+
+                <span>
+                    Target:
+                </span>
+
+                <strong>
+                    8 hrs/day
+                </strong>
+
+            </div>
+
+
+            <div class="target-line"></div>
+
+            <div
+                id="status-badge"
+                class="status-badge"
+            >
+                Loading...
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         DIVIDER
+    ====================================================== -->
+
+    <div class="tracking-divider"></div>
+
+
+    <!-- =====================================================
+         TODAY
+    ====================================================== -->
+
+    <div class="today-panel">
+
+        <div class="today-donut-column">
+
+            <div class="panel-heading">
+                Today's working hours
+            </div>
+
+
+            <div class="donut-wrapper">
+
+                <div
+                    id="today-donut"
+                    class="donut no-entry"
+                >
+
+                    <div class="donut-center">
+
+                        <div
+                            id="today-hours"
+                            class="average-hours"
+                        >
+                            0.00
+                        </div>
+
+                        <div class="hours-label">
+                            hrs
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div
+                id="today-status"
+                class="today-status"
+            >
+                No entry today
+            </div>
+
+
+            <div
+                id="today-date"
+                class="today-date"
+            >
+                <span class="calendar-icon">▣</span>
+                <span>Loading...</span>
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- =====================================================
+         MOTIVATION
+    ====================================================== -->
+
+    <div class="motivation-card">
+
+        <div class="motivation-quote">
+            <span id="motivation-quote">
+                Loading...
+            </span>
+        </div>
+
+        <div class="motivation-divider"></div>
+
+        <div
+            id="motivation-message"
+            class="motivation-message"
+        >
+            Loading...
+        </div>
+
+        <div class="motivation-symbol">
+            ★
+        </div>
+
+    </div>
+
+</div>
 
 
                 <!-- =================================================
@@ -255,6 +346,14 @@
                         Loading...
                     </span>
 
+                    <span class="footer-dot">
+                        •
+                    </span>
+
+                    <span>
+                        Target: 8 hrs/day
+                    </span>
+
                 </div>
 
             </div>
@@ -266,14 +365,26 @@
              REPOSITORY BROWSER
         ====================================================== -->
 
-        <section class="dashboard-section repository-section">
+        <section
+            class="dashboard-section repository-section"
+        >
 
             <div class="repository-header">
 
                 <div class="section-title">
 
-                    <span class="section-icon">
-                        ▱
+                    <span class="section-icon" aria-hidden="true">
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                            width="20"
+                            height="20"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <path d="M3 7a2 2 0 0 1 2-2h5l2 2h7a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/>
+                        </svg>
                     </span>
 
                     <span>
@@ -281,6 +392,7 @@
                     </span>
 
                 </div>
+
 
                 <div
                     class="repository-subtitle"

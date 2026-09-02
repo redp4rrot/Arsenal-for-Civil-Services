@@ -3,7 +3,7 @@ import { state } from "./state.js";
 
 
 /* =========================================================
-   GITHUB API BASE
+   GITHUB API
 ========================================================= */
 
 const API_BASE =
@@ -13,32 +13,60 @@ const API_BASE =
 
 
 /* =========================================================
-   FETCH ALL ISSUES
+   FETCH ISSUES
 ========================================================= */
 
 export async function fetchIssues() {
 
-    const issues = [];
+    const url =
+        `${API_BASE}/issues` +
+        `?state=all` +
+        `&per_page=100` +
+        `&page=1`;
 
-    let page = 1;
 
-    while (true) {
+    const controller =
+        new AbortController();
 
-        const url =
-            `${API_BASE}/issues` +
-            `?state=all` +
-            `&per_page=100` +
-            `&page=${page}`;
 
-        const response = await fetch(
-            url,
-            {
-                cache: "no-store"
-            }
+    /*
+     * Do not let the dashboard remain on
+     * "Loading..." forever if GitHub does not respond.
+     */
+
+    const timeout =
+        setTimeout(
+            () => controller.abort(),
+            10000
         );
 
 
+    try {
+
+        const response =
+            await fetch(
+                url,
+                {
+                    cache: "no-store",
+                    signal: controller.signal,
+                    headers: {
+                        Accept:
+                            "application/vnd.github+json"
+                    }
+                }
+            );
+
+
         if (!response.ok) {
+
+            if (response.status === 403) {
+
+                throw new Error(
+                    "GitHub API rate limit exceeded. Try again later."
+                );
+
+            }
+
 
             throw new Error(
                 `GitHub API returned ${response.status}`
@@ -47,7 +75,8 @@ export async function fetchIssues() {
         }
 
 
-        const data = await response.json();
+        const data =
+            await response.json();
 
 
         if (!Array.isArray(data)) {
@@ -63,34 +92,36 @@ export async function fetchIssues() {
          * GitHub's Issues API also returns
          * pull requests.
          */
-        const realIssues =
-            data.filter(
-                issue => !issue.pull_request
-            );
 
-
-        issues.push(...realIssues);
-
-
-        if (data.length < 100) {
-            break;
-        }
-
-
-        page++;
-
-
-        /*
-         * Safety limit.
-         */
-        if (page > 10) {
-            break;
-        }
+        return data.filter(
+            issue => !issue.pull_request
+        );
 
     }
 
+    catch (error) {
 
-    return issues;
+        if (
+            error.name ===
+            "AbortError"
+        ) {
+
+            throw new Error(
+                "GitHub API request timed out."
+            );
+
+        }
+
+
+        throw error;
+
+    }
+
+    finally {
+
+        clearTimeout(timeout);
+
+    }
 
 }
 
@@ -103,22 +134,22 @@ export async function getCachedIssues(
     forceRefresh = false
 ) {
 
-    const currentTime = Date.now();
+    const currentTime =
+        Date.now();
 
 
     /*
      * Normal cache hit.
      */
+
     if (
-
         !forceRefresh &&
-
         state.issueCache &&
-
-        currentTime -
-        state.issueCacheTimestamp <
+        (
+            currentTime -
+            state.issueCacheTimestamp
+        ) <
         CONFIG.cache.issueCacheDuration
-
     ) {
 
         return state.issueCache;
@@ -127,12 +158,10 @@ export async function getCachedIssues(
 
 
     /*
-     * If a fetch is already happening,
+     * If another request is already running,
      * reuse it.
-     *
-     * This is particularly useful when the
-     * user rapidly switches months.
      */
+
     if (state.issueFetchPromise) {
 
         return state.issueFetchPromise;
@@ -150,7 +179,9 @@ export async function getCachedIssues(
             await state.issueFetchPromise;
 
 
-        state.issueCache = issues;
+        state.issueCache =
+            issues;
+
 
         state.issueCacheTimestamp =
             Date.now();
@@ -159,9 +190,11 @@ export async function getCachedIssues(
         return issues;
 
     }
+
     finally {
 
-        state.issueFetchPromise = null;
+        state.issueFetchPromise =
+            null;
 
     }
 
@@ -169,7 +202,7 @@ export async function getCachedIssues(
 
 
 /* =========================================================
-   FIND MONTH ISSUE
+   FIND ISSUE FOR MONTH
 ========================================================= */
 
 export function findIssueForMonth(
@@ -178,11 +211,11 @@ export function findIssueForMonth(
 ) {
 
     return (
-
         issues.find(
-            issue => issue.title === issueTitle
+            issue =>
+                issue.title ===
+                issueTitle
         ) || null
-
     );
 
 }
@@ -194,8 +227,10 @@ export function findIssueForMonth(
 
 export function clearIssueCache() {
 
-    state.issueCache = null;
+    state.issueCache =
+        null;
 
-    state.issueCacheTimestamp = 0;
+    state.issueCacheTimestamp =
+        0;
 
 }
