@@ -1,81 +1,126 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>Arsenal for Civil Services</title>
 
-    <link rel="stylesheet" href="styles.css">
+    <link
+        rel="stylesheet"
+        href="styles.css"
+    >
 </head>
 
 <body>
 
-    <main class="app">
+    <div class="app">
 
-        <!-- =========================================================
+        <!-- =====================================================
              HEADER
-        ========================================================== -->
+        ====================================================== -->
 
         <header class="header">
 
-            <div class="breadcrumbs" id="breadcrumbs"></div>
+            <div
+                class="breadcrumbs"
+                id="breadcrumbs"
+            ></div>
 
             <div class="header-row">
+
                 <div>
-                    <h1 id="title">Arsenal for Civil Services</h1>
-                    <div class="subtitle" id="subtitle">
+
+                    <h1 id="title">
+                        Arsenal for Civil Services
+                    </h1>
+
+                    <div
+                        class="subtitle"
+                        id="subtitle"
+                    >
                         Repository root
                     </div>
+
                 </div>
 
-                <button id="refresh-btn" class="refresh-btn">
+                <button
+                    id="refresh-btn"
+                    class="refresh-btn"
+                    type="button"
+                >
                     ↻ Refresh
                 </button>
+
             </div>
 
         </header>
 
 
-        <!-- =========================================================
-             LIVE TRACKING
-        ========================================================== -->
+        <!-- =====================================================
+             LIVE PRODUCTIVITY TRACKING
+        ====================================================== -->
 
-        <section class="dashboard-section tracking-section">
+        <section
+            id="productivity-dashboard"
+            class="dashboard-section"
+        >
+
+            <!-- Section header -->
 
             <div class="section-header">
 
                 <div class="section-title">
-                    <span class="section-icon">〽</span>
-                    <span>LIVE TRACKING</span>
+
+                    <span class="section-icon">
+                        ⌁
+                    </span>
+
+                    <span>
+                        LIVE TRACKING
+                    </span>
+
                 </div>
 
             </div>
 
 
-            <div id="tracking-card" class="tracking-card">
+            <!-- Tracking card -->
+
+            <div class="tracking-card">
 
                 <div class="tracking-top">
 
                     <div>
-                        <div id="tracking-month" class="tracking-month">
+
+                        <div
+                            class="tracking-month"
+                            id="tracking-month"
+                        >
                             Loading...
                         </div>
 
                         <div class="tracking-label">
                             Average working hours / day
                         </div>
+
                     </div>
 
 
-                    <!-- MONTH NAVIGATION -->
+                    <!-- Month navigation -->
 
                     <div class="month-navigation">
 
                         <button
                             id="previous-month"
                             class="month-btn"
-                            title="Previous month"
+                            type="button"
+                            aria-label="Previous month"
                         >
                             ←
                         </button>
@@ -83,7 +128,8 @@
                         <button
                             id="next-month"
                             class="month-btn"
-                            title="Next month"
+                            type="button"
+                            aria-label="Next month"
                         >
                             →
                         </button>
@@ -93,16 +139,21 @@
                 </div>
 
 
-                <!-- MAIN TRACKING CONTENT -->
+                <!-- =================================================
+                     TRACKING CONTENT
+                ================================================== -->
 
                 <div class="tracking-content">
 
 
-                    <!-- DONUT -->
+                    <!-- Donut -->
 
                     <div class="donut-wrapper">
 
-                        <div id="donut" class="donut">
+                        <div
+                            id="donut"
+                            class="donut below"
+                        >
 
                             <div class="donut-center">
 
@@ -110,7 +161,7 @@
                                     id="average-hours"
                                     class="average-hours"
                                 >
-                                    --
+                                    …
                                 </div>
 
                                 <div class="hours-label">
@@ -124,18 +175,23 @@
                     </div>
 
 
-                    <!-- TARGET / STATUS -->
+                    <!-- Tracking stats -->
 
                     <div class="tracking-stats">
 
                         <div class="target-row">
 
-                            <span class="target-symbol">✦</span>
+                            <span class="target-symbol">
+                                ✦
+                            </span>
 
                             <span>
                                 Target:
-                                <strong>8 hrs/day</strong>
                             </span>
+
+                            <strong>
+                                8 hrs/day
+                            </strong>
 
                         </div>
 
@@ -153,15 +209,14 @@
                     </div>
 
 
-                    <!-- MOTIVATION -->
+                    <!-- Motivation -->
 
                     <div class="motivation-card">
 
-                        <div
-                            id="motivation-quote"
-                            class="motivation-quote"
-                        >
-                            Stay consistent.
+                        <div class="motivation-quote">
+                            <span id="motivation-quote">
+                                Loading...
+                            </span>
                         </div>
 
                         <div class="motivation-divider"></div>
@@ -170,7 +225,7 @@
                             id="motivation-message"
                             class="motivation-message"
                         >
-                            Keep showing up.
+                            Loading...
                         </div>
 
                         <div class="motivation-symbol">
@@ -182,18 +237,22 @@
                 </div>
 
 
-                <!-- TRACKING FOOTER -->
+                <!-- =================================================
+                     TRACKING FOOTER
+                ================================================== -->
 
                 <div class="tracking-footer">
 
                     <span id="total-hours">
-                        -- total hours
+                        Loading...
                     </span>
 
-                    <span class="footer-dot">•</span>
+                    <span class="footer-dot">
+                        •
+                    </span>
 
                     <span id="days-logged">
-                        -- days logged
+                        Loading...
                     </span>
 
                 </div>
@@ -203,28 +262,31 @@
         </section>
 
 
-        <!-- =========================================================
-             BROWSE REPOSITORY
-        ========================================================== -->
+        <!-- =====================================================
+             REPOSITORY BROWSER
+        ====================================================== -->
 
         <section class="dashboard-section repository-section">
 
             <div class="repository-header">
 
-                <div>
+                <div class="section-title">
 
-                    <div class="section-title">
-                        <span class="section-icon">▱</span>
-                        <span>BROWSE REPOSITORY</span>
-                    </div>
+                    <span class="section-icon">
+                        ▱
+                    </span>
 
-                    <div
-                        id="repository-subtitle"
-                        class="repository-subtitle"
-                    >
-                        Repository root
-                    </div>
+                    <span>
+                        BROWSE REPOSITORY
+                    </span>
 
+                </div>
+
+                <div
+                    class="repository-subtitle"
+                    id="repository-subtitle"
+                >
+                    Repository root
                 </div>
 
             </div>
@@ -240,10 +302,18 @@
 
         </section>
 
-    </main>
+    </div>
 
 
-    <script src="dashboard.js"></script>
+    <!-- =========================================================
+         APPLICATION
+    ========================================================== -->
+
+    <script
+        type="module"
+        src="dashboard.js"
+    ></script>
 
 </body>
+
 </html>
