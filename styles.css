@@ -381,3 +381,93 @@ h1 { font-size:clamp(30px,3vw,36px); }
   .calendar-main { max-width:480px; }
   .calendar-detail { max-width:none; }
 }
+
+
+/* Monk typography: restore the generous proportions of the visual reference */
+body {
+  font-size:15px;
+  line-height:1.72;
+  font-family: "Avenir Next", Avenir, "Segoe UI", sans-serif;
+  font-stretch:normal;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+h1 {
+  font-size:clamp(36px,3.5vw,44px);
+  line-height:1.18;
+  letter-spacing:-.7px;
+}
+.subtitle,.repository-subtitle,.calendar-intro {
+  font-size:14px;
+  line-height:1.65;
+}
+.section-title {
+  font-size:14px;
+  line-height:1.5;
+  letter-spacing:2.35px;
+}
+.tracking-month { font-size:14px; line-height:1.5; }
+.tracking-label,.panel-heading,.target-row { font-size:14px; line-height:1.6; }
+.calendar-toolbar h2 { font-size:22px; line-height:1.35; }
+.calendar-weekdays { font-size:13px; line-height:1.5; }
+.calendar-day { font-size:14px; line-height:1.25; }
+.calendar-legend { font-size:12px; line-height:1.6; }
+.detail-eyebrow { font-size:11px; line-height:1.6; }
+.calendar-detail h3 { font-size:22px; line-height:1.4; }
+.selected-date-status { font-size:14px; line-height:1.65; }
+.selected-date-hours { font-size:29px; line-height:1.35; }
+.detail-note { font-size:13px; line-height:1.75; }
+.streak-caption { font-size:12px; line-height:1.5; }
+.streak-value { line-height:1.2; }
+.calendar-festivals {
+  padding:16px 17px;
+  margin:0 0 16px;
+  font-size:13px;
+  line-height:1.65;
+}
+.calendar-festivals h3 {
+  margin:0 0 12px;
+  color:var(--text);
+  font-size:15px;
+  line-height:1.5;
+  font-weight:650;
+}
+.festival-list {
+  display:grid;
+  gap:7px;
+}
+.festival-item {
+  display:grid;
+  grid-template-columns:34px minmax(0,1fr);
+  align-items:start;
+  column-gap:13px;
+  line-height:1.6;
+}
+.festival-item strong {
+  display:block;
+  color:var(--text);
+  font-variant-numeric:tabular-nums;
+  font-weight:650;
+  text-align:left;
+  white-space:nowrap;
+}
+.festival-item span {
+  display:block;
+  min-width:0;
+  color:var(--muted);
+  overflow-wrap:anywhere;
+}
+.festival-note {
+  margin:12px 0 0;
+  padding-top:10px;
+  border-top:1px solid var(--border);
+  color:var(--muted);
+  font-size:11px;
+  line-height:1.6;
+}
+@media(max-width:760px) {
+  body { font-size:14px; line-height:1.65; }
+  h1 { font-size:clamp(30px,7vw,38px); }
+  .calendar-detail h3 { font-size:20px; }
+  .festival-item { column-gap:10px; }
+}
