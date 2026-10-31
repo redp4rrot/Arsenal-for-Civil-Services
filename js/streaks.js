@@ -101,8 +101,11 @@ function previousDateKey(key) {
     return dateKey(date.getFullYear(), date.getMonth() + 1, date.getDate());
 }
 
-export function calculateStreaks(records, today = new Date()) {
-    const studyDates = [...records.values()]
+export function calculateStreaks(records, year, monthIndex, today = new Date()) {
+    const monthRecords = [...records.values()].filter(record =>
+        record.year === year && record.month === monthIndex + 1
+    );
+    const studyDates = monthRecords
         .filter(isStudyDay)
         .map(record => record.key)
         .sort();
@@ -117,16 +120,24 @@ export function calculateStreaks(records, today = new Date()) {
         previous = key;
     }
 
-    const todayKey = dateKey(today.getFullYear(), today.getMonth() + 1, today.getDate());
-    const yesterdayKey = previousDateKey(todayKey);
+    const sameMonth = year === today.getFullYear() && monthIndex === today.getMonth();
+    const futureMonth = year * 12 + monthIndex > today.getFullYear() * 12 + today.getMonth();
+    let cursor = null;
 
-    // If today has not been logged yet, yesterday can still anchor the active streak.
-    let cursor = isStudyDay(records.get(todayKey))
-        ? todayKey
-        : isStudyDay(records.get(yesterdayKey)) ? yesterdayKey : null;
+    if (sameMonth) {
+        const todayKey = dateKey(year, monthIndex + 1, today.getDate());
+        const yesterdayKey = previousDateKey(todayKey);
+        cursor = isStudyDay(records.get(todayKey))
+            ? todayKey
+            : isStudyDay(records.get(yesterdayKey)) ? yesterdayKey : null;
+    } else if (!futureMonth && studyDates.length) {
+        // For a completed month, show the streak ending on its last logged study day.
+        cursor = studyDates[studyDates.length - 1];
+    }
 
     let current = 0;
-    while (cursor && isStudyDay(records.get(cursor))) {
+    const monthPrefix = `${year}-${String(monthIndex + 1).padStart(2, "0")}`;
+    while (cursor && cursor.startsWith(monthPrefix) && isStudyDay(records.get(cursor))) {
         current += 1;
         cursor = previousDateKey(cursor);
     }
