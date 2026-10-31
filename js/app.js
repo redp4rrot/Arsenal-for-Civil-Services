@@ -12,6 +12,11 @@ import {
     loadDirectory
 } from "./browser.js";
 
+import {
+    loadStudyCalendar,
+    setupCalendarEvents
+} from "./calendar.js";
+
 
 /* =========================================================
    REFRESH
@@ -22,6 +27,8 @@ function refreshDashboard() {
     clearIssueCache();
 
     loadTrackingMonth();
+
+    loadStudyCalendar(true);
 
     loadDirectory();
 
@@ -93,9 +100,13 @@ export function initializeApp() {
 
     setupEvents();
 
+    setupCalendarEvents();
+
     updateMonthButtons();
 
     loadTrackingMonth();
+
+    loadStudyCalendar();
 
     loadDirectory();
 
