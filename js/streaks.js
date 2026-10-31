@@ -37,8 +37,20 @@ export function parseDailyRecords(issues = []) {
             if (!isValidDate(year, month, day) || !Number.isFinite(hours)) continue;
 
             const key = dateKey(year, month, day);
+            const blockStart = WORKLOG_RE.lastIndex;
+            const nextDate = /(?:^|\n)_\d{1,2}\/\d{1,2}\/\d{4}_?/g;
+            nextDate.lastIndex = blockStart;
+            const nextHeading = nextDate.exec(body);
+            const dayBlock = body.slice(blockStart, nextHeading ? nextHeading.index : body.length);
+            const log = dayBlock
+                .split(/\r?\n/)
+                .map(line => line.trim())
+                .filter(line => /^- \[xX ]\]/.test(line))
+                .map(line => line.replace(/^- \[xX ]\]\s*/, "").replace(/\x60/g, "").replace(/\s+/g, " ").trim())
+                .filter(Boolean);
+
             records.set(key, {
-                key, year, month, day, hours,
+                key, year, month, day, hours, log,
                 status: hours < 5 ? "low" : hours <= 6 ? "half" : "study"
             });
         }
