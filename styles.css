@@ -347,3 +347,37 @@ h1 { font-size:clamp(30px,3vw,36px); }
   .repository-section { padding:18px; }
   .file-tile { width:min(220px,100%); }
 }
+
+
+/* Calendar geometry tuned to the supplied Monk reference */
+@media (min-width:761px) {
+  .calendar-layout {
+    grid-template-columns:minmax(0,400px) minmax(280px,1fr);
+    column-gap:clamp(72px,8vw,112px);
+    align-items:start;
+  }
+  .calendar-main {
+    width:100%;
+    max-width:400px;
+  }
+  .calendar-detail {
+    width:100%;
+    max-width:380px;
+    min-height:100%;
+    padding:14px 18px;
+  }
+  .calendar-weekdays,.calendar-grid {
+    grid-template-columns:repeat(7,minmax(0,1fr));
+    gap:7px;
+  }
+  .calendar-day,.calendar-empty {
+    width:100%;
+    aspect-ratio:1 / 1;
+    min-height:0;
+  }
+}
+@media (max-width:760px) {
+  .calendar-layout { grid-template-columns:minmax(0,1fr); gap:18px; }
+  .calendar-main { max-width:480px; }
+  .calendar-detail { max-width:none; }
+}
