@@ -702,3 +702,44 @@ h1 {
     align-items: center;
     justify-content: center;
 }
+
+/* =========================================================
+   STUDY STREAK CALENDAR
+========================================================= */
+.study-calendar-section{padding:28px}
+.calendar-section-header{display:flex;align-items:flex-start;justify-content:space-between;gap:24px}
+.calendar-intro{margin:9px 0 0;color:var(--muted);font-size:14px}
+.streak-metrics{display:flex;gap:12px}
+.streak-metric{min-width:130px;padding:13px 17px;border:1px solid var(--border);border-radius:12px;background:rgba(17,31,44,.7);display:flex;flex-direction:column;gap:4px}
+.streak-value{color:var(--teal);font-size:28px;line-height:1;font-weight:800}
+.streak-caption{color:var(--muted);font-size:12px}
+.calendar-layout{display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:28px;margin-top:28px}
+.calendar-main{min-width:0}
+.calendar-toolbar{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:18px}
+.calendar-toolbar h2{margin:0;color:var(--text);font-size:19px}
+.calendar-weekdays,.calendar-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px}
+.calendar-weekdays{margin-bottom:8px;color:var(--muted);font-size:12px;text-align:center}
+.calendar-grid{grid-auto-rows:minmax(42px,1fr)}
+.calendar-day,.calendar-empty{min-width:0;aspect-ratio:1;border-radius:9px}
+.calendar-day{border:1px solid transparent;color:#f4f0e4;font-size:14px;font-weight:650;cursor:pointer;transition:border-color .15s,transform .15s}
+.calendar-day:hover{transform:translateY(-1px);border-color:rgba(255,255,255,.7)}
+.calendar-day.is-study{background:#268b69}
+.calendar-day.is-half{background:#d18a32;color:#17130c}
+.calendar-day.is-holiday{background:#bd5158}
+.calendar-day.is-empty{background:#263442;color:#9aabba}
+.calendar-day.is-selected{outline:2px solid var(--teal);outline-offset:2px}
+.calendar-day.is-today:not(.is-selected){border-color:#f1dfb5}
+.calendar-legend{display:flex;flex-wrap:wrap;gap:12px 18px;margin-top:20px;color:var(--muted);font-size:12px}
+.calendar-legend span{display:inline-flex;align-items:center;gap:7px}
+.legend-square{width:11px;height:11px;border-radius:3px;display:inline-block}
+.legend-square.study{background:#268b69}.legend-square.half{background:#d18a32}
+.legend-square.holiday{background:#bd5158}.legend-square.empty{background:#263442;border:1px solid #526575}
+.calendar-detail{align-self:stretch;padding:20px;border:1px solid var(--border);border-radius:13px;background:rgba(13,25,36,.72)}
+.detail-eyebrow{color:var(--teal);font-size:11px;font-weight:800;letter-spacing:1.2px}
+.calendar-detail h3{margin:12px 0;color:var(--text);font-size:18px;line-height:1.35}
+.selected-date-status{color:var(--muted);font-size:14px}
+.selected-date-hours{margin-top:18px;color:var(--teal);font-size:25px;font-weight:750}
+.detail-note{margin:20px 0 0;color:var(--muted);font-size:12px;line-height:1.6}
+.calendar-load-status{min-height:16px;margin:12px 0 0;color:var(--red);font-size:12px}
+@media(max-width:800px){.study-calendar-section{padding:20px}.calendar-section-header{flex-direction:column}.calendar-layout{grid-template-columns:1fr}.calendar-detail{min-height:150px}}
+@media(max-width:480px){.streak-metrics{width:100%}.streak-metric{flex:1;min-width:0}.calendar-weekdays,.calendar-grid{gap:5px}.calendar-day{border-radius:7px;font-size:12px}.calendar-legend{gap:10px}}
