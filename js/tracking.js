@@ -19,7 +19,8 @@ import {
     emptyProductivity,
     parseWorkingHours,
     getTodayWorkingHours,
-    getStatus} from "./productivity.js";
+    getStatus
+} from "./productivity.js";
 
 
 /* =========================================================
@@ -245,17 +246,7 @@ function renderNoData(
         "status-badge";
 
 
-    element("motivation-quote")
-        .textContent =
-        "Your next chapter starts here.";
-
-
-    element("motivation-message")
-        .textContent =
-        "Log your first day.";
-
-
-    updateDonut(0);
+updateDonut(0);
 
 
     updateTodayDisplay(
@@ -297,17 +288,7 @@ function renderError() {
         "status-badge below";
 
 
-    element("motivation-quote")
-        .textContent =
-        "Unable to load productivity data.";
-
-
-    element("motivation-message")
-        .textContent =
-        "Try refreshing in a moment.";
-
-
-    updateDonut(0);
+updateDonut(0);
 
 
     updateTodayDisplay(0);
