@@ -1,6 +1,8 @@
 import { getCachedIssues } from "./github.js";
 import { parseDailyRecords, calculateStreaks, getRecordForDate } from "./streaks.js";
 import { CONFIG } from "./config.js";
+import { marked } from "https://cdn.jsdelivr.net/npm/marked@15.0.12/lib/marked.esm.js";
+import DOMPurify from "https://cdn.jsdelivr.net/npm/dompurify@3.2.6/dist/purify.es.mjs";
 
 const element = id => document.getElementById(id);
 const MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
@@ -42,6 +44,30 @@ function describeRecord(record) {
     return "Study logged · " + Number(record.hours).toFixed(1) + " hours";
 }
 
+function installWorklogMarkdownStyles() {
+    if (document.getElementById("worklog-markdown-styles")) return;
+    const style = document.createElement("style");
+    style.id = "worklog-markdown-styles";
+    style.textContent = `
+        .selected-date-log { white-space:normal; overflow-wrap:anywhere; }
+        .selected-date-log > :first-child { margin-top:0; }
+        .selected-date-log > :last-child { margin-bottom:0; }
+        .selected-date-log p { margin:0 0 10px; line-height:1.75; }
+        .selected-date-log ul,.selected-date-log ol { margin:8px 0 12px; padding-left:24px; }
+        .selected-date-log li { margin:5px 0; padding-left:2px; line-height:1.7; }
+        .selected-date-log li input[type="checkbox"] { margin:0 8px 0 0; accent-color:var(--green); vertical-align:middle; }
+        .selected-date-log code { padding:2px 5px; border:1px solid var(--border); border-radius:4px; background:var(--panel-2); color:var(--text); font-family:ui-monospace,SFMono-Regular,Consolas,monospace; font-size:.9em; }
+        .selected-date-log pre { max-width:100%; overflow-x:auto; padding:12px; border:1px solid var(--border); border-radius:8px; background:var(--panel-2); }
+        .selected-date-log pre code { padding:0; border:0; background:transparent; }
+        .selected-date-log blockquote { margin:10px 0; padding:2px 0 2px 14px; border-left:3px solid var(--border); color:var(--muted); }
+        .selected-date-log a { color:var(--yellow); text-decoration:underline; text-underline-offset:2px; }
+        .selected-date-log hr { margin:14px 0; border:0; border-top:1px solid var(--border); }
+        .selected-date-log table { display:block; max-width:100%; overflow-x:auto; border-collapse:collapse; }
+        .selected-date-log th,.selected-date-log td { padding:6px 9px; border:1px solid var(--border); text-align:left; }
+    `;
+    document.head.append(style);
+}
+
 function renderSelectedDay() {
     const record = getRecordForDate(records, visibleYear, visibleMonth, selectedDay);
     element("selected-date-title").textContent = formatDate(visibleYear, visibleMonth, selectedDay);
@@ -51,7 +77,13 @@ function renderSelectedDay() {
     if (!panel) return;
     const log = typeof record?.log === "string" ? record.log.trim() : "";
     panel.hidden = log.length === 0;
-    panel.textContent = log;
+    if (log.length) {
+        installWorklogMarkdownStyles();
+        const markdownHtml = marked.parse(log, { gfm: true, breaks: true });
+        panel.innerHTML = DOMPurify.sanitize(markdownHtml);
+    } else {
+        panel.replaceChildren();
+    }
     panel.classList.toggle("has-log", log.length > 0);
 }
 
