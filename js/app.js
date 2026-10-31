@@ -106,7 +106,7 @@ function setupThemeToggle() {
         document.documentElement.dataset.theme = theme;
         const dark = theme === "dark";
         button.setAttribute("aria-label", dark ? "Switch to light theme" : "Switch to dark theme");
-        button.querySelector(".theme-toggle-icon").textContent = dark ? "☀" : "☾";
+        button.querySelector(".theme-toggle-icon").innerHTML = dark ? '<div class="icon-sun" aria-hidden="true"></div>' : '<div class="icon-moon" aria-hidden="true"></div>';
         button.querySelector(".theme-toggle-label").textContent = dark ? "Light mode" : "Dark mode";
     };
 
