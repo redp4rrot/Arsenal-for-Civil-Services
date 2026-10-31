@@ -101,6 +101,8 @@ export async function loadStudyCalendar(forceRefresh = false) {
     const sequence = ++loadSequence;
     const grid = element("calendar-grid");
     grid?.setAttribute("aria-busy", "true");
+    element("calendar-month-label").textContent = `${MONTHS[visibleMonth]} ${visibleYear}`;
+    element("calendar-load-status").textContent = "Loading study records from GitHub…";
 
     try {
         const issues = await getCachedIssues(forceRefresh);
@@ -110,12 +112,12 @@ export async function loadStudyCalendar(forceRefresh = false) {
         const streaks = calculateStreaks(records);
         element("current-streak").textContent = String(streaks.current);
         element("longest-streak").textContent = String(streaks.longest);
-        element("calendar-load-status").textContent = "";
+        element("calendar-load-status").textContent = `Loaded ${records.size} dated records.`;
         renderCalendar();
     } catch (error) {
         console.error("Study calendar failed to load:", error);
         const status = element("calendar-load-status");
-        if (status) status.textContent = "Unable to load study calendar. Please refresh.";
+        if (status) status.textContent = `Unable to load study calendar: ${error.message}`;
     } finally {
         if (sequence === loadSequence) grid?.removeAttribute("aria-busy");
     }
