@@ -39,7 +39,7 @@ export function parseDailyRecords(issues = []) {
             const key = dateKey(year, month, day);
             records.set(key, {
                 key, year, month, day, hours,
-                status: hours >= 5 && hours <= 6 ? "half" : "study"
+                status: hours < 5 ? "low" : hours <= 6 ? "half" : "study"
             });
         }
 
