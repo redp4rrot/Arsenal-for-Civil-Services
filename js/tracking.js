@@ -444,11 +444,7 @@ export function renderTracking(
         getStatus(average);
 
 
-    const motivation =
-        getMotivation(average);
-
-
-    /*
+/*
      * Average
      */
 
@@ -487,21 +483,7 @@ export function renderTracking(
         `status-badge ${status.className}`;
 
 
-    /*
-     * Motivation
-     */
-
-    element("motivation-quote")
-        .textContent =
-        motivation.quote;
-
-
-    element("motivation-message")
-        .textContent =
-        motivation.message;
-
-
-    /*
+/*
      * Monthly donut
      */
 
