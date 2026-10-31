@@ -384,6 +384,7 @@
                             <button id="calendar-next" class="month-btn" type="button" aria-label="Next month">→</button>
                         </div>
                     </div>
+                    <div id="calendar-festivals" class="calendar-festivals" hidden></div>
                     <div class="calendar-weekdays" aria-hidden="true">
                         <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
                     </div>
@@ -391,7 +392,7 @@
                     <div class="calendar-legend">
                         <span><i class="legend-square study"></i>Study logged</span>
                         <span><i class="legend-square half"></i>Half day (5–6 hrs)</span>
-                        <span><i class="legend-square holiday"></i>Full-day holiday</span>
+                        <span><i class="legend-square holiday"></i>Holiday · no study entry</span>
                         <span><i class="legend-square empty"></i>No entry</span>
                     </div>
                     <p id="calendar-load-status" class="calendar-load-status" role="status"></p>
@@ -401,7 +402,7 @@
                     <h3 id="selected-date-title">Select a day</h3>
                     <div id="selected-date-status" class="selected-date-status">—</div>
                     <div id="selected-date-hours" class="selected-date-hours">—</div>
-                    <p class="detail-note">Only explicitly recorded holidays are marked as holidays. Missing worklog entries remain unclassified.</p>
+                    <p class="detail-note">Past dates without a study-hours entry are treated as holidays. Future dates remain unclassified.</p>
                 </aside>
             </div>
         </section>
