@@ -558,3 +558,17 @@ h1 {
   #file-list { grid-template-columns:minmax(0,1fr); }
   .file-tile { min-height:76px; }
 }
+
+
+/* Preserve the complete original worklog block in the selected-day panel. */
+.selected-date-log {
+    margin-top: 18px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+    color: var(--text);
+    font-size: 13px;
+    line-height: 1.75;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+.selected-date-log[hidden] { display: none; }
