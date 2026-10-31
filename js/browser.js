@@ -206,17 +206,11 @@ function createFileTile(item) {
 
 
         tile.innerHTML = `
-
             <div class="file-icon folder-icon" aria-hidden="true"></div>
-
-            <div class="file-name">
-                ${decodeURIComponent(item.name)}
+            <div class="file-info">
+                <div class="file-name">${decodeURIComponent(item.name)}</div>
+                <div class="file-meta">Folder</div>
             </div>
-
-            <div class="file-meta">
-                Folder
-            </div>
-
         `;
 
 
@@ -247,19 +241,11 @@ function createFileTile(item) {
 
 
     tile.innerHTML = `
-
-        <div class="file-icon">
-            ${icon}
+        <div class="file-icon file-type-icon">${icon}</div>
+        <div class="file-info">
+            <div class="file-name">${decodeURIComponent(item.name)}</div>
+            <div class="file-meta">${(item.size / 1024).toFixed(1)} KB</div>
         </div>
-
-        <div class="file-name">
-            ${decodeURIComponent(item.name)}
-        </div>
-
-        <div class="file-meta">
-            ${(item.size / 1024).toFixed(1)} KB
-        </div>
-
     `;
 
 
@@ -366,19 +352,11 @@ export async function loadDirectory() {
 
 
             tile.innerHTML = `
-
-                <div class="file-icon">
-                    ←
+                <div class="file-icon back-icon" aria-hidden="true">←</div>
+                <div class="file-info">
+                    <div class="file-name">Go Back</div>
+                    <div class="file-meta">Parent folder</div>
                 </div>
-
-                <div class="file-name">
-                    Go Back
-                </div>
-
-                <div class="file-meta">
-                    Parent folder
-                </div>
-
             `;
 
 

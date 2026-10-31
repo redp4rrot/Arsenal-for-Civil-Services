@@ -471,3 +471,90 @@ h1 {
   .calendar-detail h3 { font-size:20px; }
   .festival-item { column-gap:10px; }
 }
+
+
+/* Repository browser: spacious, balanced file cards */
+.repository-section {
+  display:block;
+  padding:24px 28px 28px;
+}
+.repository-header { padding:0; }
+#file-list {
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(min(100%,270px),1fr));
+  align-items:stretch;
+  justify-content:stretch;
+  gap:14px;
+  margin-top:22px;
+  min-width:0;
+}
+.file-tile {
+  display:flex;
+  flex-direction:row;
+  align-items:center;
+  justify-content:flex-start;
+  gap:14px;
+  width:100%;
+  min-width:0;
+  min-height:92px;
+  padding:16px 18px;
+  border:1px solid var(--border);
+  border-radius:13px;
+  background:var(--panel-2);
+}
+.file-tile:hover {
+  border-color:color-mix(in srgb,var(--muted) 65%,var(--border));
+  background:color-mix(in srgb,var(--panel-2) 88%,var(--muted));
+}
+.file-icon {
+  flex:0 0 44px;
+  width:44px;
+  height:44px;
+  font-size:12px;
+  border:1px solid #4a4031;
+  border-radius:10px;
+  background:rgba(31,28,23,.75);
+}
+.file-icon.folder-icon::before { width:25px; height:16px; left:8px; top:16px; }
+.file-icon.folder-icon::after { width:12px; left:9px; top:11px; }
+.file-info {
+  display:flex;
+  flex:1 1 auto;
+  flex-direction:column;
+  align-items:flex-start;
+  justify-content:center;
+  gap:4px;
+  min-width:0;
+}
+.file-name {
+  display:block;
+  width:100%;
+  min-width:0;
+  color:var(--text);
+  font-size:15px;
+  line-height:1.45;
+  font-weight:650;
+  white-space:normal;
+  overflow-wrap:anywhere;
+  word-break:normal;
+  hyphens:auto;
+}
+.file-meta {
+  display:block;
+  max-width:100%;
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.45;
+  white-space:nowrap;
+}
+.back-tile { border-style:dashed; }
+.back-icon { font-size:22px; }
+@media(max-width:760px) {
+  .repository-section { padding:20px 18px 22px; }
+  #file-list { grid-template-columns:repeat(auto-fill,minmax(min(100%,235px),1fr)); gap:11px; }
+  .file-tile { min-height:82px; padding:13px 14px; }
+}
+@media(max-width:480px) {
+  #file-list { grid-template-columns:minmax(0,1fr); }
+  .file-tile { min-height:76px; }
+}
