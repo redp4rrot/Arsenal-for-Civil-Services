@@ -941,3 +941,59 @@ h1 { font-size: clamp(28px, 3vw, 36px); letter-spacing: -1.1px; font-weight: 650
     .tracking-content { grid-template-columns:1fr !important; gap:24px !important; }
     .tracking-divider { display:none; }
 }
+
+
+/* Final polish: neutral repository tiles, compact controls, clearer study bands */
+.file-tile {
+    background: var(--panel-2) !important;
+    border-color: var(--border);
+    box-shadow: none;
+}
+.file-tile:hover { background: var(--panel) !important; border-color: var(--teal); }
+.file-icon.folder-icon {
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    width: 38px;
+    height: 34px;
+    margin-bottom: 16px;
+}
+.folder-icon::before {
+    width: 27px; height: 18px; left: 5px; top: 12px;
+    border: 1.5px solid var(--muted); border-radius: 3px;
+}
+.folder-icon::after {
+    width: 12px; height: 5px; left: 6px; top: 8px;
+    border: 1.5px solid var(--muted); border-bottom: 0;
+    border-radius: 2px 2px 0 0;
+}
+.month-navigation { align-items:center; gap:7px; }
+.month-btn {
+    width:36px !important; height:34px !important;
+    min-width:36px; padding:0 !important;
+    display:inline-flex; align-items:center; justify-content:center;
+    font-size:17px !important; line-height:1 !important;
+    border-radius:8px; font-weight:500;
+}
+.calendar-day.is-low { background:#e7d8d1; color:#68483f; border-color:#d9c4ba; }
+:root[data-theme="dark"] .calendar-day.is-low { background:#493b36; color:#e4c9bd; border-color:#5c4941; }
+.legend-square.low { background:#b98776; }
+:root[data-theme="dark"] .legend-square.low { background:#b98776; }
+.theme-toggle-icon { width:16px; height:16px; display:inline-flex; align-items:center; justify-content:center; }
+.icon-sun, .icon-moon { display:block; width:16px; height:16px; position:relative; }
+.icon-sun::before {
+    content:""; position:absolute; width:7px; height:7px; left:4.5px; top:4.5px;
+    border:1.5px solid currentColor; border-radius:50%;
+    box-shadow:0 -5px 0 -2.5px currentColor, 0 5px 0 -2.5px currentColor,
+      5px 0 0 -2.5px currentColor, -5px 0 0 -2.5px currentColor,
+      3.6px 3.6px 0 -2.5px currentColor, -3.6px 3.6px 0 -2.5px currentColor,
+      3.6px -3.6px 0 -2.5px currentColor, -3.6px -3.6px 0 -2.5px currentColor;
+}
+.icon-moon::before {
+    content:""; position:absolute; width:11px; height:11px; left:2px; top:2px;
+    border:1.5px solid currentColor; border-radius:50%;
+}
+.icon-moon::after {
+    content:""; position:absolute; width:10px; height:10px; left:7px; top:0;
+    border-radius:50%; background:var(--panel);
+}
