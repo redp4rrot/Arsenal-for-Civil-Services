@@ -18,111 +18,52 @@ const API_BASE =
 
 export async function fetchIssues() {
 
-    const url =
-        `${API_BASE}/issues` +
-        `?state=all` +
-        `&per_page=100` +
-        `&page=1`;
-
-
-    const controller =
-        new AbortController();
-
-
-    /*
-     * Do not let the dashboard remain on
-     * "Loading..." forever if GitHub does not respond.
-     */
-
-    const timeout =
-        setTimeout(
-            () => controller.abort(),
-            10000
-        );
-
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 15000);
 
     try {
+        const allIssues = [];
 
-        const response =
-            await fetch(
-                url,
-                {
-                    cache: "no-store",
-                    signal: controller.signal,
-                    headers: {
-                        Accept:
-                            "application/vnd.github+json"
-                    }
+        for (let page = 1; ; page++) {
+            const url =
+                `${API_BASE}/issues` +
+                `?state=all` +
+                `&per_page=100` +
+                `&page=${page}`;
+
+            const response = await fetch(url, {
+                cache: "no-store",
+                signal: controller.signal,
+                headers: {
+                    Accept: "application/vnd.github+json"
                 }
-            );
+            });
 
-
-        if (!response.ok) {
-
-            if (response.status === 403) {
-
-                throw new Error(
-                    "GitHub API rate limit exceeded. Try again later."
-                );
-
+            if (!response.ok) {
+                if (response.status === 403) {
+                    throw new Error("GitHub API rate limit exceeded. Try again later.");
+                }
+                throw new Error(`GitHub API returned ${response.status}`);
             }
 
+            const data = await response.json();
+            if (!Array.isArray(data)) {
+                throw new Error("Invalid GitHub API response");
+            }
 
-            throw new Error(
-                `GitHub API returned ${response.status}`
-            );
-
+            allIssues.push(...data.filter(issue => !issue.pull_request));
+            if (data.length < 100) break;
         }
 
-
-        const data =
-            await response.json();
-
-
-        if (!Array.isArray(data)) {
-
-            throw new Error(
-                "Invalid GitHub API response"
-            );
-
+        return allIssues;
+    } catch (error) {
+        if (error.name === "AbortError") {
+            throw new Error("GitHub API request timed out.");
         }
-
-
-        /*
-         * GitHub's Issues API also returns
-         * pull requests.
-         */
-
-        return data.filter(
-            issue => !issue.pull_request
-        );
-
-    }
-
-    catch (error) {
-
-        if (
-            error.name ===
-            "AbortError"
-        ) {
-
-            throw new Error(
-                "GitHub API request timed out."
-            );
-
-        }
-
-
         throw error;
-
-    }
-
-    finally {
-
+    } finally {
         clearTimeout(timeout);
-
     }
-
 }
 
 
