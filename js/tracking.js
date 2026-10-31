@@ -65,14 +65,14 @@ function updateDonut(
         safeHours <
         CONFIG.productivity.targetHours
     ) {
-        progressColor = "#ff6b73";
+        progressColor = "var(--red)";
     } else if (
         safeHours <
         CONFIG.productivity.excellentHours
     ) {
-        progressColor = "#f5b72f";
+        progressColor = "var(--yellow)";
     } else {
-        progressColor = "#6ed0c5";
+        progressColor = "var(--green)";
     }
 
     const degrees =
@@ -82,7 +82,7 @@ function updateDonut(
         conic-gradient(
             from -90deg,
             ${progressColor} 0deg ${degrees}deg,
-            #344152 ${degrees}deg 360deg
+            #45423b ${degrees}deg 360deg
         )
     `;
 
@@ -173,7 +173,7 @@ function updateTodayDonut(hours) {
     donut.style.background = `
         conic-gradient(
             from -90deg,
-            var(--teal) 0deg ${degrees}deg,
+            var(--green) 0deg ${degrees}deg,
             var(--ring) ${degrees}deg 360deg
         )
     `;

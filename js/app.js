@@ -15,7 +15,7 @@ import {
 import {
     loadStudyCalendar,
     setupCalendarEvents
-} from "./calendar.js?v=zen-2";
+} from "./calendar.js?v=monk-1";
 
 
 /* =========================================================
@@ -100,14 +100,15 @@ function setupThemeToggle() {
     const button = document.getElementById("theme-toggle");
     if (!button) return;
     const stored = (() => { try { return localStorage.getItem("arsenal-theme"); } catch { return null; } })();
-    const initial = stored === "dark" || stored === "light" ? stored : "light";
+    const initial = stored === "light" ? "light" : "dark";
 
     const apply = theme => {
         document.documentElement.dataset.theme = theme;
         const dark = theme === "dark";
         button.setAttribute("aria-label", dark ? "Switch to light theme" : "Switch to dark theme");
-        button.querySelector(".theme-toggle-icon").innerHTML = dark ? '<div class="icon-sun" aria-hidden="true"></div>' : '<div class="icon-moon" aria-hidden="true"></div>';
-        button.querySelector(".theme-toggle-label").textContent = dark ? "Light mode" : "Dark mode";
+        button.setAttribute("title", dark ? "Switch to light theme" : "Switch to dark theme");
+        button.classList.toggle("is-dark", dark);
+        button.classList.toggle("is-light", !dark);
     };
 
     apply(initial);

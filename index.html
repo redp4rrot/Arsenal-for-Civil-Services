@@ -11,14 +11,12 @@
 
     <title>Arsenal for Civil Services</title>
 
-    <link
-        rel="stylesheet"
-        href="styles.css?v=zen-3"
-    >
+    <link rel="stylesheet" href="styles.css?v=monk-1">
 </head>
 
 <body>
 
+    <div class="landscape" aria-hidden="true"><div class="moon"></div><div class="ridge ridge-back"></div><div class="ridge ridge-mid"></div><div class="ridge ridge-front"></div></div>
     <div class="app">
 
         <!-- =====================================================
@@ -58,8 +56,7 @@
                     aria-label="Switch to dark theme"
                     title="Switch theme"
                 >
-                    <span class="theme-toggle-icon" aria-hidden="true"><div class="icon-moon"></div></span>
-                    <span class="theme-toggle-label">Dark mode</span>
+                    <span class="theme-toggle-icon" aria-hidden="true"><span class="theme-sun"><div class="icon-sun"></div></span><span class="theme-moon"><div class="icon-moon"></div></span></span>
                 </button>
                 <button
                     id="refresh-btn"
@@ -167,144 +164,35 @@
                      TRACKING CONTENT
                 ================================================== -->
 
-<div class="tracking-content">
-
-    <!-- =====================================================
-         MONTHLY AVERAGE
-    ====================================================== -->
-
+<div class="tracking-content monk-tracking-content">
     <div class="monthly-panel">
-
         <div class="monthly-donut-column">
-
-            <div class="panel-heading">
-                Monthly average
-            </div>
-
+            <div class="panel-heading">Monthly average</div>
             <div class="donut-wrapper">
-
-                <div
-                    id="donut"
-                    class="donut below"
-                >
-
+                <div id="donut" class="donut below">
                     <div class="donut-center">
-
-                        <div
-                            id="average-hours"
-                            class="average-hours"
-                        >
-                            …
-                        </div>
-
-                        <div class="hours-label">
-                            hrs/day
-                        </div>
-
+                        <div id="average-hours" class="average-hours">…</div>
+                        <div class="hours-label">hrs/day</div>
                     </div>
-
                 </div>
-
             </div>
-
         </div>
-
-
         <div class="monthly-legend">
-
-            <div class="target-row">
-
-<span>
-                    Target:
-                </span>
-
-                <strong>
-                    8 hrs/day
-                </strong>
-
-            </div>
-
-
+            <div class="target-row"><span>Target:</span><strong>8 hrs/day</strong></div>
             <div class="target-line"></div>
-
-            <div
-                id="status-badge"
-                class="status-badge"
-            >
-                Loading...
-            </div>
-
+            <div id="status-badge" class="status-badge">Loading...</div>
         </div>
-
     </div>
-
-
-    <!-- =====================================================
-         DIVIDER
-    ====================================================== -->
-
     <div class="tracking-divider"></div>
-
-
-    <!-- =====================================================
-         TODAY
-    ====================================================== -->
-
     <div class="today-panel">
-
         <div class="today-donut-column">
-
-            <div class="panel-heading">
-                Today's working hours
-            </div>
-
-
-            <div class="donut-wrapper">
-
-                <div
-                    id="today-donut"
-                    class="donut no-entry"
-                >
-
-                    <div class="donut-center">
-
-                        <div
-                            id="today-hours"
-                            class="average-hours"
-                        >
-                            0.00
-                        </div>
-
-                        <div class="hours-label">
-                            hrs
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <div
-                id="today-status"
-                class="today-status"
-            >
-                No entry today
-            </div>
-
-
-            <div
-                id="today-date"
-                class="today-date"
-            >
-<span>Loading...</span>
-            </div>
-
+            <div class="panel-heading">Today's working hours</div>
+            <div class="today-big-number"><span id="today-hours">0.00</span><small>hrs</small></div>
+            <div id="today-status" class="today-status">No entry today</div>
+            <div id="today-date" class="today-date"><span>Loading...</span></div>
+            <div id="today-donut" class="today-meter-accessory" aria-hidden="true"></div>
         </div>
     </div>
-
-
 </div>
 
 
@@ -355,8 +243,8 @@
                     <div class="streak-metric"><span class="streak-value" id="longest-streak">0</span><span class="streak-caption">Longest streak</span></div>
                 </div>
             </div>
-            <div class="calendar-layout">
-                <div class="calendar-main">
+            <div class="calendar-layout monk-calendar-layout">
+                <div class="calendar-main monk-calendar-main">
                     <div class="calendar-toolbar">
                         <h2 id="calendar-month-label">Loading...</h2>
                         <div class="month-navigation">
@@ -378,7 +266,7 @@
                     </div>
                     <p id="calendar-load-status" class="calendar-load-status" role="status"></p>
                 </div>
-                <aside class="calendar-detail" aria-live="polite">
+                <aside class="calendar-detail monk-calendar-detail" aria-live="polite">
                     <div class="detail-eyebrow">SELECTED DAY</div>
                     <h3 id="selected-date-title">Select a day</h3>
                     <div id="selected-date-status" class="selected-date-status">—</div>
@@ -450,7 +338,7 @@
 
     <script
         type="module"
-        src="dashboard.js?v=zen-3"
+        src="dashboard.js?v=monk-1"
     ></script>
 
 </body>
