@@ -15,7 +15,7 @@ import {
 import {
     loadStudyCalendar,
     setupCalendarEvents
-} from "./calendar.js?v=calendar-3";
+} from "./calendar.js?v=zen-1";
 
 
 /* =========================================================
@@ -96,7 +96,31 @@ function setupEvents() {
    INITIALIZE
 ========================================================= */
 
+function setupThemeToggle() {
+    const button = document.getElementById("theme-toggle");
+    if (!button) return;
+    const stored = (() => { try { return localStorage.getItem("arsenal-theme"); } catch { return null; } })();
+    const initial = stored === "dark" || stored === "light" ? stored : "light";
+
+    const apply = theme => {
+        document.documentElement.dataset.theme = theme;
+        const dark = theme === "dark";
+        button.setAttribute("aria-label", dark ? "Switch to light theme" : "Switch to dark theme");
+        button.querySelector(".theme-toggle-icon").textContent = dark ? "☀" : "☾";
+        button.querySelector(".theme-toggle-label").textContent = dark ? "Light mode" : "Dark mode";
+    };
+
+    apply(initial);
+    button.addEventListener("click", () => {
+        const next = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+        apply(next);
+        try { localStorage.setItem("arsenal-theme", next); } catch { /* Theme still works for this session. */ }
+    });
+}
+
 export function initializeApp() {
+
+    setupThemeToggle();
 
     setupEvents();
 
