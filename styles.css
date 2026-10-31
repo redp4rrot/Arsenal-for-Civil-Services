@@ -743,3 +743,27 @@ h1 {
 .calendar-load-status{min-height:16px;margin:12px 0 0;color:var(--red);font-size:12px}
 @media(max-width:800px){.study-calendar-section{padding:20px}.calendar-section-header{flex-direction:column}.calendar-layout{grid-template-columns:1fr}.calendar-detail{min-height:150px}}
 @media(max-width:480px){.streak-metrics{width:100%}.streak-metric{flex:1;min-width:0}.calendar-weekdays,.calendar-grid{gap:5px}.calendar-day{border-radius:7px;font-size:12px}.calendar-legend{gap:10px}}
+
+/* Study calendar refinements */
+.calendar-main { max-width: 660px; }
+.calendar-grid { grid-auto-rows: 74px; gap: 7px; }
+.calendar-day,.calendar-empty { width: 100%; height: 74px; aspect-ratio: auto; }
+.calendar-festivals { margin: 0 0 18px; padding: 13px 15px; border: 1px solid var(--border); border-radius: 11px; background: rgba(17,31,44,.55); }
+.calendar-festivals[hidden] { display: none; }
+.calendar-festivals h3 { margin: 0 0 10px; color: var(--teal); font-size: 13px; letter-spacing: .5px; text-transform: uppercase; }
+.festival-list { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 8px 14px; }
+.festival-item { display: flex; align-items: baseline; gap: 9px; min-width: 0; color: var(--text); font-size: 12px; }
+.festival-item strong { flex: 0 0 23px; color: var(--teal); font-size: 13px; }
+.festival-item span { min-width: 0; }
+.festival-note { margin: 10px 0 0; color: var(--muted); font-size: 10px; }
+.calendar-day.is-holiday { background: #bd5158; color: #fff; }
+@media(max-width:800px) {
+    .calendar-main { max-width: none; }
+    .calendar-grid { grid-auto-rows: 62px; }
+    .calendar-day,.calendar-empty { height: 62px; }
+}
+@media(max-width:480px) {
+    .calendar-grid { grid-auto-rows: 42px; }
+    .calendar-day,.calendar-empty { height: 42px; }
+    .festival-list { grid-template-columns: 1fr; }
+}
