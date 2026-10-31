@@ -36,9 +36,9 @@ function formatDate(year, month, day) {
 }
 
 function describeRecord(record) {
-    if (!record) return "No entry recorded";
-    if (record.status === "half") return "Half day · " + record.hours.toFixed(1) + " hours";
-    return "Study logged · " + record.hours.toFixed(1) + " hours";
+    if (!record || record.hours == null || !Number.isFinite(Number(record.hours))) return "No study-hours entry";
+    if (record.status === "half") return "Half day · " + Number(record.hours).toFixed(1) + " hours";
+    return "Study logged · " + Number(record.hours).toFixed(1) + " hours";
 }
 
 function renderSelectedDay() {
@@ -53,8 +53,8 @@ function renderFestivals() {
     if (!panel) return;
     const key = String(visibleYear) + "-" + String(visibleMonth + 1).padStart(2, "0");
     const today = new Date();
-    const isFutureMonth = monthIndex(visibleYear, visibleMonth) > monthIndex(today.getFullYear(), today.getMonth());
-    const events = (FESTIVALS[key] || []).filter(event => isFutureMonth || event.day >= today.getDate());
+    const isCurrentMonth = visibleYear === today.getFullYear() && visibleMonth === today.getMonth();
+    const events = isCurrentMonth ? (FESTIVALS[key] || []).filter(event => event.day >= today.getDate()) : [];
 
     panel.replaceChildren();
     panel.hidden = events.length === 0;
