@@ -15,7 +15,7 @@ import {
 import {
     loadStudyCalendar,
     setupCalendarEvents
-} from "./calendar.js?v=monk-1";
+} from "./calendar.js?v=monk-2";
 
 
 /* =========================================================

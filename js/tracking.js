@@ -65,12 +65,12 @@ function updateDonut(
         safeHours <
         CONFIG.productivity.targetHours
     ) {
-        progressColor = "var(--red)";
+        progressColor = "var(--green)";
     } else if (
         safeHours <
         CONFIG.productivity.excellentHours
     ) {
-        progressColor = "var(--yellow)";
+        progressColor = "var(--green)";
     } else {
         progressColor = "var(--green)";
     }
@@ -82,7 +82,7 @@ function updateDonut(
         conic-gradient(
             from -90deg,
             ${progressColor} 0deg ${degrees}deg,
-            #45423b ${degrees}deg 360deg
+            var(--ring) ${degrees}deg 360deg
         )
     `;
 
