@@ -1,7 +1,6 @@
 import { CONFIG } from "./config.js";
 
 const WORKLOG_RE = /_(\d{1,2})\/(\d{1,2})\/(\d{4})_\s+\*\*(\d+(?:\.\d+)?)\*\*/g;
-const DATE_RE = /_?(\d{1,2})\/(\d{1,2})\/(\d{4})_?/;
 
 const dateKey = (year, month, day) =>
     `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
@@ -14,51 +13,49 @@ function isValidDate(year, month, day) {
 }
 
 /**
- * Convert monthly GitHub issue bodies into one record per calendar date.
- * Only dates with recorded study hours become study records; the calendar
- * classifies all elapsed dates without a record as holidays.
+ * Parse each dated worklog heading and retain every character beneath it
+ * until the next dated heading. This deliberately includes checklist items,
+ * free-form notes, day-off remarks and other markdown text.
  */
 export function parseDailyRecords(issues = []) {
     const records = new Map();
+    const headingPattern = /_(\d{1,2})\/(\d{1,2})\/(\d{4})_\s+\*\*(\d+(?:\.\d+)?)\*\*/g;
+    const nextHeadingPattern = /^_(\d{1,2})\/(\d{1,2})\/(\d{4})_\s+\*\*(\d+(?:\.\d+)?)\*\*/gm;
 
     for (const issue of issues) {
         if (!issue || issue.pull_request || typeof issue.body !== "string") continue;
 
         const body = issue.body;
+        const headings = [];
         let match;
-        WORKLOG_RE.lastIndex = 0;
+        headingPattern.lastIndex = 0;
+        while ((match = headingPattern.exec(body)) !== null) {
+            headings.push({
+                index: match.index,
+                end: headingPattern.lastIndex,
+                day: Number(match[1]),
+                month: Number(match[2]),
+                year: Number(match[3]),
+                hours: Number(match[4])
+            });
+        }
 
-        while ((match = WORKLOG_RE.exec(body)) !== null) {
-            const day = Number(match[1]);
-            const month = Number(match[2]);
-            const year = Number(match[3]);
-            const hours = Number(match[4]);
-
+        for (let i = 0; i < headings.length; i++) {
+            const heading = headings[i];
+            const { year, month, day, hours } = heading;
             if (!isValidDate(year, month, day) || !Number.isFinite(hours)) continue;
 
+            const blockEnd = i + 1 < headings.length ? headings[i + 1].index : body.length;
+            const log = body.slice(heading.end, blockEnd).trim();
             const key = dateKey(year, month, day);
-            const blockStart = WORKLOG_RE.lastIndex;
-            const nextDate = /(?:^|\n)_\d{1,2}\/\d{1,2}\/\d{4}_?/g;
-            nextDate.lastIndex = blockStart;
-            const nextHeading = nextDate.exec(body);
-            const dayBlock = body.slice(blockStart, nextHeading ? nextHeading.index : body.length);
-            const log = dayBlock
-                .split(/\r?\n/)
-                .map(line => line.trim())
-                .filter(line => /^- \[xX ]\]/.test(line))
-                .map(line => line.replace(/^- \[xX ]\]\s*/, "").replace(/\x60/g, "").replace(/\s+/g, " ").trim())
-                .filter(Boolean);
 
             records.set(key, {
                 key, year, month, day, hours, log,
                 status: hours < 5 ? "low" : hours <= 6 ? "half" : "study"
             });
         }
-
-
     }
 
-    // Exclude anything before the configured calendar start.
     const firstMonth = CONFIG.productivity.startYear * 12 + CONFIG.productivity.startMonth;
     for (const [key, record] of records) {
         if (record.year * 12 + record.month - 1 < firstMonth) records.delete(key);
