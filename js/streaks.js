@@ -56,7 +56,7 @@ export function parseDailyRecords(issues = []) {
 }
 
 function isStudyDay(record) {
-    return record?.status === "study" || record?.status === "half";
+    return record?.status === "study" || record?.status === "half" || record?.status === "low";
 }
 
 function previousDateKey(key) {
