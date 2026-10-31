@@ -572,3 +572,40 @@ h1 {
     overflow-wrap: anywhere;
 }
 .selected-date-log[hidden] { display: none; }
+
+
+/* Monthly average trend in the right-hand Live Tracking pane */
+.average-trend-panel {
+  min-width:0; width:100%; align-self:stretch;
+  display:flex; flex-direction:column; justify-content:center; gap:12px;
+}
+.average-trend-panel .panel-heading { font-size:15px; font-weight:650; }
+.average-trend-chart { width:100%; min-width:0; }
+.average-trend-svg { display:block; width:100%; height:auto; overflow:visible; }
+.trend-gridline { stroke:var(--border); stroke-width:1; stroke-dasharray:3 5; }
+.trend-axis-label,.trend-month-label { fill:var(--muted); font-family:inherit; font-size:12px; }
+.trend-axis-title { fill:var(--muted); font-family:inherit; font-size:12px; letter-spacing:.4px; }
+.trend-line { fill:none; stroke:var(--green); stroke-width:3; stroke-linecap:round; stroke-linejoin:round; }
+.trend-point { fill:var(--green); stroke:var(--panel); stroke-width:2; }
+.trend-value { fill:var(--text); font-family:inherit; font-size:11px; font-weight:650; }
+.trend-projection { stroke:var(--yellow); stroke-width:2; stroke-dasharray:5 6; opacity:.9; }
+.trend-live-halo { fill:var(--yellow); opacity:.2; animation:trend-pulse 1.8s ease-out infinite; transform-box:fill-box; transform-origin:center; }
+.trend-live-point { fill:var(--yellow); stroke:var(--panel); stroke-width:2; }
+.trend-live-value { fill:var(--yellow); font-family:inherit; font-size:12px; font-weight:750; }
+.trend-month-label.is-live { fill:var(--yellow); font-weight:750; }
+.trend-caption { display:flex; align-items:center; flex-wrap:wrap; gap:7px; color:var(--muted); font-size:11px; line-height:1.5; }
+.trend-key { width:17px; height:3px; display:inline-block; border-radius:3px; }
+.trend-key-solid { background:var(--green); }
+.trend-key-live { margin-left:8px; background:var(--yellow); }
+.trend-loading { padding:60px 0; color:var(--muted); text-align:center; }
+.today-legacy-values { display:none; }
+@keyframes trend-pulse {
+  0% { opacity:.35; transform:scale(.65); }
+  70% { opacity:.12; transform:scale(1.8); }
+  100% { opacity:0; transform:scale(2.1); }
+}
+@media(max-width:760px) {
+  .average-trend-panel { min-height:250px; }
+  .average-trend-svg { max-height:270px; }
+}
+@media(prefers-reduced-motion:reduce) { .trend-live-halo { animation:none; } }

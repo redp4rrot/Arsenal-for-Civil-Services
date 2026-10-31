@@ -6,7 +6,7 @@ import {
     loadTrackingMonth,
     moveMonth,
     updateMonthButtons
-} from "./tracking.js";
+} from "./tracking.js?v=trend-1";
 
 import {
     loadDirectory

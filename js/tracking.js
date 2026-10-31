@@ -297,6 +297,106 @@ updateDonut(0);
 
 
 /* =========================================================
+   MONTHLY AVERAGE TREND
+========================================================= */
+
+function renderAverageTrend(issues, currentDate = new Date()) {
+    const container = element("average-trend-chart");
+    if (!container) return;
+
+    const startYear = CONFIG.productivity.startYear;
+    const startMonth = CONFIG.productivity.startMonth;
+    const currentIndex = currentDate.getFullYear() * 12 + currentDate.getMonth();
+    const startIndex = startYear * 12 + startMonth;
+    const months = [];
+
+    for (let index = startIndex; index <= currentIndex; index++) {
+        const year = Math.floor(index / 12);
+        const month = index % 12;
+        const issue = findIssueForMonth(issues, getIssueTitle(year, month));
+        const stats = issue ? parseWorkingHours(issue.body, year, month) : emptyProductivity();
+        months.push({
+            year, month,
+            label: new Intl.DateTimeFormat("en", { month: "short" }).format(new Date(year, month, 1)),
+            average: stats.daysLogged ? stats.average : null,
+            isLive: index === currentIndex
+        });
+    }
+
+    const completed = months.filter(item => !item.isLive && item.average !== null);
+    const live = months[months.length - 1];
+    const maxValue = Math.max(8, ...months.map(item => item.average ?? 0));
+    const yMax = Math.ceil(maxValue / 2) * 2;
+    const width = 620, height = 280;
+    const left = 46, right = 22, top = 24, bottom = 48;
+    const plotWidth = width - left - right;
+    const plotHeight = height - top - bottom;
+    const x = index => left + (months.length <= 1 ? plotWidth / 2 : index * plotWidth / (months.length - 1));
+    const y = value => top + plotHeight - (value / yMax) * plotHeight;
+    const svgNS = "http://www.w3.org/2000/svg";
+    const make = (tag, attrs = {}) => {
+        const node = document.createElementNS(svgNS, tag);
+        for (const [key, value] of Object.entries(attrs)) node.setAttribute(key, String(value));
+        return node;
+    };
+    const svg = make("svg", { viewBox: `0 0 ${width} ${height}`, class: "average-trend-svg", role: "presentation" });
+
+    for (let tick = 0; tick <= yMax; tick += Math.max(2, yMax / 4)) {
+        const tickValue = Math.round(tick * 10) / 10;
+        const yy = y(tickValue);
+        svg.append(make("line", { x1: left, y1: yy, x2: width - right, y2: yy, class: "trend-gridline" }));
+        const label = make("text", { x: left - 12, y: yy + 4, "text-anchor": "end", class: "trend-axis-label" });
+        label.textContent = Number.isInteger(tickValue) ? String(tickValue) : tickValue.toFixed(1);
+        svg.append(label);
+    }
+
+    const yTitle = make("text", { x: 14, y: top + plotHeight / 2, transform: `rotate(-90 14 ${top + plotHeight / 2})`, "text-anchor": "middle", class: "trend-axis-title" });
+    yTitle.textContent = "Avg. hrs";
+    svg.append(yTitle);
+
+    const completedPoints = completed.map(item => {
+        const index = months.indexOf(item);
+        return { x: x(index), y: y(item.average), item };
+    });
+    if (completedPoints.length > 1) {
+        const path = completedPoints.map((point, index) => `${index ? "L" : "M"} ${point.x} ${point.y}`).join(" ");
+        svg.append(make("path", { d: path, class: "trend-line" }));
+    }
+
+    completedPoints.forEach(point => {
+        svg.append(make("circle", { cx: point.x, cy: point.y, r: 5, class: "trend-point" }));
+        const value = make("text", { x: point.x, y: point.y - 13, "text-anchor": "middle", class: "trend-value" });
+        value.textContent = point.item.average.toFixed(2);
+        svg.append(value);
+    });
+
+    const liveIndex = months.length - 1;
+    const liveAverage = live.average ?? 0;
+    const liveX = x(liveIndex);
+    const liveY = y(liveAverage);
+    const lastCompleted = completedPoints[completedPoints.length - 1];
+    if (lastCompleted) {
+        svg.append(make("line", { x1: lastCompleted.x, y1: lastCompleted.y, x2: liveX, y2: liveY, class: "trend-projection" }));
+    }
+    svg.append(make("circle", { cx: liveX, cy: liveY, r: 11, class: "trend-live-halo" }));
+    svg.append(make("circle", { cx: liveX, cy: liveY, r: 5.5, class: "trend-live-point" }));
+    const liveLabel = make("text", { x: liveX, y: Math.max(top + 12, liveY - 17), "text-anchor": "middle", class: "trend-live-value" });
+    liveLabel.textContent = live.average === null ? "0.00*" : liveAverage.toFixed(2) + "*";
+    svg.append(liveLabel);
+
+    months.forEach((item, index) => {
+        const label = make("text", { x: x(index), y: height - 17, "text-anchor": "middle", class: item.isLive ? "trend-month-label is-live" : "trend-month-label" });
+        label.textContent = item.label;
+        svg.append(label);
+    });
+
+    container.replaceChildren(svg);
+    container.setAttribute("aria-label", months.map(item =>
+        `${item.label}: ${item.average === null ? "no logged average" : item.average.toFixed(2) + " hours"}`
+    ).join("; ") + (live.average === null ? ". Current-month marker is awaiting the first entry." : ". Current-month marker shows the month-to-date average."));
+}
+
+/* =========================================================
    RENDER TRACKING
 ========================================================= */
 
@@ -667,6 +767,8 @@ export async function loadTrackingMonth() {
             issue,
             todayHours
         );
+
+        renderAverageTrend(issues, now);
 
 
         updateMonthButtons();

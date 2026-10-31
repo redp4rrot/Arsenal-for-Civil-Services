@@ -11,7 +11,7 @@
 
     <title>Arsenal for Civil Services</title>
 
-    <link rel="stylesheet" href="styles.css?v=monk-4">
+    <link rel="stylesheet" href="styles.css?v=trend-1">
 </head>
 
 <body>
@@ -184,13 +184,15 @@
         </div>
     </div>
     <div class="tracking-divider"></div>
-    <div class="today-panel">
-        <div class="today-donut-column">
-            <div class="panel-heading">Today's working hours</div>
-            <div class="today-big-number"><span id="today-hours">0.00</span><small>hrs</small></div>
-            <div id="today-status" class="today-status">No entry today</div>
-            <div id="today-date" class="today-date"><span>Loading...</span></div>
-            <div id="today-donut" class="today-meter-accessory" aria-hidden="true"></div>
+    <div class="today-panel average-trend-panel">
+        <div class="panel-heading">Monthly average · June–November 2026</div>
+        <div id="average-trend-chart" class="average-trend-chart" role="img" aria-label="Monthly average study hours from June to November 2026">
+            <div class="trend-loading">Loading monthly averages…</div>
+        </div>
+        <div class="trend-caption"><span class="trend-key trend-key-solid"></span> Completed months <span class="trend-key trend-key-live"></span> November · live average</div>
+        <div class="today-legacy-values" aria-hidden="true">
+            <span id="today-hours">0.00</span><span id="today-status">No entry today</span>
+            <span id="today-date">Loading...</span><span id="today-donut"></span>
         </div>
     </div>
 </div>
