@@ -37,6 +37,7 @@ function formatDate(year, month, day) {
 
 function describeRecord(record) {
     if (!record || record.hours == null || !Number.isFinite(Number(record.hours))) return "No study-hours entry";
+    if (record.status === "low") return "Low day · under 5 hours";
     if (record.status === "half") return "Half day · " + Number(record.hours).toFixed(1) + " hours";
     return "Study logged · " + Number(record.hours).toFixed(1) + " hours";
 }
