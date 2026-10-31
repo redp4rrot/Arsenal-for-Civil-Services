@@ -19,9 +19,7 @@ import {
     emptyProductivity,
     parseWorkingHours,
     getTodayWorkingHours,
-    getStatus,
-    getMotivation
-} from "./productivity.js";
+    getStatus} from "./productivity.js";
 
 
 /* =========================================================
