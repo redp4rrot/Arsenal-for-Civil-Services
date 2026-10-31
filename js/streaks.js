@@ -42,21 +42,42 @@ export function parseDailyRecords(issues = []) {
             });
         }
 
-        // Only an explicit holiday/day-off marker on a date-bearing line counts.
-        for (const line of body.split(/\r?\n/)) {
-            if (!/\b(day off|holiday|leave)\b/i.test(line)) continue;
+        // Monthly worklogs often put "Day off." on the line immediately
+        // after the date. Only attach a standalone marker to that adjacent date.
+        const lines = body.split(/\r?\n/);
+        let previousLineDate = null;
+
+        for (const line of lines) {
             const dateMatch = line.match(DATE_RE);
-            if (!dateMatch) continue;
 
-            const day = Number(dateMatch[1]);
-            const month = Number(dateMatch[2]);
-            const year = Number(dateMatch[3]);
-            const key = dateKey(year, month, day);
+            if (dateMatch) {
+                const day = Number(dateMatch[1]);
+                const month = Number(dateMatch[2]);
+                const year = Number(dateMatch[3]);
 
-            if (isValidDate(year, month, day) && !records.has(key)) {
-                records.set(key, {
-                    key, year, month, day, hours: null, status: "holiday"
+                previousLineDate = isValidDate(year, month, day)
+                    ? { key: dateKey(year, month, day), year, month, day }
+                    : null;
+
+                if (/\b(day off|holiday|leave)\b/i.test(line) &&
+                    previousLineDate && !records.has(previousLineDate.key)) {
+                    records.set(previousLineDate.key, {
+                        ...previousLineDate, hours: null, status: "holiday"
+                    });
+                }
+                continue;
+            }
+
+            if (/^\s*_?day off\.?_?\s*$/i.test(line) && previousLineDate &&
+                !records.has(previousLineDate.key)) {
+                records.set(previousLineDate.key, {
+                    ...previousLineDate, hours: null, status: "holiday"
                 });
+            }
+
+            // Do not let an unrelated later note inherit an old date.
+            if (line.trim() && !/^\s*(?:day off\.?|holiday)\s*$/i.test(line)) {
+                previousLineDate = null;
             }
         }
     }
