@@ -43,44 +43,7 @@ export function parseDailyRecords(issues = []) {
             });
         }
 
-        // Monthly worklogs often put "Day off." on the line immediately
-        // after the date. Only attach a standalone marker to that adjacent date.
-        const lines = body.split(/\r?\n/);
-        let previousLineDate = null;
 
-        for (const line of lines) {
-            const dateMatch = line.match(DATE_RE);
-
-            if (dateMatch) {
-                const day = Number(dateMatch[1]);
-                const month = Number(dateMatch[2]);
-                const year = Number(dateMatch[3]);
-
-                previousLineDate = isValidDate(year, month, day)
-                    ? { key: dateKey(year, month, day), year, month, day }
-                    : null;
-
-                if (/\b(day off|holiday|leave)\b/i.test(line) &&
-                    previousLineDate && !records.has(previousLineDate.key)) {
-                    records.set(previousLineDate.key, {
-                        ...previousLineDate, hours: null, status: "holiday"
-                    });
-                }
-                continue;
-            }
-
-            if (/^\s*_?day off\.?_?\s*$/i.test(line) && previousLineDate &&
-                !records.has(previousLineDate.key)) {
-                records.set(previousLineDate.key, {
-                    ...previousLineDate, hours: null, status: "holiday"
-                });
-            }
-
-            // Do not let an unrelated later note inherit an old date.
-            if (line.trim() && !/^\s*(?:day off\.?|holiday)\s*$/i.test(line)) {
-                previousLineDate = null;
-            }
-        }
     }
 
     // Exclude anything before the configured calendar start.
