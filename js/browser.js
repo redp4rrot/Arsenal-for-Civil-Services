@@ -176,56 +176,8 @@ function renderHeader(
 ========================================================= */
 
 function getFileIcon(filename) {
-
-    const extension =
-        filename
-            .split(".")
-            .pop()
-            .toLowerCase();
-
-
-    if (extension === "pdf") {
-
-        return "📕";
-
-    }
-
-
-    if (
-
-        [
-            "png",
-            "jpg",
-            "jpeg",
-            "webp",
-            "gif",
-            "svg"
-        ].includes(extension)
-
-    ) {
-
-        return "🖼️";
-
-    }
-
-
-    if (
-
-        [
-            "zip",
-            "rar",
-            "7z"
-        ].includes(extension)
-
-    ) {
-
-        return "🗜️";
-
-    }
-
-
-    return "📄";
-
+    const extension = filename.split(".").pop().toLowerCase();
+    return extension.slice(0, 5).toUpperCase() || "FILE";
 }
 
 
@@ -255,9 +207,7 @@ function createFileTile(item) {
 
         tile.innerHTML = `
 
-            <div class="file-icon folder-icon">
-                📁
-            </div>
+            <div class="file-icon folder-icon" aria-hidden="true"></div>
 
             <div class="file-name">
                 ${decodeURIComponent(item.name)}
