@@ -49,22 +49,10 @@ function renderSelectedDay() {
     element("selected-date-hours").textContent = record?.hours != null ? record.hours.toFixed(1) + " hrs" : "—";
     const panel = element("selected-date-log");
     if (!panel) return;
-    panel.replaceChildren();
-    const entries = Array.isArray(record?.log) ? record.log : [];
-    panel.hidden = entries.length === 0;
-    if (entries.length) {
-        const heading = document.createElement("div");
-        heading.className = "selected-log-heading";
-        heading.textContent = "Study log";
-        const list = document.createElement("ul");
-        list.className = "selected-log-list";
-        for (const entry of entries) {
-            const item = document.createElement("li");
-            item.textContent = entry;
-            list.append(item);
-        }
-        panel.append(heading, list);
-    }
+    const log = typeof record?.log === "string" ? record.log.trim() : "";
+    panel.hidden = log.length === 0;
+    panel.textContent = log;
+    panel.classList.toggle("has-log", log.length > 0);
 }
 
 function renderFestivals() {
