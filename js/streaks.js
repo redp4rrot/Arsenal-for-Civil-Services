@@ -15,7 +15,8 @@ function isValidDate(year, month, day) {
 
 /**
  * Convert monthly GitHub issue bodies into one record per calendar date.
- * A missing date is intentionally not interpreted as a holiday.
+ * Only dates with recorded study hours become study records; the calendar
+ * classifies all elapsed dates without a record as holidays.
  */
 export function parseDailyRecords(issues = []) {
     const records = new Map();
@@ -121,7 +122,6 @@ export function calculateStreaks(records, year, monthIndex, today = new Date()) 
     }
 
     const sameMonth = year === today.getFullYear() && monthIndex === today.getMonth();
-    const futureMonth = year * 12 + monthIndex > today.getFullYear() * 12 + today.getMonth();
     let cursor = null;
 
     if (sameMonth) {
@@ -130,8 +130,8 @@ export function calculateStreaks(records, year, monthIndex, today = new Date()) 
         cursor = isStudyDay(records.get(todayKey))
             ? todayKey
             : isStudyDay(records.get(yesterdayKey)) ? yesterdayKey : null;
-    } else if (!futureMonth && studyDates.length) {
-        // For a completed month, show the streak ending on its last logged study day.
+    } else if (studyDates.length) {
+        // For any non-current month, show the latest streak recorded in that month.
         cursor = studyDates[studyDates.length - 1];
     }
 
