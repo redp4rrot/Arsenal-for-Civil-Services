@@ -13,7 +13,7 @@
 
     <link
         rel="stylesheet"
-        href="styles.css?v=zen-1"
+        href="styles.css?v=zen-3"
     >
 </head>
 
@@ -58,7 +58,7 @@
                     aria-label="Switch to dark theme"
                     title="Switch theme"
                 >
-                    <span class="theme-toggle-icon" aria-hidden="true">☾</span>
+                    <span class="theme-toggle-icon" aria-hidden="true"><div class="icon-moon"></div></span>
                     <span class="theme-toggle-label">Dark mode</span>
                 </button>
                 <button
@@ -370,8 +370,9 @@
                     </div>
                     <div id="calendar-grid" class="calendar-grid" aria-label="Study activity calendar"></div>
                     <div class="calendar-legend">
-                        <span><i class="legend-square study"></i>Study logged</span>
+                        <span><i class="legend-square study"></i>Study logged · above 6 hrs</span>
                         <span><i class="legend-square half"></i>Half day (5–6 hrs)</span>
+                        <span><i class="legend-square low"></i>Low day · under 5 hrs</span>
                         <span><i class="legend-square holiday"></i>Holiday · no study entry</span>
                         <span><i class="legend-square empty"></i>No entry</span>
                     </div>
@@ -449,7 +450,7 @@
 
     <script
         type="module"
-        src="dashboard.js?v=zen-1"
+        src="dashboard.js?v=zen-3"
     ></script>
 
 </body>
