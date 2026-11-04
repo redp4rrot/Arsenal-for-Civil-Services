@@ -627,6 +627,10 @@ h1 {
 .today-task-title strong { font-weight:800; }
 .today-task-title em { color:var(--muted); }
 .today-task-title a { color:var(--yellow); text-decoration:underline; text-underline-offset:2px; }
+.today-task-status { justify-self:start; display:inline-flex; align-items:center; padding:4px 9px; border:1px solid var(--border); border-radius:999px; background:var(--panel); color:var(--muted); font-size:10px; line-height:1.35; font-weight:750; letter-spacing:.2px; }
+.today-task-status.status-done,.today-task-status.status-completed { border-color:rgba(115,170,130,.38); color:#8fbd9a; background:rgba(115,170,130,.09); }
+.today-task-status.status-in-progress,.today-task-status.status-in-review { border-color:rgba(220,170,85,.4); color:#e1b66e; background:rgba(220,170,85,.09); }
+.today-task-status.status-blocked { border-color:rgba(195,105,105,.4); color:#d58b8b; background:rgba(195,105,105,.09); }
 .today-task-open { display:inline-block; margin-top:7px; color:var(--muted); font-size:10px; font-weight:650; text-decoration:none; letter-spacing:.15px; }
 .today-task-open:hover { color:var(--yellow); }
 .today-task-slots { display:flex; flex-wrap:wrap; gap:6px; margin:0; }
