@@ -98,17 +98,24 @@ function renderTodayTasks(tasks) {
         return rank(a) - rank(b);
     });
     for (const task of tasks) {
-        const item = document.createElement("div");
+        const item = document.createElement("article");
         item.className = "today-task";
-        const title = task.url ? document.createElement("a") : document.createElement("span");
+        const main = document.createElement("div");
+        main.className = "today-task-main";
+        const title = document.createElement("div");
         title.className = "today-task-title";
-        title.textContent = task.title;
+        title.innerHTML = DOMPurify.sanitize(marked.parseInline(task.title || ""));
+        main.append(title);
         if (task.url) {
-            title.href = task.url;
-            title.target = "_blank";
-            title.rel = "noopener noreferrer";
+            const link = document.createElement("a");
+            link.className = "today-task-open";
+            link.href = task.url;
+            link.target = "_blank";
+            link.rel = "noopener noreferrer";
+            link.textContent = "Open task ↗";
+            main.append(link);
         }
-        item.append(title);
+        item.append(main);
         if (task.slots.length) {
             const slots = document.createElement("div");
             slots.className = "today-task-slots";
@@ -119,6 +126,11 @@ function renderTodayTasks(tasks) {
                 slots.append(tag);
             }
             item.append(slots);
+        } else {
+            const tag = document.createElement("span");
+            tag.className = "today-task-unscheduled";
+            tag.textContent = "No time slot";
+            item.append(tag);
         }
         list.append(item);
     }
