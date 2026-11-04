@@ -611,19 +611,28 @@ h1 {
 @media(prefers-reduced-motion:reduce) { .trend-live-halo { animation:none; } }
 
 
-/* Today's tasks — compact, scannable cards */
-.today-plan { margin:22px 0 6px; padding-top:18px; border-top:1px solid var(--border); }
+/* Today's tasks — refined task cards */
+.today-plan { margin:22px 0 6px; padding-top:19px; border-top:1px solid var(--border); }
 .today-plan[hidden] { display:none; }
 .today-plan-heading { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:14px; color:var(--text); font-size:11px; font-weight:800; letter-spacing:1.7px; }
-.today-plan-count { display:inline-flex; align-items:center; justify-content:center; min-width:25px; height:25px; padding:0 7px; border:1px solid var(--border); border-radius:999px; color:var(--muted); font-size:11px; letter-spacing:0; }
-.today-plan-list { display:grid; grid-template-columns:1fr; gap:9px; }
-.today-task { display:grid; grid-template-columns:minmax(0,1fr); gap:9px; padding:13px 14px; border:1px solid var(--border); border-radius:11px; background:var(--panel-2); transition:border-color .18s ease, transform .18s ease; }
-.today-task:hover { border-color:var(--yellow); transform:translateY(-1px); }
-.today-task-title { display:block; color:var(--text); font-size:13px; line-height:1.55; font-weight:650; text-decoration:none; overflow-wrap:anywhere; }
-a.today-task-title:hover { color:var(--yellow); }
+.today-plan-count { display:inline-flex; align-items:center; justify-content:center; min-width:27px; height:27px; padding:0 8px; border:1px solid var(--border); border-radius:50%; color:var(--muted); font-size:11px; letter-spacing:0; }
+.today-plan-list { display:grid; grid-template-columns:1fr; gap:10px; }
+.today-task { position:relative; display:grid; grid-template-columns:minmax(0,1fr); gap:10px; padding:14px 15px 13px 17px; overflow:hidden; border:1px solid var(--border); border-radius:12px; background:linear-gradient(115deg,var(--panel-2),var(--panel)); transition:border-color .18s ease, transform .18s ease, box-shadow .18s ease; }
+.today-task::before { content:""; position:absolute; inset:0 auto 0 0; width:3px; background:var(--yellow); opacity:.55; }
+.today-task:hover { border-color:var(--yellow); transform:translateY(-2px); box-shadow:0 7px 20px rgba(0,0,0,.12); }
+.today-task-main { min-width:0; }
+.today-task-title { color:var(--text); font-size:13px; line-height:1.65; font-weight:650; overflow-wrap:anywhere; }
+.today-task-title p { display:inline; margin:0; }
+.today-task-title code { padding:2px 5px; border:1px solid var(--border); border-radius:5px; background:var(--panel); color:var(--yellow); font-family:ui-monospace,SFMono-Regular,Consolas,monospace; font-size:.9em; font-weight:600; }
+.today-task-title strong { font-weight:800; }
+.today-task-title em { color:var(--muted); }
+.today-task-title a { color:var(--yellow); text-decoration:underline; text-underline-offset:2px; }
+.today-task-open { display:inline-block; margin-top:7px; color:var(--muted); font-size:10px; font-weight:650; text-decoration:none; letter-spacing:.15px; }
+.today-task-open:hover { color:var(--yellow); }
 .today-task-slots { display:flex; flex-wrap:wrap; gap:6px; margin:0; }
-.today-task-slot { display:inline-flex; align-items:center; padding:4px 8px; border:1px solid var(--border); border-radius:999px; background:var(--panel); color:var(--muted); font-size:10px; line-height:1.3; font-weight:650; }
+.today-task-slot { display:inline-flex; align-items:center; padding:4px 9px; border:1px solid var(--border); border-radius:999px; background:var(--panel); color:var(--muted); font-size:10px; line-height:1.35; font-weight:700; }
+.today-task-unscheduled { color:var(--muted); font-size:10px; font-style:italic; }
 .today-plan-empty { margin:0; padding:14px; border:1px dashed var(--border); border-radius:10px; color:var(--muted); font-size:12px; line-height:1.6; }
 .today-plan-empty.is-error { color:var(--red); overflow-wrap:anywhere; }
-@media(min-width:1100px) { .today-task { padding:14px 15px; } }
-@media(max-width:760px) { .today-plan { margin-top:16px; } .today-task { padding:12px; } }
+@media(min-width:1100px) { .today-task { padding:15px 17px 14px 19px; } }
+@media(max-width:760px) { .today-plan { margin-top:16px; } .today-task { padding:12px 13px 12px 15px; } }
