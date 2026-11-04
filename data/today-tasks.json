@@ -1,40 +1,630 @@
 {
-  "date": "2026-11-04",
-  "updated_at": "2026-11-04T11:38:05.393573+00:00",
+  "updated_at": "2026-11-04T11:48:13.555632+00:00",
   "tasks": [
     {
+      "date": "2026-10-11",
+      "title": "Attend `28` classes of `Ethics` (Theory + Application)",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/154",
+      "slots": [
+        "Morning"
+      ],
+      "status": "Done"
+    },
+    {
+      "date": "2026-09-30",
+      "title": "Physics | Read `Atomic and Molecular Physics` + solve all the PYQs till 2025 | Part-1",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/194",
+      "slots": [
+        "Morning",
+        "Post lunch"
+      ],
+      "status": "Done"
+    },
+    {
+      "date": "2026-10-16",
+      "title": "Physics | Read `Geometrial Optics` and solve all the PYQs till 2025",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/211",
+      "slots": [
+        "Morning",
+        "Post lunch"
+      ],
+      "status": "Done"
+    },
+    {
+      "date": "2026-10-31",
+      "title": "Physics | Read `Interference and Diffraction` and solve all the PYQs till 2025 | Part-1",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/212",
+      "slots": [
+        "Morning",
+        "Post lunch"
+      ],
+      "status": "Done"
+    },
+    {
+      "date": "2026-11-04",
       "title": "Consolidate | `Part-III | Fundamental Rights@A17-35`",
       "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/221",
       "slots": [
         "Morning"
-      ]
+      ],
+      "status": "In Progress"
     },
     {
+      "date": "2026-11-03",
+      "title": "Economy and Agriculture | Prepare a strategy to consolidate this subject",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/225",
+      "slots": [
+        "Morning"
+      ],
+      "status": "Done"
+    },
+    {
+      "date": "2026-11-04",
       "title": "Theme based notes",
       "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/228",
       "slots": [
         "Morning",
         "Post evening tea"
-      ]
+      ],
+      "status": "In Progress"
     },
     {
+      "date": "2026-10-11",
+      "title": "Physics | Read `Waves` and solve all the PYQs till 2025",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/210",
+      "slots": [
+        "Post lunch"
+      ],
+      "status": "Done"
+    },
+    {
+      "date": "2026-11-04",
       "title": "Physics | Read `Interference and Diffraction` and solve all the PYQs till 2025 | Part-2",
       "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/218",
       "slots": [
         "Post lunch"
-      ]
+      ],
+      "status": "In Progress"
     },
     {
+      "date": "2026-09-29",
+      "title": "MIH | Solve all the Mains `PYQs till 2025`",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/189",
+      "slots": [
+        "Post evening tea"
+      ],
+      "status": "In Progress"
+    },
+    {
+      "date": "2026-09-25",
+      "title": "GS-IV | Solve all the `PYQs till 2025`",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/195",
+      "slots": [
+        "Post dinner",
+        "Post evening tea"
+      ],
+      "status": "In Progress"
+    },
+    {
+      "date": "2026-10-31",
+      "title": "Consolidate | `Commencement, states reorganization, Part-I, II and III(A12-16)`",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/216",
+      "slots": [
+        "Post evening tea"
+      ],
+      "status": "Done"
+    },
+    {
+      "date": "2026-11-04",
       "title": "Daily Newspaper reading | The IE",
       "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/131",
       "slots": [
         "Late night"
-      ]
+      ],
+      "status": "In Progress"
     },
     {
+      "date": "2026-10-07",
+      "title": "Physics | Read `Molecular Physics` + solve all the PYQs till 2025 | Part-2",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/201",
+      "slots": [
+        "Late night"
+      ],
+      "status": "Done"
+    },
+    {
+      "date": "2026-10-27",
+      "title": "Attend `21` classes of `Social Issues/Society`",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/193",
+      "slots": [
+        "Post dinner"
+      ],
+      "status": "Done"
+    },
+    {
+      "date": "2026-10-15",
+      "title": "Plan GS (integrated)",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/215",
+      "slots": [
+        "Post dinner"
+      ],
+      "status": "In Progress"
+    },
+    {
+      "date": "2026-06-20",
+      "title": "Attend the remaining `90` classes of `Physics`",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/133",
+      "slots": [],
+      "status": "On Hold"
+    },
+    {
+      "date": "2026-08-15",
+      "title": "Attend `36` classes of `Modern Indian History`",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/135",
+      "slots": [],
+      "status": "Done"
+    },
+    {
+      "date": "2026-03-26",
+      "title": "Smart Mapping classes for Prelims-2026",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/1",
+      "slots": [],
+      "status": "Done"
+    },
+    {
+      "date": "2026-03-18",
+      "title": "Attend the remaining Geography Classes (GS-Foundation)",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/2",
+      "slots": [],
+      "status": "Done"
+    },
+    {
+      "date": "2026-03-17",
+      "title": "Attend the remaining Environment Classes (GS-Foundation)",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/14",
+      "slots": [],
+      "status": "Done"
+    },
+    {
+      "date": "2026-03-18",
+      "title": "Attend the remaining Science and Tech Classes (GS-Foundation)",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/15",
+      "slots": [],
+      "status": "Done"
+    },
+    {
+      "date": "2026-05-23",
+      "title": "Indian Polity for Prelims-2026",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/16",
+      "slots": [],
+      "status": "Done"
+    },
+    {
+      "date": "2026-03-18",
+      "title": "Plan week 2.",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/19",
+      "slots": [],
+      "status": "Done"
+    },
+    {
+      "date": "2026-03-17",
+      "title": "Get the Maps ASAP!!",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/20",
+      "slots": [],
+      "status": "Done"
+    },
+    {
+      "date": "2026-04-01",
+      "title": "Attend the Live classes of Environment, Geography, Security.",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/21",
+      "slots": [],
+      "status": "Done"
+    },
+    {
+      "date": "2026-03-26",
+      "title": "Revise world mapping by marking the locations on Mapping booklet.",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/22",
+      "slots": [],
+      "status": "Done"
+    },
+    {
+      "date": "2026-03-26",
+      "title": "Plan week 3.",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/23",
+      "slots": [],
+      "status": "Done"
+    },
+    {
+      "date": "2026-04-01",
+      "title": "Plan week 4.",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/29",
+      "slots": [],
+      "status": "Done"
+    },
+    {
+      "date": "2026-04-07",
+      "title": "Movies, Books, Hobbies",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/36",
+      "slots": [],
+      "status": "Todo"
+    },
+    {
+      "date": "2026-05-13",
+      "title": "Planning the backlog for Prelims-2026",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/37",
+      "slots": [],
+      "status": "Done"
+    },
+    {
+      "date": "2026-04-24",
+      "title": "Attend classes targeting Prelims-2026",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/38",
+      "slots": [],
+      "status": "Done"
+    },
+    {
+      "date": "2026-04-24",
+      "title": "Attend the Live classes of Geography",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/39",
+      "slots": [],
+      "status": "Done"
+    },
+    {
+      "date": "2026-05-23",
+      "title": "Mapping for Prelims-2026",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/56",
+      "slots": [],
+      "status": "Done"
+    },
+    {
+      "date": "2026-04-08",
+      "title": "Revise world mapping - Political and Physical.",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/80",
+      "slots": [],
+      "status": "Done"
+    },
+    {
+      "date": "2026-04-17",
+      "title": "Supplement all continents | World Mapping | Places in news",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/82",
+      "slots": [],
+      "status": "Done"
+    },
+    {
+      "date": "2026-04-21",
+      "title": "Solve the India mapping PYQ + update the Notebook.",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/83",
+      "slots": [],
+      "status": "Done"
+    },
+    {
+      "date": "2026-04-21",
+      "title": "Revise India mapping - Political and Physical.",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/84",
+      "slots": [],
+      "status": "Done"
+    },
+    {
+      "date": "2026-04-08",
+      "title": "Plan week 5",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/85",
+      "slots": [],
+      "status": "Done"
+    },
+    {
+      "date": "2026-04-16",
+      "title": "Plan week 6",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/95",
+      "slots": [],
+      "status": "Done"
+    },
+    {
+      "date": "2026-04-22",
+      "title": "Plan week 7",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/96",
+      "slots": [],
+      "status": "Done"
+    },
+    {
+      "date": "2026-05-23",
+      "title": "Geography | Notes | PYQs/MCQs",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/110",
+      "slots": [],
+      "status": "Done"
+    },
+    {
+      "date": "2026-05-23",
+      "title": "Env | PT-365",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/111",
+      "slots": [],
+      "status": "Done"
+    },
+    {
+      "date": "2026-05-23",
+      "title": "Env | Notes | PYQs/MCQs",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/112",
+      "slots": [],
+      "status": "Done"
+    },
+    {
+      "date": "2026-05-23",
+      "title": "S&T | ppts | PYQs/MCQs",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/113",
+      "slots": [],
+      "status": "Done"
+    },
+    {
+      "date": "2026-05-10",
+      "title": "Supplement World Mapping with additional topics",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/115",
+      "slots": [],
+      "status": "Done"
+    },
+    {
+      "date": "2026-04-29",
+      "title": "Update the India Mapping with Places in News",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/116",
+      "slots": [],
+      "status": "Done"
+    },
+    {
+      "date": "2026-05-23",
+      "title": "Revision | `India Mapping` | Prelims Capsule 2026",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/118",
+      "slots": [],
+      "status": "Done"
+    },
+    {
+      "date": "2026-05-25",
+      "title": "Road to CSE-2027",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/121",
+      "slots": [],
+      "status": "In Progress"
+    },
+    {
+      "date": "2026-05-23",
+      "title": "Env | Vision Test Series | Prelims-2026",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/122",
+      "slots": [],
+      "status": "Done"
+    },
+    {
+      "date": "2026-05-23",
+      "title": "Geography | Vision Test Series | Prelims-2026",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/123",
+      "slots": [],
+      "status": "Done"
+    },
+    {
+      "date": "2026-05-23",
+      "title": "S&T | Vision Test Series | Prelims-2026",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/124",
+      "slots": [],
+      "status": "Done"
+    },
+    {
+      "date": "2026-05-23",
+      "title": "CSAT | Vision Test Series | Prelims-2026",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/125",
+      "slots": [],
+      "status": "Done"
+    },
+    {
+      "date": "2026-10-14",
+      "title": "Planning the backlog for CSE-2027",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/127",
+      "slots": [],
+      "status": "In Progress"
+    },
+    {
+      "date": "2026-06-30",
+      "title": "Plan the backlog for `June 2026`",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/128",
+      "slots": [],
+      "status": "Done"
+    },
+    {
+      "date": "2026-07-12",
+      "title": "Monthly Current affairs magazine for Jan 2026",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/129",
+      "slots": [],
+      "status": "Done"
+    },
+    {
+      "date": "2026-06-29",
+      "title": "Physics | Read `Classical Mechanics` + solve all the `PYQs till 2025`",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/136",
+      "slots": [],
+      "status": "Done"
+    },
+    {
+      "date": "2026-05-23",
+      "title": "Final Consolidation Sprint for Prelims-2026",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/137",
+      "slots": [],
+      "status": "Done"
+    },
+    {
+      "date": "2026-07-31",
+      "title": "Plan the backlog for `July 2026`",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/150",
+      "slots": [],
+      "status": "Done"
+    },
+    {
+      "date": "2026-06-30",
+      "title": "Revise Modern History class notes | `Lecture 1-13`",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/151",
+      "slots": [],
+      "status": "Done"
+    },
+    {
+      "date": "2026-06-29",
+      "title": "Attempt `Mechanics of Particles Class Revision Test`",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/155",
+      "slots": [],
+      "status": "Done"
+    },
+    {
+      "date": "2026-06-28",
+      "title": "Attempt `Special Theory of Relativity class test`",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/156",
+      "slots": [],
+      "status": "Done"
+    },
+    {
+      "date": "2026-07-15",
+      "title": "Attempt `Rigid body dynamics, Mechanics of continuous media Class test`",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/157",
+      "slots": [],
+      "status": "Done"
+    },
+    {
+      "date": "2026-06-30",
+      "title": "Mini Test Mains Series `MIH Test 1 (4140)`",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/158",
+      "slots": [],
+      "status": "Done"
+    },
+    {
+      "date": "2026-07-20",
+      "title": "Attempt `Classical Mechanics and Relativity Test`",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/160",
+      "slots": [],
+      "status": "Done"
+    },
+    {
+      "date": "2026-07-21",
+      "title": "Physics Test Series 2026 (12 Tests) 14 June | `Sectional Test 1 - Paper 1 (5687)`",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/161",
+      "slots": [],
+      "status": "Done"
+    },
+    {
+      "date": "2026-07-01",
+      "title": "Mathematical pre-requisites for Physics",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/162",
+      "slots": [],
+      "status": "Done"
+    },
+    {
+      "date": "2026-07-24",
+      "title": "Attempt `Quantum Mechanics Test 1`",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/164",
+      "slots": [],
+      "status": "Done"
+    },
+    {
+      "date": "2026-07-26",
+      "title": "Physics | Read `Quantum Mechanics in 1D` + solve all the `PYQs till 2025`",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/167",
+      "slots": [],
+      "status": "Done"
+    },
+    {
+      "date": "2026-07-30",
+      "title": "Mini Test Mains Series `MIH Test 2  (4141)`",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/168",
+      "slots": [],
+      "status": "Done"
+    },
+    {
+      "date": "2026-07-15",
+      "title": "`Re-Attempt` Mini Test Mains Series `MIH Test 1 (4140)`",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/170",
+      "slots": [],
+      "status": "Done"
+    },
+    {
+      "date": "2026-07-29",
+      "title": "`MIH` | Revise class notes from Lecture `1-26` | Make `Topic wise & Theme based complete notes` for `Mains`",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/171",
+      "slots": [],
+      "status": "Done"
+    },
+    {
+      "date": "2026-07-30",
+      "title": "Revision for attempting `MIH (4140) and (4141)` Series",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/175",
+      "slots": [],
+      "status": "Done"
+    },
+    {
+      "date": "2026-08-31",
+      "title": "Plan the backlog for `August 2026`",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/176",
+      "slots": [],
+      "status": "Done"
+    },
+    {
+      "date": "2026-07-24",
+      "title": "Revision for attempting `Tests` | `Complete Classical Mechanics` | `Quantum Mechanics 1D`",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/177",
+      "slots": [],
+      "status": "Done"
+    },
+    {
+      "date": "2026-08-17",
+      "title": "Physics | Read `Quantum Mechanics in 3D` + solve all the PYQs till 2025",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/179",
+      "slots": [],
+      "status": "Done"
+    },
+    {
+      "date": "2026-08-29",
+      "title": "Attend `7` classes of `Post Independence History`",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/183",
+      "slots": [],
+      "status": "Done"
+    },
+    {
+      "date": "2026-08-16",
+      "title": "`MIH` | Revise class notes from Lecture `26-33` | Classroom assignments",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/185",
+      "slots": [],
+      "status": "Done"
+    },
+    {
+      "date": "2026-09-30",
+      "title": "Plan the backlog for `September 2026`",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/187",
+      "slots": [],
+      "status": "Done"
+    },
+    {
+      "date": "2026-09-15",
+      "title": "Attend `5` classes of `Essay Enrichment Programme 2026`",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/191",
+      "slots": [],
+      "status": "On Hold"
+    },
+    {
+      "date": "2026-09-12",
+      "title": "Society | Solve all the `PYQs till 2025`",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/196",
+      "slots": [],
+      "status": "In Progress"
+    },
+    {
+      "date": "2026-09-26",
+      "title": "Migrate to Keypad | Rage-in-Cage",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/197",
+      "slots": [],
+      "status": "Done"
+    },
+    {
+      "date": "2026-10-31",
+      "title": "Plan the backlog for `October 2026`",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/200",
+      "slots": [],
+      "status": "Done"
+    },
+    {
+      "date": "2026-11-04",
       "title": "Plan the backlog for `November 2026`",
       "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/217",
-      "slots": []
+      "slots": [],
+      "status": "In Progress"
     }
   ]
 }
