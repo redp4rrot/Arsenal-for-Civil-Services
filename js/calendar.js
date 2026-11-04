@@ -30,34 +30,8 @@ let visibleMonth = new Date().getMonth();
 let selectedDay = new Date().getDate();
 let latestDataMonth = monthIndex(visibleYear, visibleMonth);
 let loadSequence = 0;
-let todayTasks = [];
 let todayTasksLoading = false;
-const PROJECT_TOKEN_KEY = "arsenal-projects-token";
-const PROJECT_QUERY = `
-query($cursor: String) {
-  user(login: "redp4rrot") {
-    projectV2(number: 3) {
-      items(first: 100, after: $cursor) {
-        nodes {
-          isArchived
-          content {
-            ... on Issue { title url state number }
-            ... on PullRequest { title url state number }
-            ... on DraftIssue { title }
-          }
-          fieldValues(first: 30) {
-            nodes {
-              ... on ProjectV2ItemFieldDateValue { date field { ... on ProjectV2FieldCommon { name } } }
-              ... on ProjectV2ItemFieldSingleSelectValue { name field { ... on ProjectV2FieldCommon { name } } }
-              ... on ProjectV2ItemFieldMultiSelectValue { value field { ... on ProjectV2FieldCommon { name } } }
-            }
-          }
-        }
-        pageInfo { hasNextPage endCursor }
-      }
-    }
-  }
-}`;
+
 
 function formatDate(year, month, day) {
     return new Intl.DateTimeFormat("en-GB", {
@@ -150,86 +124,26 @@ function renderTodayTasks(tasks) {
     }
 }
 
-async function fetchTodayTasks(token) {
-    const tasks = [];
-    let cursor = null;
-    do {
-        const response = await fetch("https://api.github.com/graphql", {
-            method: "POST",
-            headers: {
-                "Authorization": "Bearer " + token,
-                "Content-Type": "application/json",
-                "Accept": "application/vnd.github+json"
-            },
-            body: JSON.stringify({ query: PROJECT_QUERY, variables: { cursor } })
-        });
-        const result = await response.json();
-        if (!response.ok || result.errors?.length) {
-            throw new Error(result.errors?.map(error => error.message).join("; ") || "GitHub returned " + response.status);
-        }
-        const project = result.data?.user?.projectV2;
-        if (!project) throw new Error("Could not find Project #3 for redp4rrot.");
-        for (const item of project.items.nodes) {
-            if (item.isArchived) continue;
-            const content = item.content || {};
-            if (!content.title) continue;
-            const fields = {};
-            for (const value of item.fieldValues.nodes) {
-                const field = value.field?.name;
-                if (!field) continue;
-                if ("date" in value) fields[field] = value.date;
-                else if ("value" in value) fields[field] = value.value;
-                else if ("name" in value) fields[field] = value.name;
-            }
-            if (fields.Date !== todayISO()) continue;
-            tasks.push({
-                title: content.title,
-                url: content.url || "",
-                slots: String(fields.Slot || "").split(",").map(slot => slot.trim()).filter(Boolean)
-            });
-        }
-        const page = project.items.pageInfo;
-        cursor = page.hasNextPage ? page.endCursor : null;
-    } while (cursor);
-    return tasks;
-}
-
 async function loadTodayPlan() {
     if (!isSelectedDateToday() || todayTasksLoading) return;
-    element("today-plan").hidden = false;
-    let token = "";
-    try { token = sessionStorage.getItem(PROJECT_TOKEN_KEY) || ""; } catch {}
-    if (!token) {
-        element("today-plan-auth").hidden = false;
-        showPlanMessage("Connect GitHub to load today's tasks.");
-        return;
-    }
-    element("today-plan-auth").hidden = true;
+    const section = element("today-plan");
+    section.hidden = false;
     todayTasksLoading = true;
     showPlanMessage("Loading today's tasks…");
     try {
-        const tasks = await fetchTodayTasks(token);
-        renderTodayTasks(tasks);
+        const response = await fetch("./data/today-tasks.json?ts=" + Date.now(), { cache: "no-store" });
+        if (!response.ok) throw new Error("Task snapshot unavailable (" + response.status + ").");
+        const snapshot = await response.json();
+        if (snapshot.date !== todayISO()) {
+            showPlanMessage("Today's task snapshot is being prepared.");
+            return;
+        }
+        renderTodayTasks(Array.isArray(snapshot.tasks) ? snapshot.tasks : []);
     } catch (error) {
         showPlanMessage("Couldn't load tasks: " + error.message, true);
-        element("today-plan-auth").hidden = false;
     } finally {
         todayTasksLoading = false;
     }
-}
-
-function setupTodayPlanAuth() {
-    const button = element("today-plan-connect");
-    const input = element("today-plan-token");
-    if (!button || !input) return;
-    button.addEventListener("click", async () => {
-        const token = input.value.trim();
-        if (!token) return showPlanMessage("Enter your GitHub token first.", true);
-        try { sessionStorage.setItem(PROJECT_TOKEN_KEY, token); }
-        catch { return showPlanMessage("Session storage is unavailable in this browser.", true); }
-        input.value = "";
-        await loadTodayPlan();
-    });
 }
 
 function installWorklogMarkdownStyles() {
@@ -404,7 +318,6 @@ export async function loadStudyCalendar(forceRefresh = false) {
 }
 
 export function setupCalendarEvents() {
-    setupTodayPlanAuth();
     element("calendar-previous")?.addEventListener("click", () => {
         const previous = normalizeMonth(visibleYear, visibleMonth - 1);
         visibleYear = previous.year;
