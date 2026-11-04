@@ -611,22 +611,19 @@ h1 {
 @media(prefers-reduced-motion:reduce) { .trend-live-halo { animation:none; } }
 
 
-/* Minimal task list for today's selected calendar date */
-.today-plan { margin:18px 0 4px; padding-top:14px; border-top:1px solid var(--border); }
-.today-plan[hidden],.today-plan-auth[hidden] { display:none; }
-.today-plan-heading { display:flex; justify-content:space-between; gap:10px; margin-bottom:10px; color:var(--text); font-size:11px; font-weight:750; letter-spacing:1.6px; }
-.today-plan-count { color:var(--muted); font-size:10px; }
-.today-plan-list { display:grid; gap:8px; }
-.today-task { padding:8px 0; border-bottom:1px solid var(--border); }
-.today-task-title { color:var(--text); font-size:13px; line-height:1.55; font-weight:600; text-decoration:none; overflow-wrap:anywhere; }
-a.today-task-title:hover { color:var(--yellow); text-decoration:underline; }
-.today-task-slots { display:flex; flex-wrap:wrap; gap:6px; margin-top:5px; }
-.today-task-slot { color:var(--muted); font-size:11px; line-height:1.5; }
-.today-task-slot + .today-task-slot::before { content:"· "; }
-.today-plan-empty,.today-plan-help { margin:0; color:var(--muted); font-size:12px; line-height:1.6; }
+/* Today's tasks — compact, scannable cards */
+.today-plan { margin:22px 0 6px; padding-top:18px; border-top:1px solid var(--border); }
+.today-plan[hidden] { display:none; }
+.today-plan-heading { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:14px; color:var(--text); font-size:11px; font-weight:800; letter-spacing:1.7px; }
+.today-plan-count { display:inline-flex; align-items:center; justify-content:center; min-width:25px; height:25px; padding:0 7px; border:1px solid var(--border); border-radius:999px; color:var(--muted); font-size:11px; letter-spacing:0; }
+.today-plan-list { display:grid; grid-template-columns:1fr; gap:9px; }
+.today-task { display:grid; grid-template-columns:minmax(0,1fr); gap:9px; padding:13px 14px; border:1px solid var(--border); border-radius:11px; background:var(--panel-2); transition:border-color .18s ease, transform .18s ease; }
+.today-task:hover { border-color:var(--yellow); transform:translateY(-1px); }
+.today-task-title { display:block; color:var(--text); font-size:13px; line-height:1.55; font-weight:650; text-decoration:none; overflow-wrap:anywhere; }
+a.today-task-title:hover { color:var(--yellow); }
+.today-task-slots { display:flex; flex-wrap:wrap; gap:6px; margin:0; }
+.today-task-slot { display:inline-flex; align-items:center; padding:4px 8px; border:1px solid var(--border); border-radius:999px; background:var(--panel); color:var(--muted); font-size:10px; line-height:1.3; font-weight:650; }
+.today-plan-empty { margin:0; padding:14px; border:1px dashed var(--border); border-radius:10px; color:var(--muted); font-size:12px; line-height:1.6; }
 .today-plan-empty.is-error { color:var(--red); overflow-wrap:anywhere; }
-.today-plan-auth { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:8px; margin-top:10px; }
-.today-plan-auth input { min-width:0; padding:8px 10px; border:1px solid var(--border); border-radius:7px; background:var(--panel-2); color:var(--text); font:inherit; font-size:12px; }
-.today-plan-auth button { padding:7px 12px; border:1px solid var(--border); border-radius:7px; background:var(--panel-2); color:var(--text); font:inherit; font-size:12px; cursor:pointer; }
-.today-plan-help { grid-column:1 / -1; font-size:10px; }
-@media(max-width:760px) { .today-plan { margin-top:14px; } }
+@media(min-width:1100px) { .today-task { padding:14px 15px; } }
+@media(max-width:760px) { .today-plan { margin-top:16px; } .today-task { padding:12px; } }
