@@ -32,7 +32,6 @@ query($cursor: String) {
 }
 '''
 
-today = datetime.now(ZoneInfo("Asia/Kolkata")).date().isoformat()
 tasks = []
 cursor = None
 while True:
@@ -71,11 +70,18 @@ while True:
                 fields[field] = value["value"]
             elif value.get("name") is not None:
                 fields[field] = value["name"]
-        if fields.get("Date") != today:
+        task_date = fields.get("Date")
+        if not task_date:
             continue
         raw_slot = fields.get("Slot", "")
         slots = [part.strip() for part in raw_slot.split(",") if part.strip()]
-        tasks.append({"title": content["title"], "url": content.get("url", ""), "slots": slots})
+        tasks.append({
+            "date": task_date,
+            "title": content["title"],
+            "url": content.get("url", ""),
+            "slots": slots,
+            "status": fields.get("Status", "No status"),
+        })
     page = project["items"]["pageInfo"]
     if not page["hasNextPage"]:
         break
@@ -85,5 +91,5 @@ slot_order = {"morning": 0, "post lunch": 1, "post evening tea": 2, "late night"
 tasks.sort(key=lambda task: min((slot_order.get(slot.lower(), 99) for slot in task["slots"]), default=100))
 os.makedirs("data", exist_ok=True)
 with open("data/today-tasks.json", "w", encoding="utf-8") as output:
-    json.dump({"date": today, "updated_at": datetime.now(timezone.utc).isoformat(), "tasks": tasks}, output, ensure_ascii=False, indent=2)
-print(f"Published {len(tasks)} tasks for {today}")
+    json.dump({"updated_at": datetime.now(timezone.utc).isoformat(), "tasks": tasks}, output, ensure_ascii=False, indent=2)
+print(f"Published {len(tasks)} dated project tasks")
