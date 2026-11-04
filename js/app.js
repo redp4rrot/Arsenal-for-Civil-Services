@@ -15,7 +15,7 @@ import {
 import {
     loadStudyCalendar,
     setupCalendarEvents
-} from "./calendar.js?v=today-plan-1";
+} from "./calendar.js?v=today-click-1";
 
 
 /* =========================================================

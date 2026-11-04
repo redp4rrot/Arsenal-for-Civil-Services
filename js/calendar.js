@@ -31,8 +31,33 @@ let selectedDay = new Date().getDate();
 let latestDataMonth = monthIndex(visibleYear, visibleMonth);
 let loadSequence = 0;
 let todayTasks = [];
-let todayTasksDate = "";
-let todayTasksReady = false;
+let todayTasksLoading = false;
+const PROJECT_TOKEN_KEY = "arsenal-projects-token";
+const PROJECT_QUERY = `
+query($cursor: String) {
+  user(login: "redp4rrot") {
+    projectV2(number: 3) {
+      items(first: 100, after: $cursor) {
+        nodes {
+          isArchived
+          content {
+            ... on Issue { title url state number }
+            ... on PullRequest { title url state number }
+            ... on DraftIssue { title }
+          }
+          fieldValues(first: 30) {
+            nodes {
+              ... on ProjectV2ItemFieldDateValue { date field { name } }
+              ... on ProjectV2ItemFieldSingleSelectValue { name field { name } }
+              ... on ProjectV2ItemFieldMultiSelectValue { value field { name } }
+            }
+          }
+        }
+        pageInfo { hasNextPage endCursor }
+      }
+    }
+  }
+}`;
 
 function formatDate(year, month, day) {
     return new Intl.DateTimeFormat("en-GB", {
@@ -54,102 +79,157 @@ function isSelectedDateToday() {
         selectedDay === today.getDate();
 }
 
+function todayISO() {
+    const parts = new Intl.DateTimeFormat("en-CA", {
+        timeZone: "Asia/Kolkata", year: "numeric", month: "2-digit", day: "2-digit"
+    }).formatToParts(new Date());
+    const part = type => parts.find(value => value.type === type)?.value;
+    return part("year") + "-" + part("month") + "-" + part("day");
+}
+
 function renderTodayPlan() {
     const section = element("today-plan");
+    if (section) section.hidden = !isSelectedDateToday();
+}
+
+function showPlanMessage(message, isError = false) {
     const list = element("today-plan-list");
     const count = element("today-plan-count");
-    if (!section || !list || !count) return;
-
-    const show = isSelectedDateToday();
-    section.hidden = !show;
-    if (!show) return;
-
     list.replaceChildren();
-    if (!todayTasksReady || todayTasksDate !== (() => { const d = new Date(); return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); })()) {
-        count.textContent = "";
-        const message = document.createElement("p");
-        message.className = "today-plan-empty";
-        message.textContent = "Today's Scrum plan is syncing. Try refreshing in a moment.";
-        list.append(message);
+    count.textContent = "";
+    const note = document.createElement("p");
+    note.className = "today-plan-empty" + (isError ? " is-error" : "");
+    note.textContent = message;
+    list.append(note);
+}
+
+function renderTodayTasks(tasks) {
+    const list = element("today-plan-list");
+    const count = element("today-plan-count");
+    list.replaceChildren();
+    count.textContent = tasks.length ? String(tasks.length) : "";
+    if (!tasks.length) {
+        showPlanMessage("No tasks for today.");
         return;
     }
-
-    count.textContent = todayTasks.length + (todayTasks.length === 1 ? " TASK" : " TASKS");
-    if (!todayTasks.length) {
-        const message = document.createElement("p");
-        message.className = "today-plan-empty";
-        message.textContent = "No tasks are scheduled for today. Keep the day intentional.";
-        list.append(message);
-        return;
-    }
-
-    const slotOrder = ["Morning", "Post lunch", "Post evening tea", "Late night"];
-    const sorted = [...todayTasks].sort((a, b) => {
+    const order = ["Morning", "Post lunch", "Post evening tea", "Late night"];
+    tasks.sort((a, b) => {
         const rank = task => {
-            const indexes = (task.slots || []).map(slot => {
-                const i = slotOrder.findIndex(value => value.toLowerCase() === slot.toLowerCase());
-                return i < 0 ? slotOrder.length : i;
+            const indexes = task.slots.map(slot => {
+                const index = order.findIndex(value => value.toLowerCase() === slot.toLowerCase());
+                return index < 0 ? order.length : index;
             });
-            return indexes.length ? Math.min(...indexes) : slotOrder.length + 1;
+            return indexes.length ? Math.min(...indexes) : order.length + 1;
         };
         return rank(a) - rank(b);
     });
-
-    for (const task of sorted) {
-        const card = document.createElement("article");
-        card.className = "today-task";
-        const top = document.createElement("div");
-        top.className = "today-task-top";
+    for (const task of tasks) {
+        const item = document.createElement("div");
+        item.className = "today-task";
         const title = task.url ? document.createElement("a") : document.createElement("span");
         title.className = "today-task-title";
-        title.textContent = task.title || "Untitled task";
+        title.textContent = task.title;
         if (task.url) {
             title.href = task.url;
             title.target = "_blank";
             title.rel = "noopener noreferrer";
         }
-        const status = document.createElement("span");
-        status.className = "today-task-status";
-        status.textContent = task.status || "Open";
-        top.append(title, status);
-        card.append(top);
-
-        const slots = Array.isArray(task.slots) ? task.slots.filter(Boolean) : [];
-        const slotRow = document.createElement("div");
-        slotRow.className = "today-task-slots";
-        if (slots.length) {
-            for (const slot of slots) {
-                const badge = document.createElement("span");
-                badge.className = "today-task-slot";
-                badge.textContent = slot;
-                slotRow.append(badge);
+        item.append(title);
+        if (task.slots.length) {
+            const slots = document.createElement("div");
+            slots.className = "today-task-slots";
+            for (const slot of task.slots) {
+                const tag = document.createElement("span");
+                tag.className = "today-task-slot";
+                tag.textContent = slot;
+                slots.append(tag);
             }
-        } else {
-            const badge = document.createElement("span");
-            badge.className = "today-task-slot is-unscheduled";
-            badge.textContent = "Unscheduled";
-            slotRow.append(badge);
+            item.append(slots);
         }
-        card.append(slotRow);
-        list.append(card);
+        list.append(item);
     }
 }
 
+async function fetchTodayTasks(token) {
+    const tasks = [];
+    let cursor = null;
+    do {
+        const response = await fetch("https://api.github.com/graphql", {
+            method: "POST",
+            headers: {
+                "Authorization": "Bearer " + token,
+                "Content-Type": "application/json",
+                "Accept": "application/vnd.github+json"
+            },
+            body: JSON.stringify({ query: PROJECT_QUERY, variables: { cursor } })
+        });
+        const result = await response.json();
+        if (!response.ok || result.errors?.length) {
+            throw new Error(result.errors?.map(error => error.message).join("; ") || "GitHub returned " + response.status);
+        }
+        const project = result.data?.user?.projectV2;
+        if (!project) throw new Error("Could not find Project #3 for redp4rrot.");
+        for (const item of project.items.nodes) {
+            if (item.isArchived) continue;
+            const content = item.content || {};
+            if (!content.title) continue;
+            const fields = {};
+            for (const value of item.fieldValues.nodes) {
+                const field = value.field?.name;
+                if (!field) continue;
+                if ("date" in value) fields[field] = value.date;
+                else if ("value" in value) fields[field] = value.value;
+                else if ("name" in value) fields[field] = value.name;
+            }
+            if (fields.Date !== todayISO()) continue;
+            tasks.push({
+                title: content.title,
+                url: content.url || "",
+                slots: String(fields.Slot || "").split(",").map(slot => slot.trim()).filter(Boolean)
+            });
+        }
+        const page = project.items.pageInfo;
+        cursor = page.hasNextPage ? page.endCursor : null;
+    } while (cursor);
+    return tasks;
+}
+
 async function loadTodayPlan() {
-    try {
-        const response = await fetch("./data/today-tasks.json?ts=" + Date.now(), { cache: "no-store" });
-        if (!response.ok) throw new Error("Task data is not available yet");
-        const data = await response.json();
-        todayTasksDate = String(data.date || "");
-        todayTasks = Array.isArray(data.tasks) ? data.tasks : [];
-        todayTasksReady = true;
-    } catch (error) {
-        todayTasks = [];
-        todayTasksDate = "";
-        todayTasksReady = false;
-        console.info("Today's Scrum tasks are not synced yet:", error.message);
+    if (!isSelectedDateToday() || todayTasksLoading) return;
+    element("today-plan").hidden = false;
+    let token = "";
+    try { token = sessionStorage.getItem(PROJECT_TOKEN_KEY) || ""; } catch {}
+    if (!token) {
+        element("today-plan-auth").hidden = false;
+        showPlanMessage("Connect GitHub to load today's tasks.");
+        return;
     }
-    renderTodayPlan();
+    element("today-plan-auth").hidden = true;
+    todayTasksLoading = true;
+    showPlanMessage("Loading today's tasks…");
+    try {
+        const tasks = await fetchTodayTasks(token);
+        renderTodayTasks(tasks);
+    } catch (error) {
+        showPlanMessage("Couldn't load tasks: " + error.message, true);
+        element("today-plan-auth").hidden = false;
+    } finally {
+        todayTasksLoading = false;
+    }
+}
+
+function setupTodayPlanAuth() {
+    const button = element("today-plan-connect");
+    const input = element("today-plan-token");
+    if (!button || !input) return;
+    button.addEventListener("click", async () => {
+        const token = input.value.trim();
+        if (!token) return showPlanMessage("Enter your GitHub token first.", true);
+        try { sessionStorage.setItem(PROJECT_TOKEN_KEY, token); }
+        catch { return showPlanMessage("Session storage is unavailable in this browser.", true); }
+        input.value = "";
+        await loadTodayPlan();
+    });
 }
 
 function installWorklogMarkdownStyles() {
@@ -267,6 +347,7 @@ function renderCalendar() {
         tile.addEventListener("click", () => {
             selectedDay = day;
             renderCalendar();
+            if (isSelectedDateToday()) loadTodayPlan();
         });
         grid.append(tile);
     }
@@ -314,7 +395,6 @@ export async function loadStudyCalendar(forceRefresh = false) {
         updateStreakMetrics();
         element("calendar-load-status").textContent = "Loaded " + records.size + " dated records.";
         renderCalendar();
-        await loadTodayPlan();
     } catch (error) {
         console.error("Study calendar failed to load:", error);
         element("calendar-load-status").textContent = "Unable to load study calendar: " + error.message;
@@ -324,6 +404,7 @@ export async function loadStudyCalendar(forceRefresh = false) {
 }
 
 export function setupCalendarEvents() {
+    setupTodayPlanAuth();
     element("calendar-previous")?.addEventListener("click", () => {
         const previous = normalizeMonth(visibleYear, visibleMonth - 1);
         visibleYear = previous.year;
