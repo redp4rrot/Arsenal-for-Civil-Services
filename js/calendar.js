@@ -266,7 +266,6 @@ function renderCalendar() {
         tile.addEventListener("click", () => {
             selectedDay = day;
             renderCalendar();
-            loadTodayPlan();
         });
         grid.append(tile);
     }
