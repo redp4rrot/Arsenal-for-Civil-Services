@@ -15,7 +15,7 @@ import {
 import {
     loadStudyCalendar,
     setupCalendarEvents
-} from "./calendar.js?v=tasks-snapshot-1";
+} from "./calendar.js?v=tasks-markdown-2";
 
 
 /* =========================================================
