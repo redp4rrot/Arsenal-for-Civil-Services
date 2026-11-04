@@ -30,7 +30,7 @@ let visibleMonth = new Date().getMonth();
 let selectedDay = new Date().getDate();
 let latestDataMonth = monthIndex(visibleYear, visibleMonth);
 let loadSequence = 0;
-let todayTasksLoading = false;
+let taskLoadSequence = 0;
 
 
 function formatDate(year, month, day) {
@@ -46,24 +46,16 @@ function describeRecord(record) {
     return "Study logged · " + Number(record.hours).toFixed(1) + " hours";
 }
 
-function isSelectedDateToday() {
-    const today = new Date();
-    return visibleYear === today.getFullYear() &&
-        visibleMonth === today.getMonth() &&
-        selectedDay === today.getDate();
-}
-
-function todayISO() {
-    const parts = new Intl.DateTimeFormat("en-CA", {
-        timeZone: "Asia/Kolkata", year: "numeric", month: "2-digit", day: "2-digit"
-    }).formatToParts(new Date());
-    const part = type => parts.find(value => value.type === type)?.value;
-    return part("year") + "-" + part("month") + "-" + part("day");
+function selectedDateISO() {
+    return visibleYear + "-" + String(visibleMonth + 1).padStart(2, "0") + "-" +
+        String(selectedDay).padStart(2, "0");
 }
 
 function renderTodayPlan() {
     const section = element("today-plan");
-    if (section) section.hidden = !isSelectedDateToday();
+    if (section) section.hidden = false;
+    const heading = section?.querySelector(".today-plan-heading span");
+    if (heading) heading.textContent = "TASKS FOR SELECTED DAY";
 }
 
 function showPlanMessage(message, isError = false) {
@@ -83,7 +75,7 @@ function renderTodayTasks(tasks) {
     list.replaceChildren();
     count.textContent = tasks.length ? String(tasks.length) : "";
     if (!tasks.length) {
-        showPlanMessage("No tasks for today.");
+        showPlanMessage("No tasks scheduled for this day.");
         return;
     }
     const order = ["Morning", "Post lunch", "Post evening tea", "Late night"];
@@ -116,6 +108,11 @@ function renderTodayTasks(tasks) {
             main.append(link);
         }
         item.append(main);
+        const status = document.createElement("span");
+        const statusText = task.status || "No status";
+        status.className = "today-task-status status-" + statusText.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+        status.textContent = statusText;
+        item.append(status);
         if (task.slots.length) {
             const slots = document.createElement("div");
             slots.className = "today-task-slots";
@@ -137,24 +134,20 @@ function renderTodayTasks(tasks) {
 }
 
 async function loadTodayPlan() {
-    if (!isSelectedDateToday() || todayTasksLoading) return;
+    const requestId = ++taskLoadSequence;
     const section = element("today-plan");
     section.hidden = false;
-    todayTasksLoading = true;
-    showPlanMessage("Loading today's tasks…");
+    const date = selectedDateISO();
+    showPlanMessage("Loading tasks for " + formatDate(visibleYear, visibleMonth, selectedDay) + "…");
     try {
         const response = await fetch("./data/today-tasks.json?ts=" + Date.now(), { cache: "no-store" });
         if (!response.ok) throw new Error("Task snapshot unavailable (" + response.status + ").");
         const snapshot = await response.json();
-        if (snapshot.date !== todayISO()) {
-            showPlanMessage("Today's task snapshot is being prepared.");
-            return;
-        }
-        renderTodayTasks(Array.isArray(snapshot.tasks) ? snapshot.tasks : []);
+        if (requestId !== taskLoadSequence) return;
+        const tasks = Array.isArray(snapshot.tasks) ? snapshot.tasks.filter(task => task.date === date) : [];
+        renderTodayTasks(tasks);
     } catch (error) {
-        showPlanMessage("Couldn't load tasks: " + error.message, true);
-    } finally {
-        todayTasksLoading = false;
+        if (requestId === taskLoadSequence) showPlanMessage("Couldn't load tasks: " + error.message, true);
     }
 }
 
@@ -273,7 +266,7 @@ function renderCalendar() {
         tile.addEventListener("click", () => {
             selectedDay = day;
             renderCalendar();
-            if (isSelectedDateToday()) loadTodayPlan();
+            loadTodayPlan();
         });
         grid.append(tile);
     }
@@ -286,6 +279,8 @@ function renderCalendar() {
 
     renderSelectedDay();
     renderFestivals();
+    renderTodayPlan();
+    loadTodayPlan();
 }
 
 function updateStreakMetrics() {
