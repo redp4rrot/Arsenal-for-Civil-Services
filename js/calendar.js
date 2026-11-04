@@ -47,9 +47,9 @@ query($cursor: String) {
           }
           fieldValues(first: 30) {
             nodes {
-              ... on ProjectV2ItemFieldDateValue { date field { name } }
-              ... on ProjectV2ItemFieldSingleSelectValue { name field { name } }
-              ... on ProjectV2ItemFieldMultiSelectValue { value field { name } }
+              ... on ProjectV2ItemFieldDateValue { date field { ... on ProjectV2FieldCommon { name } } }
+              ... on ProjectV2ItemFieldSingleSelectValue { name field { ... on ProjectV2FieldCommon { name } } }
+              ... on ProjectV2ItemFieldMultiSelectValue { value field { ... on ProjectV2FieldCommon { name } } }
             }
           }
         }
