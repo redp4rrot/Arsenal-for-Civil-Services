@@ -1,5 +1,9 @@
 name: Update today's Scrum tasks
 on:
+  push:
+    paths:
+      - 'scripts/fetch_today_tasks.py'
+      - '.github/workflows/update-today-tasks.yml'
   schedule:
     - cron: '*/15 * * * *'
   workflow_dispatch:
