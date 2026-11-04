@@ -1,0 +1,41 @@
+name: Sync today's Scrum tasks
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-todays-scrum-tasks
+  cancel-in-progress: true
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out dashboard
+        uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Fetch today's Project items
+        env:
+          PROJECTS_TOKEN: ${{ secrets.PROJECTS_TOKEN }}
+        run: python scripts/sync_today_tasks.py
+      - name: Publish task data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/today-tasks.json
+          if git diff --cached --quiet; then
+            echo "Today's task data is unchanged."
+          else
+            git commit -m "chore: sync today's Scrum tasks"
+            git push
+          fi

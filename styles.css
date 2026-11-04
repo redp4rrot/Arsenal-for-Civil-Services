@@ -609,3 +609,93 @@ h1 {
   .average-trend-svg { max-height:270px; }
 }
 @media(prefers-reduced-motion:reduce) { .trend-live-halo { animation:none; } }
+
+
+/* Today's Scrum plan in the selected-day panel */
+.today-plan {
+  margin:20px 0 4px;
+  padding:16px 0 4px;
+  border-top:1px solid var(--border);
+}
+.today-plan[hidden] { display:none; }
+.today-plan-heading {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:12px;
+  color:var(--text);
+  font-size:11px;
+  line-height:1.5;
+  font-weight:750;
+  letter-spacing:1.8px;
+}
+.today-plan-count {
+  color:var(--muted);
+  font-size:10px;
+  font-weight:650;
+  letter-spacing:1px;
+}
+.today-plan-list { display:grid; gap:9px; }
+.today-task {
+  min-width:0;
+  padding:11px 12px;
+  border:1px solid var(--border);
+  border-radius:9px;
+  background:var(--panel-2);
+}
+.today-task-top {
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+}
+.today-task-title {
+  min-width:0;
+  color:var(--text);
+  font-size:13px;
+  line-height:1.55;
+  font-weight:650;
+  text-decoration:none;
+  overflow-wrap:anywhere;
+}
+a.today-task-title:hover {
+  color:var(--yellow);
+  text-decoration:underline;
+  text-underline-offset:3px;
+}
+.today-task-status {
+  flex:0 0 auto;
+  color:var(--muted);
+  font-size:10px;
+  line-height:1.5;
+  white-space:nowrap;
+}
+.today-task-slots {
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  margin-top:8px;
+}
+.today-task-slot {
+  display:inline-flex;
+  align-items:center;
+  padding:3px 8px;
+  border:1px solid var(--border);
+  border-radius:999px;
+  color:var(--muted);
+  font-size:10px;
+  line-height:1.4;
+  background:color-mix(in srgb,var(--panel) 78%,transparent);
+}
+.today-task-slot.is-unscheduled { border-style:dashed; opacity:.8; }
+.today-plan-empty {
+  margin:0;
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.7;
+}
+@media(max-width:760px) {
+  .today-plan { margin-top:16px; }
+  .today-task { padding:10px; }
+}
