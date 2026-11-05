@@ -14,6 +14,7 @@ import {
 
 import {
     loadStudyCalendar,
+    refreshTodayPlan,
     setupCalendarEvents
 } from "./calendar.js?v=selected-date-status-1";
 
@@ -29,6 +30,8 @@ function refreshDashboard() {
     loadTrackingMonth();
 
     loadStudyCalendar(true);
+
+    refreshTodayPlan();
 
     loadDirectory();
 
@@ -132,6 +135,8 @@ export function initializeApp() {
     loadTrackingMonth();
 
     loadStudyCalendar();
+
+    refreshTodayPlan();
 
     loadDirectory();
 
