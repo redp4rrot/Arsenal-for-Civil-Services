@@ -32,6 +32,33 @@ let latestDataMonth = monthIndex(visibleYear, visibleMonth);
 let loadSequence = 0;
 let taskLoadSequence = 0;
 let cachedTasks = [];
+const TOKEN_KEY = 'arsenal-github-projects-token';
+let selectedProjectId = localStorage.getItem('arsenal-project-id') || '';
+async function projectsGraphQL(token, query, variables = {}) {
+ const response = await fetch('https://api.github.com/graphql', {method:'POST',headers:{Authorization:'Bearer '+token,'Content-Type':'application/json',Accept:'application/vnd.github+json'},body:JSON.stringify({query,variables}),cache:'no-store'});
+ const payload = await response.json();
+ if (!response.ok || payload.errors?.length) throw new Error(payload.errors?.map(e=>e.message).join('; ') || 'GitHub returned '+response.status);
+ return payload.data;
+}
+function projectStatus(message,error=false){const n=element('projects-connection-status');if(n){n.textContent=message;n.classList.toggle('is-error',error);}}
+async function fetchProjectTasks(token,projectId){
+ const query = 'query($id:ID!,$after:String){node(id:$id){... on ProjectV2{items(first:100,after:$after){nodes{fieldValues(first:30){nodes{... on ProjectV2ItemFieldDateValue{date field{... on ProjectV2FieldCommon{name}}} ... on ProjectV2ItemFieldSingleSelectValue{name field{... on ProjectV2FieldCommon{name}}} ... on ProjectV2ItemFieldTextValue{text field{... on ProjectV2FieldCommon{name}}}}} content{... on Issue{title url state}}} pageInfo{hasNextPage endCursor}}}}}';
+ const tasks=[];let after=null;do{
+  const data=await projectsGraphQL(token,query,{id:projectId,after});const conn=data.node&&data.node.items;if(!conn)throw new Error('Cannot read this Project board. Check token permissions.');
+  for(const item of conn.nodes){const issue=item.content;if(!issue||!issue.title)continue;const vals=item.fieldValues.nodes;const find=fn=>vals.find(v=>v.field&&v.field.name&&fn(v.field.name.toLowerCase()));const dateValue=find(n=>n.includes('date')||n.includes('due'));const statusValue=find(n=>n.includes('status'));const date=dateValue&&(dateValue.date||dateValue.text)||'';if(!/^\d{4}-\d{2}-\d{2}$/.test(date))continue;const slots=vals.filter(v=>v.field&&/(slot|time)/i.test(v.field.name)).map(v=>v.name||v.text).filter(Boolean);tasks.push({date,title:issue.title,url:issue.url,status:statusValue&&statusValue.name||issue.state,slots});}
+  after=conn.pageInfo.hasNextPage?conn.pageInfo.endCursor:null;
+ }while(after);return tasks;
+}
+async function connectGitHubProjects(){
+ const input=element('projects-token');const token=input&&input.value.trim()||localStorage.getItem(TOKEN_KEY)||'';if(!token){projectStatus('Enter a GitHub token with read:project permission.',true);return;}
+ projectStatus('Connecting to GitHub Projects…');try{
+  const viewer=await projectsGraphQL(token,'query{viewer{login}}');localStorage.setItem(TOKEN_KEY,token);if(input)input.value='';
+  const result=await projectsGraphQL(token,'query($login:String!){user(login:$login){projectsV2(first:100){nodes{id title number}}}}',{login:viewer.viewer.login});
+  const projects=result.user&&result.user.projectsV2.nodes||[];if(!projects.length)throw new Error('No Projects V2 boards found under @'+viewer.viewer.login+'.');
+  const select=element('projects-board');select.replaceChildren();for(const p of projects){const o=document.createElement('option');o.value=p.id;o.textContent=p.title+' (#'+p.number+')';select.append(o);}
+  if(!projects.some(p=>p.id===selectedProjectId))selectedProjectId=projects[0].id;select.value=selectedProjectId;select.hidden=false;localStorage.setItem('arsenal-project-id',selectedProjectId);projectStatus('Connected as @'+viewer.viewer.login+'.');await refreshTodayPlan();
+ }catch(e){projectStatus(e.message,true);showPlanMessage('GitHub Projects connection failed: '+e.message,true);}
+}
 
 
 function formatDate(year, month, day) {
@@ -135,28 +162,11 @@ function renderTodayTasks(tasks) {
 }
 
 export async function refreshTodayPlan() {
-    const requestId = ++taskLoadSequence;
-    const section = element("today-plan");
-    if (!section) return;
-    section.hidden = false;
-    showPlanMessage("Refreshing tasks…");
-    try {
-        const response = await fetch("./data/today-tasks.json?ts=" + Date.now(), {
-            cache: "no-store",
-            headers: { "Cache-Control": "no-cache" }
-        });
-        if (!response.ok) throw new Error("Task data unavailable (" + response.status + ").");
-        const snapshot = await response.json();
-        if (requestId !== taskLoadSequence) return;
-        cachedTasks = Array.isArray(snapshot.tasks) ? snapshot.tasks : [];
-        renderTasksForSelectedDate();
-    } catch (error) {
-        if (requestId === taskLoadSequence) {
-            showPlanMessage("Couldn't load tasks: " + error.message, true);
-        }
-    }
+ const requestId=++taskLoadSequence;const section=element('today-plan');if(!section)return;section.hidden=false;
+ const token=localStorage.getItem(TOKEN_KEY);if(!token||!selectedProjectId){showPlanMessage('Connect your GitHub Project to load live tasks.');return;}
+ showPlanMessage('Fetching live tasks from GitHub Projects…');try{cachedTasks=await fetchProjectTasks(token,selectedProjectId);if(requestId!==taskLoadSequence)return;renderTasksForSelectedDate();projectStatus('Synced '+cachedTasks.length+' dated tasks from GitHub Projects.');}
+ catch(error){if(requestId===taskLoadSequence){showPlanMessage('Could not load live tasks: '+error.message,true);projectStatus(error.message,true);}}
 }
-
 function renderTasksForSelectedDate() {
     const date = selectedDateISO();
     const tasks = cachedTasks.filter(task => task.date === date).map(task => ({
@@ -339,6 +349,10 @@ export async function loadStudyCalendar(forceRefresh = false) {
 }
 
 export function setupCalendarEvents() {
+ const tokenInput=element('projects-token');if(tokenInput&&localStorage.getItem(TOKEN_KEY))tokenInput.placeholder='GitHub token saved · enter a new one to replace';
+ element('projects-connect')?.addEventListener('click',connectGitHubProjects);
+ element('projects-board')?.addEventListener('change',event=>{selectedProjectId=event.target.value;localStorage.setItem('arsenal-project-id',selectedProjectId);refreshTodayPlan();});
+ if(localStorage.getItem(TOKEN_KEY))connectGitHubProjects();
     element("calendar-previous")?.addEventListener("click", () => {
         const previous = normalizeMonth(visibleYear, visibleMonth - 1);
         visibleYear = previous.year;
