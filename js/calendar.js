@@ -43,10 +43,28 @@ async function projectsGraphQL(token, query, variables = {}) {
 }
 function projectStatus(message,error=false){const n=element('projects-connection-status');if(n){n.textContent=message;n.classList.toggle('is-error',error);}}
 async function fetchProjectTasks(token,projectId){
- const query = 'query($id:ID!,$after:String){node(id:$id){... on ProjectV2{items(first:100,after:$after){nodes{fieldValues(first:30){nodes{... on ProjectV2ItemFieldDateValue{date field{... on ProjectV2FieldCommon{name}}} ... on ProjectV2ItemFieldSingleSelectValue{name field{... on ProjectV2FieldCommon{name}}} ... on ProjectV2ItemFieldTextValue{text field{... on ProjectV2FieldCommon{name}}}}} content{... on Issue{title url state}}} pageInfo{hasNextPage endCursor}}}}}';
+ const query = 'query($id:ID!,$after:String){node(id:$id){... on ProjectV2{items(first:100,after:$after){nodes{fieldValues(first:50){nodes{... on ProjectV2ItemFieldDateValue{date field{... on ProjectV2FieldCommon{name}}} ... on ProjectV2ItemFieldSingleSelectValue{name field{... on ProjectV2FieldCommon{name}}} ... on ProjectV2ItemFieldTextValue{text field{... on ProjectV2FieldCommon{name}}}}} content{... on Issue{title url state} ... on DraftIssue{title} ... on PullRequest{title url state}}} pageInfo{hasNextPage endCursor}}}}}';
+ const normalizeDate=value=>{
+  if(!value)return '';
+  const raw=String(value).trim();
+  const iso=raw.match(/^(\\d{4}-\\d{2}-\\d{2})/);
+  if(iso)return iso[1];
+  const parsed=new Date(raw);
+  return Number.isNaN(parsed.getTime())?'':parsed.toISOString().slice(0,10);
+ };
  const tasks=[];let after=null;do{
   const data=await projectsGraphQL(token,query,{id:projectId,after});const conn=data.node&&data.node.items;if(!conn)throw new Error('Cannot read this Project board. Check token permissions.');
-  for(const item of conn.nodes){const issue=item.content;if(!issue||!issue.title)continue;const vals=item.fieldValues.nodes;const find=fn=>vals.find(v=>v.field&&v.field.name&&fn(v.field.name.toLowerCase()));const dateValue=find(n=>n.includes('date')||n.includes('due'));const statusValue=find(n=>n.includes('status'));const date=dateValue&&(dateValue.date||dateValue.text)||'';if(!/^\d{4}-\d{2}-\d{2}$/.test(date))continue;const slots=vals.filter(v=>v.field&&/(slot|time)/i.test(v.field.name)).map(v=>v.name||v.text).filter(Boolean);tasks.push({date,title:issue.title,url:issue.url,status:statusValue&&statusValue.name||issue.state,slots});}
+  for(const item of conn.nodes){
+   const issue=item.content;if(!issue||!issue.title)continue;
+   const vals=item.fieldValues.nodes;
+   const find=fn=>vals.find(v=>v.field&&v.field.name&&fn(v.field.name.toLowerCase()));
+   const dateValue=find(n=>n==='date'||n.includes('due')||n.includes('date'))||vals.find(v=>v.date||v.text&&/^\\d{4}-\\d{2}-\\d{2}/.test(v.text));
+   const statusValue=find(n=>n.includes('status'));
+   const date=normalizeDate(dateValue&&(dateValue.date||dateValue.text));
+   if(!date)continue;
+   const slots=vals.filter(v=>v.field&&/(slot|time)/i.test(v.field.name)).map(v=>v.name||v.text).filter(Boolean);
+   tasks.push({date,title:issue.title,url:issue.url||'',status:statusValue&&statusValue.name||issue.state||'',slots});
+  }
   after=conn.pageInfo.hasNextPage?conn.pageInfo.endCursor:null;
  }while(after);return tasks;
 }
