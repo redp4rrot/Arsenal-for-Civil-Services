@@ -33,7 +33,7 @@ let loadSequence = 0;
 let taskLoadSequence = 0;
 let cachedTasks = [];
 const PROJECT_TOKEN_KEY = 'arsenal-github-projects-token';
-const getProjectToken = () => { try { return sessionStorage.getItem(PROJECT_TOKEN_KEY) || ''; } catch { return ''; } };
+const getProjectToken = () => { try { const saved = localStorage.getItem(PROJECT_TOKEN_KEY); if (saved) return saved; const legacy = sessionStorage.getItem(PROJECT_TOKEN_KEY); if (legacy) { localStorage.setItem(PROJECT_TOKEN_KEY, legacy); return legacy; } return ''; } catch { return ''; } };
 let selectedProjectId = localStorage.getItem('arsenal-project-id') || '';
 async function projectsGraphQL(token, query, variables = {}) {
  const response = await fetch('https://api.github.com/graphql', {method:'POST',headers:{Authorization:'Bearer '+token,'Content-Type':'application/json',Accept:'application/vnd.github+json'},body:JSON.stringify({query,variables}),cache:'no-store'});
