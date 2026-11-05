@@ -16,7 +16,7 @@ import {
     loadStudyCalendar,
     refreshTodayPlan,
     setupCalendarEvents
-} from "./calendar.js?v=selected-date-status-1";
+} from "./calendar.js?v=tasks-refresh-2";
 
 
 /* =========================================================
