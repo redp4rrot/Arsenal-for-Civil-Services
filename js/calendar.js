@@ -83,7 +83,7 @@ function selectedDateISO() {
 
 function renderTodayPlan() {
     const section = element("today-plan");
-    if (section) section.hidden = true;
+    if (section) section.hidden = false;
     const heading = section?.querySelector(".today-plan-heading span");
     if (heading) {
         const today = new Date();
