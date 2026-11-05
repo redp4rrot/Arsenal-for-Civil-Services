@@ -114,7 +114,7 @@ function showPlanMessage(message, isError = false) {
     const list = element("today-plan-list");
     const count = element("today-plan-count");
     list.replaceChildren();
-    count.textContent = "";
+    if (count) count.textContent = "";
     const note = document.createElement("p");
     note.className = "today-plan-empty" + (isError ? " is-error" : "");
     note.textContent = message;
@@ -125,7 +125,7 @@ function renderTodayTasks(tasks) {
     const list = element("today-plan-list");
     const count = element("today-plan-count");
     list.replaceChildren();
-    count.textContent = tasks.length ? String(tasks.length) : "";
+    if (count) count.textContent = tasks.length ? String(tasks.length) : "";
     if (!tasks.length) return;
     const order = ["Morning", "Post lunch", "Post evening tea", "Late night"];
     tasks.sort((a, b) => {
