@@ -56,8 +56,9 @@ async function connectGitHubProjects(){
   const viewer=await projectsGraphQL(token,'query{viewer{login}}');
   const result=await projectsGraphQL(token,'query($login:String!){user(login:$login){projectsV2(first:100){nodes{id title number}}}}',{login:viewer.viewer.login});
   const projects=result.user&&result.user.projectsV2.nodes||[];if(!projects.length)throw new Error('No Projects V2 boards found under @'+viewer.viewer.login+'.');
-  const select=element('projects-board');select.replaceChildren();for(const p of projects){const o=document.createElement('option');o.value=p.id;o.textContent=p.title+' (#'+p.number+')';select.append(o);}
-  if(!projects.some(p=>p.id===selectedProjectId))selectedProjectId=projects[0].id;select.value=selectedProjectId;select.hidden=false;localStorage.setItem('arsenal-project-id',selectedProjectId);projectStatus('Connected as @'+viewer.viewer.login+'.');await refreshTodayPlan();
+  const defaultProject=projects.find(p=>p.title.trim()==='CSE-2026/2027' && p.number===3) || projects.find(p=>p.title.trim()==='CSE-2026/2027');
+  if(!defaultProject)throw new Error('Default project CSE-2026/2027 (#3) was not found under @'+viewer.viewer.login+'.');
+  selectedProjectId=defaultProject.id;localStorage.setItem('arsenal-project-id',selectedProjectId);projectStatus('Connected to CSE-2026/2027 (#3) as @'+viewer.viewer.login+'.');await refreshTodayPlan();
  }catch(e){projectStatus(e.message,true);showPlanMessage('GitHub Projects connection failed: '+e.message,true);}
 }
 
@@ -351,7 +352,6 @@ export async function loadStudyCalendar(forceRefresh = false) {
 
 export function setupCalendarEvents() {
  
- element('projects-board')?.addEventListener('change',event=>{selectedProjectId=event.target.value;localStorage.setItem('arsenal-project-id',selectedProjectId);refreshTodayPlan();});
  if(getProjectToken())connectGitHubProjects();
     element("calendar-previous")?.addEventListener("click", () => {
         const previous = normalizeMonth(visibleYear, visibleMonth - 1);
