@@ -31,6 +31,7 @@ let selectedDay = new Date().getDate();
 let latestDataMonth = monthIndex(visibleYear, visibleMonth);
 let loadSequence = 0;
 let taskLoadSequence = 0;
+let cachedTasks = [];
 
 
 function formatDate(year, month, day) {
@@ -133,22 +134,36 @@ function renderTodayTasks(tasks) {
     }
 }
 
-async function loadTodayPlan() {
+export async function refreshTodayPlan() {
     const requestId = ++taskLoadSequence;
     const section = element("today-plan");
+    if (!section) return;
     section.hidden = false;
-    const date = selectedDateISO();
-    showPlanMessage("Loading tasks for " + formatDate(visibleYear, visibleMonth, selectedDay) + "…");
+    showPlanMessage("Refreshing tasks…");
     try {
-        const response = await fetch("./data/today-tasks.json?ts=" + Date.now(), { cache: "no-store" });
-        if (!response.ok) throw new Error("Task snapshot unavailable (" + response.status + ").");
+        const response = await fetch("./data/today-tasks.json?ts=" + Date.now(), {
+            cache: "no-store",
+            headers: { "Cache-Control": "no-cache" }
+        });
+        if (!response.ok) throw new Error("Task data unavailable (" + response.status + ").");
         const snapshot = await response.json();
         if (requestId !== taskLoadSequence) return;
-        const tasks = Array.isArray(snapshot.tasks) ? snapshot.tasks.filter(task => task.date === date) : [];
-        renderTodayTasks(tasks);
+        cachedTasks = Array.isArray(snapshot.tasks) ? snapshot.tasks : [];
+        renderTasksForSelectedDate();
     } catch (error) {
-        if (requestId === taskLoadSequence) showPlanMessage("Couldn't load tasks: " + error.message, true);
+        if (requestId === taskLoadSequence) {
+            showPlanMessage("Couldn't load tasks: " + error.message, true);
+        }
     }
+}
+
+function renderTasksForSelectedDate() {
+    const date = selectedDateISO();
+    const tasks = cachedTasks.filter(task => task.date === date).map(task => ({
+        ...task,
+        slots: Array.isArray(task.slots) ? task.slots : []
+    }));
+    renderTodayTasks(tasks);
 }
 
 function installWorklogMarkdownStyles() {
@@ -279,7 +294,7 @@ function renderCalendar() {
     renderSelectedDay();
     renderFestivals();
     renderTodayPlan();
-    loadTodayPlan();
+    renderTasksForSelectedDate();
 }
 
 function updateStreakMetrics() {
