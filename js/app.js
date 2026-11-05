@@ -16,7 +16,7 @@ import {
     loadStudyCalendar,
     refreshTodayPlan,
     setupCalendarEvents
-} from "./calendar.js?v=local-token-1";
+} from "./calendar.js?v=local-token-fix-1";
 
 
 /* =========================================================
