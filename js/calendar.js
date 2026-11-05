@@ -1,6 +1,6 @@
 import { getCachedIssues } from "./github.js";
 import { parseDailyRecords, calculateStreaks, getRecordForDate } from "./streaks.js";
-import { CONFIG } from "./config.js";
+import { CONFIG, GITHUB_PROJECTS_TOKEN } from "./config.js";
 import { marked } from "https://cdn.jsdelivr.net/npm/marked@15.0.12/lib/marked.esm.js";
 import DOMPurify from "https://cdn.jsdelivr.net/npm/dompurify@3.2.6/dist/purify.es.mjs";
 
@@ -50,9 +50,9 @@ async function fetchProjectTasks(token,projectId){
  }while(after);return tasks;
 }
 async function connectGitHubProjects(){
- const input=element('projects-token');const token=input&&input.value.trim()||localStorage.getItem(TOKEN_KEY)||'';if(!token){projectStatus('Enter a GitHub token with read:project permission.',true);return;}
+ const token=GITHUB_PROJECTS_TOKEN;if(!token){projectStatus('Add your GitHub token in js/config.js.',true);return;}
  projectStatus('Connecting to GitHub Projects…');try{
-  const viewer=await projectsGraphQL(token,'query{viewer{login}}');localStorage.setItem(TOKEN_KEY,token);if(input)input.value='';
+  const viewer=await projectsGraphQL(token,'query{viewer{login}}');
   const result=await projectsGraphQL(token,'query($login:String!){user(login:$login){projectsV2(first:100){nodes{id title number}}}}',{login:viewer.viewer.login});
   const projects=result.user&&result.user.projectsV2.nodes||[];if(!projects.length)throw new Error('No Projects V2 boards found under @'+viewer.viewer.login+'.');
   const select=element('projects-board');select.replaceChildren();for(const p of projects){const o=document.createElement('option');o.value=p.id;o.textContent=p.title+' (#'+p.number+')';select.append(o);}
@@ -163,7 +163,7 @@ function renderTodayTasks(tasks) {
 
 export async function refreshTodayPlan() {
  const requestId=++taskLoadSequence;const section=element('today-plan');if(!section)return;section.hidden=false;
- const token=localStorage.getItem(TOKEN_KEY);if(!token||!selectedProjectId){showPlanMessage('Connect your GitHub Project to load live tasks.');return;}
+ const token=GITHUB_PROJECTS_TOKEN;if(!token||!selectedProjectId){showPlanMessage('Connect your GitHub Project to load live tasks.');return;}
  showPlanMessage('Fetching live tasks from GitHub Projects…');try{cachedTasks=await fetchProjectTasks(token,selectedProjectId);if(requestId!==taskLoadSequence)return;renderTasksForSelectedDate();projectStatus('Synced '+cachedTasks.length+' dated tasks from GitHub Projects.');}
  catch(error){if(requestId===taskLoadSequence){showPlanMessage('Could not load live tasks: '+error.message,true);projectStatus(error.message,true);}}
 }
@@ -349,10 +349,10 @@ export async function loadStudyCalendar(forceRefresh = false) {
 }
 
 export function setupCalendarEvents() {
- const tokenInput=element('projects-token');if(tokenInput&&localStorage.getItem(TOKEN_KEY))tokenInput.placeholder='GitHub token saved · enter a new one to replace';
+ 
  element('projects-connect')?.addEventListener('click',connectGitHubProjects);
  element('projects-board')?.addEventListener('change',event=>{selectedProjectId=event.target.value;localStorage.setItem('arsenal-project-id',selectedProjectId);refreshTodayPlan();});
- if(localStorage.getItem(TOKEN_KEY))connectGitHubProjects();
+ if(GITHUB_PROJECTS_TOKEN)connectGitHubProjects();
     element("calendar-previous")?.addEventListener("click", () => {
         const previous = normalizeMonth(visibleYear, visibleMonth - 1);
         visibleYear = previous.year;
