@@ -1,7 +1,3 @@
-// Add a GitHub token with read:project permission here before deploying.
-import { GITHUB_PROJECTS_TOKEN } from "./secrets.js";
-export { GITHUB_PROJECTS_TOKEN };
-
 export const CONFIG = {
 
     github: {
