@@ -1,3 +1,3 @@
-import { initializeApp } from "./js/app.js?v=projects-default-1";
+import { initializeApp } from "./js/app.js?v=tasks-labels-1";
 
 initializeApp();
