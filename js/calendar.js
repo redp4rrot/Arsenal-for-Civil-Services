@@ -51,7 +51,7 @@ async function fetchProjectTasks(token,projectId){
  }while(after);return tasks;
 }
 async function connectGitHubProjects(){
- const token=getProjectToken();if(!token){projectStatus('Add your token to Session Storage as arsenal-github-projects-token, then reload.',true);return;}
+ const token=getProjectToken();if(!token){projectStatus('');return;}
  projectStatus('Connecting to GitHub Projects…');try{
   const viewer=await projectsGraphQL(token,'query{viewer{login}}');
   const result=await projectsGraphQL(token,'query($login:String!){user(login:$login){projectsV2(first:100){nodes{id title number}}}}',{login:viewer.viewer.login});
@@ -88,7 +88,7 @@ function renderTodayPlan() {
     if (heading) {
         const today = new Date();
         const todayISO = today.getFullYear() + "-" + String(today.getMonth() + 1).padStart(2, "0") + "-" + String(today.getDate()).padStart(2, "0");
-        heading.textContent = selectedDateISO() < todayISO ? "TASKS FINISHED" : "SCHEDULED";
+        heading.textContent = selectedDateISO() < todayISO ? "Tasks finished" : "Scheduled";
     }
 }
 
@@ -166,9 +166,9 @@ function renderTodayTasks(tasks) {
 
 export async function refreshTodayPlan() {
  const requestId=++taskLoadSequence;const section=element('today-plan');if(!section)return;section.hidden=false;
- const token=getProjectToken();if(!token||!selectedProjectId){showPlanMessage('Set Session Storage key arsenal-github-projects-token and reload to load live tasks.');return;}
+ const token=getProjectToken();if(!token||!selectedProjectId){element('today-plan-list')?.replaceChildren();element('today-plan-count')&&(element('today-plan-count').textContent='');projectStatus('');return;}
  try{cachedTasks=await fetchProjectTasks(token,selectedProjectId);if(requestId!==taskLoadSequence)return;renderTasksForSelectedDate();projectStatus('');}
- catch(error){if(requestId===taskLoadSequence){showPlanMessage('Could not load live tasks: '+error.message,true);projectStatus(error.message,true);}}
+ catch(error){if(requestId===taskLoadSequence){element('today-plan-list')?.replaceChildren();element('today-plan-count')&&(element('today-plan-count').textContent='');projectStatus('');console.error('GitHub Projects task fetch failed:',error);}}
 }
 function renderTasksForSelectedDate() {
     const date = selectedDateISO();
