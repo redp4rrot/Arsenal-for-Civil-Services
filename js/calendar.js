@@ -85,7 +85,11 @@ function renderTodayPlan() {
     const section = element("today-plan");
     if (section) section.hidden = false;
     const heading = section?.querySelector(".today-plan-heading span");
-    if (heading) heading.textContent = "TASKS FOR SELECTED DAY";
+    if (heading) {
+        const today = new Date();
+        const todayISO = today.getFullYear() + "-" + String(today.getMonth() + 1).padStart(2, "0") + "-" + String(today.getDate()).padStart(2, "0");
+        heading.textContent = selectedDateISO() < todayISO ? "TASKS FINISHED" : "SCHEDULED";
+    }
 }
 
 function showPlanMessage(message, isError = false) {
@@ -104,10 +108,7 @@ function renderTodayTasks(tasks) {
     const count = element("today-plan-count");
     list.replaceChildren();
     count.textContent = tasks.length ? String(tasks.length) : "";
-    if (!tasks.length) {
-        showPlanMessage("No tasks scheduled for this day.");
-        return;
-    }
+    if (!tasks.length) return;
     const order = ["Morning", "Post lunch", "Post evening tea", "Late night"];
     tasks.sort((a, b) => {
         const rank = task => {
@@ -166,7 +167,7 @@ function renderTodayTasks(tasks) {
 export async function refreshTodayPlan() {
  const requestId=++taskLoadSequence;const section=element('today-plan');if(!section)return;section.hidden=false;
  const token=getProjectToken();if(!token||!selectedProjectId){showPlanMessage('Set Session Storage key arsenal-github-projects-token and reload to load live tasks.');return;}
- showPlanMessage('Fetching live tasks from GitHub Projects…');try{cachedTasks=await fetchProjectTasks(token,selectedProjectId);if(requestId!==taskLoadSequence)return;renderTasksForSelectedDate();projectStatus('Synced '+cachedTasks.length+' dated tasks from GitHub Projects.');}
+ try{cachedTasks=await fetchProjectTasks(token,selectedProjectId);if(requestId!==taskLoadSequence)return;renderTasksForSelectedDate();projectStatus('');}
  catch(error){if(requestId===taskLoadSequence){showPlanMessage('Could not load live tasks: '+error.message,true);projectStatus(error.message,true);}}
 }
 function renderTasksForSelectedDate() {
