@@ -1,3 +1,3 @@
-import { initializeApp } from "./js/app.js?v=projects-live-2";
+import { initializeApp } from "./js/app.js?v=projects-session-1";
 
 initializeApp();
