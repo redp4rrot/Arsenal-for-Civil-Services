@@ -1,3 +1,6 @@
+// Add a GitHub token with read:project permission here before deploying.
+export const GITHUB_PROJECTS_TOKEN = "";
+
 export const CONFIG = {
 
     github: {
