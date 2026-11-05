@@ -83,7 +83,7 @@ function selectedDateISO() {
 
 function renderTodayPlan() {
     const section = element("today-plan");
-    if (section) section.hidden = false;
+    if (section) section.hidden = true;
     const heading = section?.querySelector(".today-plan-heading span");
     if (heading) {
         const today = new Date();
@@ -166,9 +166,9 @@ function renderTodayTasks(tasks) {
 
 export async function refreshTodayPlan() {
  const requestId=++taskLoadSequence;const section=element('today-plan');if(!section)return;section.hidden=false;
- const token=getProjectToken();if(!token||!selectedProjectId){element('today-plan-list')?.replaceChildren();element('today-plan-count')&&(element('today-plan-count').textContent='');projectStatus('');return;}
+ const token=getProjectToken();if(!token||!selectedProjectId){const section=element('today-plan');if(section)section.hidden=true;element('today-plan-list')?.replaceChildren();element('today-plan-count')&&(element('today-plan-count').textContent='');projectStatus('');return;}
  try{cachedTasks=await fetchProjectTasks(token,selectedProjectId);if(requestId!==taskLoadSequence)return;renderTasksForSelectedDate();projectStatus('');}
- catch(error){if(requestId===taskLoadSequence){element('today-plan-list')?.replaceChildren();element('today-plan-count')&&(element('today-plan-count').textContent='');projectStatus('');console.error('GitHub Projects task fetch failed:',error);}}
+ catch(error){if(requestId===taskLoadSequence){const section=element('today-plan');if(section)section.hidden=true;element('today-plan-list')?.replaceChildren();element('today-plan-count')&&(element('today-plan-count').textContent='');projectStatus('');console.error('GitHub Projects task fetch failed:',error);}}
 }
 function renderTasksForSelectedDate() {
     const date = selectedDateISO();
@@ -176,6 +176,9 @@ function renderTasksForSelectedDate() {
         ...task,
         slots: Array.isArray(task.slots) ? task.slots : []
     }));
+    const section = element("today-plan");
+    if (section) section.hidden = tasks.length === 0;
+    if (tasks.length) renderTodayPlan();
     renderTodayTasks(tasks);
 }
 
