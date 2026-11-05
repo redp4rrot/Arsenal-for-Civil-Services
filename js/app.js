@@ -16,7 +16,7 @@ import {
     loadStudyCalendar,
     refreshTodayPlan,
     setupCalendarEvents
-} from "./calendar.js?v=projects-live-2";
+} from "./calendar.js?v=projects-session-1";
 
 
 /* =========================================================
