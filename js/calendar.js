@@ -32,7 +32,6 @@ let latestDataMonth = monthIndex(visibleYear, visibleMonth);
 let loadSequence = 0;
 let taskLoadSequence = 0;
 let cachedTasks = [];
-const TOKEN_KEY = 'arsenal-github-projects-token';
 let selectedProjectId = localStorage.getItem('arsenal-project-id') || '';
 async function projectsGraphQL(token, query, variables = {}) {
  const response = await fetch('https://api.github.com/graphql', {method:'POST',headers:{Authorization:'Bearer '+token,'Content-Type':'application/json',Accept:'application/vnd.github+json'},body:JSON.stringify({query,variables}),cache:'no-store'});
@@ -163,7 +162,7 @@ function renderTodayTasks(tasks) {
 
 export async function refreshTodayPlan() {
  const requestId=++taskLoadSequence;const section=element('today-plan');if(!section)return;section.hidden=false;
- const token=GITHUB_PROJECTS_TOKEN;if(!token||!selectedProjectId){showPlanMessage('Connect your GitHub Project to load live tasks.');return;}
+ const token=GITHUB_PROJECTS_TOKEN;if(!token||!selectedProjectId){showPlanMessage('Add your GitHub token in js/config.js to load live tasks.');return;}
  showPlanMessage('Fetching live tasks from GitHub Projects…');try{cachedTasks=await fetchProjectTasks(token,selectedProjectId);if(requestId!==taskLoadSequence)return;renderTasksForSelectedDate();projectStatus('Synced '+cachedTasks.length+' dated tasks from GitHub Projects.');}
  catch(error){if(requestId===taskLoadSequence){showPlanMessage('Could not load live tasks: '+error.message,true);projectStatus(error.message,true);}}
 }
@@ -350,7 +349,6 @@ export async function loadStudyCalendar(forceRefresh = false) {
 
 export function setupCalendarEvents() {
  
- element('projects-connect')?.addEventListener('click',connectGitHubProjects);
  element('projects-board')?.addEventListener('change',event=>{selectedProjectId=event.target.value;localStorage.setItem('arsenal-project-id',selectedProjectId);refreshTodayPlan();});
  if(GITHUB_PROJECTS_TOKEN)connectGitHubProjects();
     element("calendar-previous")?.addEventListener("click", () => {
