@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-07T08:38:05.849709+00:00",
+  "updated_at": "2026-11-07T15:13:02.702220+00:00",
   "tasks": [
     {
       "date": "2026-10-11",
@@ -59,16 +59,6 @@
       "status": "Done"
     },
     {
-      "date": "2026-11-07",
-      "title": "Theme based notes",
-      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/228",
-      "slots": [
-        "Morning",
-        "Post evening tea"
-      ],
-      "status": "In Progress"
-    },
-    {
       "date": "2026-10-11",
       "title": "Physics | Read `Waves` and solve all the PYQs till 2025",
       "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/210",
@@ -93,7 +83,7 @@
       "slots": [
         "Post lunch"
       ],
-      "status": "In Progress"
+      "status": "Done"
     },
     {
       "date": "2026-09-29",
@@ -122,6 +112,15 @@
         "Post evening tea"
       ],
       "status": "Done"
+    },
+    {
+      "date": "2026-11-07",
+      "title": "Theme based notes",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/228",
+      "slots": [
+        "Post evening tea"
+      ],
+      "status": "In Progress"
     },
     {
       "date": "2026-10-07",
