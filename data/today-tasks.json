@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-08T02:19:35.800800+00:00",
+  "updated_at": "2026-11-08T09:24:22.223337+00:00",
   "tasks": [
     {
       "date": "2026-10-11",
@@ -48,7 +48,7 @@
         "Morning",
         "Post lunch"
       ],
-      "status": "Todo"
+      "status": "In Progress"
     },
     {
       "date": "2026-11-08",
