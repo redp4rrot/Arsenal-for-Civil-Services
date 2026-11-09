@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-09T00:08:42.994561+00:00",
+  "updated_at": "2026-11-09T06:43:13.350354+00:00",
   "tasks": [
     {
       "date": "2026-10-11",
@@ -69,15 +69,6 @@
       "status": "Done"
     },
     {
-      "date": "2026-11-09",
-      "title": "Theme based notes",
-      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/228",
-      "slots": [
-        "Morning"
-      ],
-      "status": "In Progress"
-    },
-    {
       "date": "2026-10-11",
       "title": "Physics | Read `Waves` and solve all the PYQs till 2025",
       "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/210",
@@ -94,15 +85,6 @@
         "Post lunch"
       ],
       "status": "Done"
-    },
-    {
-      "date": "2026-11-09",
-      "title": "Daily Newspaper reading | The IE",
-      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/131",
-      "slots": [
-        "Post evening tea"
-      ],
-      "status": "In Progress"
     },
     {
       "date": "2026-09-29",
@@ -131,6 +113,15 @@
         "Post evening tea"
       ],
       "status": "Done"
+    },
+    {
+      "date": "2026-11-09",
+      "title": "Theme based notes",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/228",
+      "slots": [
+        "Post evening tea"
+      ],
+      "status": "In Progress"
     },
     {
       "date": "2026-10-07",
@@ -438,6 +429,13 @@
       "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/129",
       "slots": [],
       "status": "Done"
+    },
+    {
+      "date": "2026-11-11",
+      "title": "Daily Newspaper reading | The IE",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/131",
+      "slots": [],
+      "status": "In Progress"
     },
     {
       "date": "2026-06-29",
