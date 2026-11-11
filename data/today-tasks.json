@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-11T01:48:35.332796+00:00",
+  "updated_at": "2026-11-11T09:11:12.137544+00:00",
   "tasks": [
     {
       "date": "2026-10-11",
@@ -50,6 +50,15 @@
       "status": "Done"
     },
     {
+      "date": "2026-11-11",
+      "title": "Consolidate | `Pre-requisites` for Indian Economy",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/229",
+      "slots": [
+        "Morning"
+      ],
+      "status": "In Progress"
+    },
+    {
       "date": "2026-10-11",
       "title": "Physics | Read `Waves` and solve all the PYQs till 2025",
       "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/210",
@@ -59,10 +68,11 @@
       "status": "Done"
     },
     {
-      "date": "2026-11-10",
+      "date": "2026-11-11",
       "title": "Physics | Read `Polarization and Modern Optics` and solve all the PYQs till 2025",
       "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/213",
       "slots": [
+        "Late night",
         "Post lunch"
       ],
       "status": "In Progress"
@@ -75,15 +85,6 @@
         "Post lunch"
       ],
       "status": "Done"
-    },
-    {
-      "date": "2026-11-10",
-      "title": "Consolidate | `Part-III | Fundamental Rights@A17-35`",
-      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/221",
-      "slots": [
-        "Post lunch"
-      ],
-      "status": "In Progress"
     },
     {
       "date": "2026-09-29",
@@ -114,6 +115,15 @@
       "status": "Done"
     },
     {
+      "date": "2026-11-11",
+      "title": "Consolidate | `Part-III | Fundamental Rights@A17-35`",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/221",
+      "slots": [
+        "Post evening tea"
+      ],
+      "status": "In Progress"
+    },
+    {
       "date": "2026-10-07",
       "title": "Physics | Read `Molecular Physics` + solve all the PYQs till 2025 | Part-2",
       "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/201",
@@ -121,6 +131,15 @@
         "Late night"
       ],
       "status": "Done"
+    },
+    {
+      "date": "2026-11-11",
+      "title": "Daily Newspaper reading | The IE",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/131",
+      "slots": [
+        "Post dinner"
+      ],
+      "status": "In Progress"
     },
     {
       "date": "2026-10-27",
@@ -421,13 +440,6 @@
       "status": "Done"
     },
     {
-      "date": "2026-11-11",
-      "title": "Daily Newspaper reading | The IE",
-      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/131",
-      "slots": [],
-      "status": "In Progress"
-    },
-    {
       "date": "2026-06-29",
       "title": "Physics | Read `Classical Mechanics` + solve all the `PYQs till 2025`",
       "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/136",
@@ -617,16 +629,9 @@
       "status": "Done"
     },
     {
-      "date": "2026-11-10",
+      "date": "2026-11-11",
       "title": "Plan the backlog for `November 2026`",
       "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/217",
-      "slots": [],
-      "status": "In Progress"
-    },
-    {
-      "date": "2026-11-10",
-      "title": "Consolidate | `Pre-requisites` for Indian Economy",
-      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/229",
       "slots": [],
       "status": "In Progress"
     }
