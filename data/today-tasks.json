@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-12T04:21:50.170491+00:00",
+  "updated_at": "2026-11-12T13:08:38.575856+00:00",
   "tasks": [
     {
       "date": "2026-10-11",
@@ -116,10 +116,10 @@
     },
     {
       "date": "2026-11-12",
-      "title": "Consolidate | `Part-III | Fundamental Rights@A17-35`",
-      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/221",
+      "title": "Daily Newspaper reading | The IE",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/131",
       "slots": [
-        "Post evening tea"
+        "Late night"
       ],
       "status": "In Progress"
     },
@@ -131,15 +131,6 @@
         "Late night"
       ],
       "status": "Done"
-    },
-    {
-      "date": "2026-11-12",
-      "title": "Daily Newspaper reading | The IE",
-      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/131",
-      "slots": [
-        "Post dinner"
-      ],
-      "status": "In Progress"
     },
     {
       "date": "2026-10-27",
@@ -154,6 +145,15 @@
       "date": "2026-10-15",
       "title": "Plan GS (integrated)",
       "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/215",
+      "slots": [
+        "Post dinner"
+      ],
+      "status": "In Progress"
+    },
+    {
+      "date": "2026-11-12",
+      "title": "Consolidate | `Part-III | Fundamental Rights@A17-35`",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/221",
       "slots": [
         "Post dinner"
       ],
