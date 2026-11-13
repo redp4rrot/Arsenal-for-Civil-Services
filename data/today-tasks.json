@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-13T01:45:34.157129+00:00",
+  "updated_at": "2026-11-13T09:23:40.312197+00:00",
   "tasks": [
     {
       "date": "2026-10-11",
@@ -50,7 +50,7 @@
       "status": "Done"
     },
     {
-      "date": "2026-11-12",
+      "date": "2026-11-13",
       "title": "Consolidate | `Pre-requisites` for Indian Economy",
       "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/229",
       "slots": [
@@ -68,7 +68,7 @@
       "status": "Done"
     },
     {
-      "date": "2026-11-12",
+      "date": "2026-11-13",
       "title": "Physics | Read `Polarization and Modern Optics` and solve all the PYQs till 2025",
       "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/213",
       "slots": [
@@ -115,7 +115,16 @@
       "status": "Done"
     },
     {
-      "date": "2026-11-12",
+      "date": "2026-11-13",
+      "title": "Consolidate | `Part-III | Fundamental Rights@A17-35`",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/221",
+      "slots": [
+        "Post evening tea"
+      ],
+      "status": "In Progress"
+    },
+    {
+      "date": "2026-11-13",
       "title": "Daily Newspaper reading | The IE",
       "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/131",
       "slots": [
@@ -145,15 +154,6 @@
       "date": "2026-10-15",
       "title": "Plan GS (integrated)",
       "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/215",
-      "slots": [
-        "Post dinner"
-      ],
-      "status": "In Progress"
-    },
-    {
-      "date": "2026-11-12",
-      "title": "Consolidate | `Part-III | Fundamental Rights@A17-35`",
-      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/221",
       "slots": [
         "Post dinner"
       ],
@@ -629,7 +629,7 @@
       "status": "Done"
     },
     {
-      "date": "2026-11-12",
+      "date": "2026-11-13",
       "title": "Plan the backlog for `November 2026`",
       "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/217",
       "slots": [],
