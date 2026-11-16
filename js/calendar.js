@@ -300,18 +300,17 @@ function renderCalendar() {
         const record = getRecordForDate(records, visibleYear, visibleMonth, day);
         const isFutureDate = monthIndex(visibleYear, visibleMonth) > monthIndex(today.getFullYear(), today.getMonth()) ||
             (visibleYear === today.getFullYear() && visibleMonth === today.getMonth() && day > today.getDate());
-        const status = record ? record.status : (isFutureDate ? "empty" : "holiday");
+        const isToday = visibleYear === today.getFullYear() && visibleMonth === today.getMonth() && day === today.getDate();
+        const status = record ? record.status : (isFutureDate || isToday ? "empty" : "holiday");
         const tile = document.createElement("button");
         tile.type = "button";
         tile.className = "calendar-day is-" + status;
         tile.textContent = String(day);
         tile.setAttribute("aria-pressed", String(day === selectedDay));
         if (day === selectedDay) tile.classList.add("is-selected");
-        if (visibleYear === today.getFullYear() && visibleMonth === today.getMonth() && day === today.getDate()) {
-            tile.classList.add("is-today");
-        }
+        if (isToday) tile.classList.add("is-today");
         tile.title = formatDate(visibleYear, visibleMonth, day) + " — " +
-            (record ? describeRecord(record) : isFutureDate ? "Upcoming day" : "Holiday · no study entry");
+            (record ? describeRecord(record) : isToday ? "Today" : isFutureDate ? "Upcoming day" : "Holiday · no study entry");
         tile.addEventListener("click", () => {
             selectedDay = day;
             renderCalendar();
