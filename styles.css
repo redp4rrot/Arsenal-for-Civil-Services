@@ -666,3 +666,52 @@ h1 {
 @media(max-width:760px) { .today-plan { margin-top:12px; padding-top:10px; } .today-task { padding:9px 11px 8px 13px; } }
 
 .projects-connection{display:flex;flex-wrap:wrap;align-items:center;gap:7px;margin:0 0 12px}.projects-connection input{min-width:0;flex:1 1 190px;padding:8px 10px;border:1px solid var(--border);border-radius:7px;background:var(--panel);color:var(--text);font:inherit;font-size:11px}.projects-connection button,.projects-connection select{padding:8px 10px;border:1px solid var(--border);border-radius:7px;background:var(--panel-2);color:var(--text);font:inherit;font-size:11px}.projects-connection button{cursor:pointer}#projects-connection-status{flex-basis:100%;color:var(--muted);font-size:10px;line-height:1.4}
+
+/* Dark-theme calendar tiles: muted pastel tints tuned for the charcoal surface. */
+:root:not([data-theme="light"]) .calendar-day.is-study,
+:root:not([data-theme="light"]) .calendar-day.study {
+  background:#293B31;
+  border-color:#405747;
+  color:#DCEBDD;
+}
+:root:not([data-theme="light"]) .calendar-day.is-half,
+:root:not([data-theme="light"]) .calendar-day.half {
+  background:#443827;
+  border-color:#67543A;
+  color:#F2E3C6;
+}
+:root:not([data-theme="light"]) .calendar-day.is-low,
+:root:not([data-theme="light"]) .calendar-day.low {
+  background:#3A3345;
+  border-color:#554965;
+  color:#E7DDF2;
+}
+:root:not([data-theme="light"]) .calendar-day.is-holiday,
+:root:not([data-theme="light"]) .calendar-day.holiday {
+  background:#452F31;
+  border-color:#684247;
+  color:#F1D7D8;
+}
+:root:not([data-theme="light"]) .calendar-day.is-today {
+  background:#344334;
+  border-color:#9DBB9A;
+  color:#F1F8E9;
+  animation-name:today-tile-pulse-dark;
+}
+:root:not([data-theme="light"]) .calendar-day.is-selected {
+  filter:drop-shadow(0 0 4px rgba(174,218,178,.34)) drop-shadow(0 0 8px rgba(174,218,178,.12));
+}
+@keyframes today-tile-pulse-dark {
+  0%,100% { box-shadow:inset 0 0 0 1px rgba(157,187,154,.45),0 0 0 0 rgba(157,187,154,0); }
+  50% { box-shadow:inset 0 0 0 1px rgba(184,215,179,.78),0 0 0 4px rgba(157,187,154,.13); }
+}
+:root:not([data-theme="light"]) .legend-square.study { background:#789B7D; border:1px solid #405747; }
+:root:not([data-theme="light"]) .legend-square.half { background:#B99A68; border:1px solid #67543A; }
+:root:not([data-theme="light"]) .legend-square.low { background:#9584AA; border:1px solid #554965; }
+:root:not([data-theme="light"]) .legend-square.holiday { background:#B9787D; border:1px solid #684247; }
+@media(prefers-reduced-motion:reduce) {
+  :root:not([data-theme="light"]) .calendar-day.is-today {
+    animation:none;
+    box-shadow:inset 0 0 0 1px #9DBB9A;
+  }
+}
