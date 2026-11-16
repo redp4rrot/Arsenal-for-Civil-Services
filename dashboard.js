@@ -1,3 +1,3 @@
-import { initializeApp } from "./js/app.js?v=local-token-fix-1";
+import { initializeApp } from "./js/app.js?v=today-width-1";
 
 initializeApp();
