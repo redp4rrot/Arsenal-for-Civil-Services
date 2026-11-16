@@ -16,7 +16,7 @@ import {
     loadStudyCalendar,
     refreshTodayPlan,
     setupCalendarEvents
-} from "./calendar.js?v=neon-selection-1";
+} from "./calendar.js?v=dark-pastels-1";
 
 
 /* =========================================================
