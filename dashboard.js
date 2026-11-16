@@ -1,3 +1,3 @@
-import { initializeApp } from "./js/app.js?v=pastel-tiles-1";
+import { initializeApp } from "./js/app.js?v=neon-selection-1";
 
 initializeApp();
