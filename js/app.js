@@ -16,7 +16,7 @@ import {
     loadStudyCalendar,
     refreshTodayPlan,
     setupCalendarEvents
-} from "./calendar.js?v=full-width-sage-1";
+} from "./calendar.js?v=pastel-tiles-1";
 
 
 /* =========================================================
