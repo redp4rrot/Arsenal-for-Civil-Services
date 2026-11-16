@@ -113,7 +113,7 @@ h1 { margin:0; color:var(--text); font-family:Georgia,"Times New Roman",serif; f
 .calendar-day.is-low,.calendar-day.low { background:#EAE3F2; border-color:#D5C8E5; color:#463951; }
 .calendar-day.is-holiday,.calendar-day.holiday { background:#F8DDDD; border-color:#EBC4C4; color:#633B3B; }
 .calendar-day.is-empty,.calendar-day.empty { background:transparent; border-color:var(--border); color:var(--muted); }
-.calendar-day.is-selected { outline:2px solid var(--text); outline-offset:2px; }
+.calendar-day.is-selected { outline:none; filter:drop-shadow(0 0 4px rgba(145,255,190,.58)) drop-shadow(0 0 9px rgba(145,255,190,.20)); }
 .calendar-day.is-today {
   position:relative;
   z-index:1;
