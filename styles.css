@@ -114,7 +114,21 @@ h1 { margin:0; color:var(--text); font-family:Georgia,"Times New Roman",serif; f
 .calendar-day.is-holiday,.calendar-day.holiday { background:#49302e; border-color:#64413d; color:#e5c5be; }
 .calendar-day.is-empty,.calendar-day.empty { background:transparent; border-color:var(--border); color:var(--muted); }
 .calendar-day.is-selected { outline:2px solid var(--text); outline-offset:2px; }
-.calendar-day.is-today:not(.is-selected) { box-shadow:inset 0 0 0 1px var(--yellow); }
+.calendar-day.is-today {
+  position:relative;
+  z-index:1;
+  border-color:rgba(214,180,112,.78);
+  background:rgba(160,125,68,.16);
+  color:var(--text);
+  animation:today-tile-pulse 2.2s ease-in-out infinite;
+}
+@keyframes today-tile-pulse {
+  0%,100% { box-shadow:inset 0 0 0 1px rgba(214,180,112,.48),0 0 0 0 rgba(214,180,112,0); }
+  50% { box-shadow:inset 0 0 0 1px rgba(238,204,139,.95),0 0 0 4px rgba(214,180,112,.10); }
+}
+@media(prefers-reduced-motion:reduce) {
+  .calendar-day.is-today { animation:none; box-shadow:inset 0 0 0 1px rgba(214,180,112,.8); }
+}
 .calendar-legend { display:flex; flex-wrap:wrap; gap:9px 14px; margin-top:16px; color:var(--muted); font-size:10px; }
 .calendar-legend span { display:inline-flex; align-items:center; gap:6px; }
 .legend-square { display:inline-block; width:9px; height:9px; border-radius:3px; }
@@ -562,6 +576,11 @@ h1 {
 
 /* Preserve the complete original worklog block in the selected-day panel. */
 .selected-date-log {
+    display:block;
+    width:100%;
+    max-width:none;
+    min-width:0;
+    box-sizing:border-box;
     margin-top: 18px;
     padding-top: 16px;
     border-top: 1px solid var(--border);
@@ -571,6 +590,9 @@ h1 {
     white-space: pre-wrap;
     overflow-wrap: anywhere;
 }
+.selected-date-log > * { max-width:none; }
+.selected-date-log ul,.selected-date-log ol { width:100%; box-sizing:border-box; }
+.selected-date-log li { width:100%; }
 .selected-date-log[hidden] { display: none; }
 
 
