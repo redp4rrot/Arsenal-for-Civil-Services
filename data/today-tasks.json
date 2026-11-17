@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-17T00:50:15.131952+00:00",
+  "updated_at": "2026-11-17T08:58:31.879668+00:00",
   "tasks": [
     {
       "date": "2026-10-11",
@@ -54,7 +54,8 @@
       "title": "Consolidate | `Pre-requisites` for Indian Economy",
       "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/229",
       "slots": [
-        "Morning"
+        "Morning",
+        "Post lunch"
       ],
       "status": "In Progress"
     },
@@ -113,6 +114,15 @@
         "Post evening tea"
       ],
       "status": "Done"
+    },
+    {
+      "date": "2026-11-17",
+      "title": "Consolidate | `Part-IV | DPSPs@A36-51, FDs@51A`",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/224",
+      "slots": [
+        "Post evening tea"
+      ],
+      "status": "Todo"
     },
     {
       "date": "2026-11-16",
