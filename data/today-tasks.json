@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-18T01:14:33.654038+00:00",
+  "updated_at": "2026-11-18T08:38:49.139374+00:00",
   "tasks": [
     {
       "date": "2026-10-11",
@@ -50,12 +50,11 @@
       "status": "Done"
     },
     {
-      "date": "2026-11-17",
+      "date": "2026-11-18",
       "title": "Consolidate | `Pre-requisites` for Indian Economy",
       "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/229",
       "slots": [
-        "Morning",
-        "Post lunch"
+        "Morning"
       ],
       "status": "In Progress"
     },
@@ -69,7 +68,7 @@
       "status": "Done"
     },
     {
-      "date": "2026-11-17",
+      "date": "2026-11-18",
       "title": "Physics | Read `Polarization and Modern Optics` and solve all the PYQs till 2025",
       "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/213",
       "slots": [
@@ -134,7 +133,7 @@
       "status": "Done"
     },
     {
-      "date": "2026-11-17",
+      "date": "2026-11-18",
       "title": "Daily Newspaper reading | The IE",
       "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/131",
       "slots": [
@@ -639,7 +638,7 @@
       "status": "Done"
     },
     {
-      "date": "2026-11-17",
+      "date": "2026-11-18",
       "title": "Plan the backlog for `November 2026`",
       "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/217",
       "slots": [],
