@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-20T03:23:57.509340+00:00",
+  "updated_at": "2026-11-20T12:04:26.006192+00:00",
   "tasks": [
     {
       "date": "2026-10-11",
@@ -50,13 +50,22 @@
       "status": "Done"
     },
     {
-      "date": "2026-11-19",
+      "date": "2026-11-20",
       "title": "Consolidate | `Fundamentals of Macroeconomics` | Vivek Singh",
       "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/229",
       "slots": [
         "Morning"
       ],
       "status": "In Progress"
+    },
+    {
+      "date": "2026-11-20",
+      "title": "Consolidate | `Inflation` | Vivek Singh + class notes | Static concepts",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/231",
+      "slots": [
+        "Morning"
+      ],
+      "status": "Todo"
     },
     {
       "date": "2026-10-11",
@@ -68,7 +77,7 @@
       "status": "Done"
     },
     {
-      "date": "2026-11-19",
+      "date": "2026-11-20",
       "title": "Physics | Read `Polarization and Modern Optics` and solve all the PYQs till 2025",
       "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/213",
       "slots": [
@@ -115,7 +124,7 @@
       "status": "Done"
     },
     {
-      "date": "2026-11-19",
+      "date": "2026-11-20",
       "title": "Consolidate | `Part-IV | DPSPs@A36-51, FDs@51A`",
       "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/224",
       "slots": [
@@ -133,7 +142,7 @@
       "status": "Done"
     },
     {
-      "date": "2026-11-19",
+      "date": "2026-11-20",
       "title": "Daily Newspaper reading | The IE",
       "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/131",
       "slots": [
@@ -638,18 +647,11 @@
       "status": "Done"
     },
     {
-      "date": "2026-11-19",
+      "date": "2026-11-20",
       "title": "Plan the backlog for `November 2026`",
       "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/217",
       "slots": [],
       "status": "In Progress"
-    },
-    {
-      "date": "2026-11-19",
-      "title": "Consolidate | `Inflation` | Vivek Singh + class notes | Static concepts",
-      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/231",
-      "slots": [],
-      "status": "Todo"
     }
   ]
 }
