@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-23T03:39:27.766117+00:00",
+  "updated_at": "2026-11-23T13:42:26.013530+00:00",
   "tasks": [
     {
       "date": "2026-10-11",
@@ -81,7 +81,6 @@
       "title": "Physics | Read `Polarization and Modern Optics` and solve all the PYQs till 2025",
       "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/213",
       "slots": [
-        "Late night",
         "Post lunch"
       ],
       "status": "In Progress"
@@ -115,6 +114,16 @@
       "status": "In Progress"
     },
     {
+      "date": "2026-11-23",
+      "title": "Physics | Read `Electrostatics and Magnetostatics` and solve all the PYQs till 2025",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/214",
+      "slots": [
+        "Late night",
+        "Post evening tea"
+      ],
+      "status": "Todo"
+    },
+    {
       "date": "2026-10-31",
       "title": "Consolidate | `Commencement, states reorganization, Part-I, II and III(A12-16)`",
       "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/216",
@@ -122,15 +131,6 @@
         "Post evening tea"
       ],
       "status": "Done"
-    },
-    {
-      "date": "2026-11-23",
-      "title": "Consolidate | `Part-IV | DPSPs@A36-51, FDs@51A`",
-      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/224",
-      "slots": [
-        "Post evening tea"
-      ],
-      "status": "In Progress"
     },
     {
       "date": "2026-11-18",
@@ -650,6 +650,13 @@
       "date": "2026-11-23",
       "title": "Plan the backlog for `November 2026`",
       "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/217",
+      "slots": [],
+      "status": "In Progress"
+    },
+    {
+      "date": "2026-11-24",
+      "title": "Consolidate | `Part-IV | DPSPs@A36-51, FDs@51A`",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/224",
       "slots": [],
       "status": "In Progress"
     }
