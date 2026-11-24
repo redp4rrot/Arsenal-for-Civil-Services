@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-23T13:42:26.013530+00:00",
+  "updated_at": "2026-11-24T01:15:53.406234+00:00",
   "tasks": [
     {
       "date": "2026-10-11",
@@ -59,7 +59,7 @@
       "status": "Done"
     },
     {
-      "date": "2026-11-23",
+      "date": "2026-11-24",
       "title": "Consolidate | `Inflation` | Vivek Singh + class notes | Static concepts",
       "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/231",
       "slots": [
@@ -83,7 +83,7 @@
       "slots": [
         "Post lunch"
       ],
-      "status": "In Progress"
+      "status": "Done"
     },
     {
       "date": "2026-11-07",
@@ -114,14 +114,14 @@
       "status": "In Progress"
     },
     {
-      "date": "2026-11-23",
+      "date": "2026-11-24",
       "title": "Physics | Read `Electrostatics and Magnetostatics` and solve all the PYQs till 2025",
       "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/214",
       "slots": [
         "Late night",
         "Post evening tea"
       ],
-      "status": "Todo"
+      "status": "In Progress"
     },
     {
       "date": "2026-10-31",
@@ -142,7 +142,7 @@
       "status": "Done"
     },
     {
-      "date": "2026-11-23",
+      "date": "2026-11-24",
       "title": "Daily Newspaper reading | The IE",
       "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/131",
       "slots": [
@@ -647,7 +647,7 @@
       "status": "Done"
     },
     {
-      "date": "2026-11-23",
+      "date": "2026-11-24",
       "title": "Plan the backlog for `November 2026`",
       "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/217",
       "slots": [],
