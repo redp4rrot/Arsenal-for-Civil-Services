@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-25T23:39:26.901346+00:00",
+  "updated_at": "2026-11-26T05:29:42.098241+00:00",
   "tasks": [
     {
       "date": "2026-10-11",
@@ -39,6 +39,16 @@
         "Post lunch"
       ],
       "status": "Done"
+    },
+    {
+      "date": "2026-11-26",
+      "title": "Physics | Read `Electrostatics and Magnetostatics` and solve all the PYQs till 2025",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/214",
+      "slots": [
+        "Morning",
+        "Post lunch"
+      ],
+      "status": "In Progress"
     },
     {
       "date": "2026-11-03",
@@ -86,16 +96,6 @@
       "status": "Done"
     },
     {
-      "date": "2026-11-25",
-      "title": "Physics | Read `Electrostatics and Magnetostatics` and solve all the PYQs till 2025",
-      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/214",
-      "slots": [
-        "Late night",
-        "Post lunch"
-      ],
-      "status": "In Progress"
-    },
-    {
       "date": "2026-11-07",
       "title": "Physics | Read `Interference and Diffraction` and solve all the PYQs till 2025 | Part-2",
       "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/218",
@@ -133,7 +133,7 @@
       "status": "Done"
     },
     {
-      "date": "2026-11-25",
+      "date": "2026-11-26",
       "title": "Consolidate | `Part-IV | DPSPs@A36-51, FDs@51A`",
       "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/224",
       "slots": [
@@ -151,15 +151,6 @@
       "status": "Done"
     },
     {
-      "date": "2026-11-25",
-      "title": "Daily Newspaper reading | The IE",
-      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/131",
-      "slots": [
-        "Late night"
-      ],
-      "status": "In Progress"
-    },
-    {
       "date": "2026-10-07",
       "title": "Physics | Read `Molecular Physics` + solve all the PYQs till 2025 | Part-2",
       "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/201",
@@ -167,6 +158,15 @@
         "Late night"
       ],
       "status": "Done"
+    },
+    {
+      "date": "2026-11-26",
+      "title": "Daily Newspaper reading | The IE",
+      "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/131",
+      "slots": [
+        "Post dinner"
+      ],
+      "status": "In Progress"
     },
     {
       "date": "2026-10-27",
@@ -656,7 +656,7 @@
       "status": "Done"
     },
     {
-      "date": "2026-11-25",
+      "date": "2026-11-26",
       "title": "Plan the backlog for `November 2026`",
       "url": "https://github.com/redp4rrot/Arsenal-for-Civil-Services/issues/217",
       "slots": [],
